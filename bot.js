@@ -53,6 +53,11 @@ client.on('message', msg => {
                     break;
             }
         }
+    if (msg.content.toLocaleLowerCase().includes('furry')) {
+        let furryArray = ['UwU', 'OwO', 'Uwuristen', '(　・`ω・´)', 'fuwurykról van szó?', 'Kruwuzor fuwury UwU'];
+        let randomNumber = Math.floor(Math.random() * furryArray.length);
+        msg.channel.send(furryArray[randomNumber]);
+    }
 
 });
 client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvcZA.DbM0EvrKsUQpe43XnltT6ryVkHc');
