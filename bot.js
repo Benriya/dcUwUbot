@@ -25,6 +25,9 @@ let attachment;
 
 client.on('message', msg => {
 
+    //const chanel = client.channels.find('kuwuka', kuwuka)
+    //671309309757358123
+
     if(msg.author.bot) return;
     if (msg.content === 'ping') {
         msg.reply('Pong!');
@@ -53,6 +56,20 @@ client.on('message', msg => {
                     break;
             }
         }
+
+        if (msg.content.substring(0, 1) === '.' && msg.channel.id === '704983142452428933') {
+            let args = msg.content.substring(1).split(' ');
+            let cmd = args[0];
+
+            args = args.splice(1);
+            switch (cmd.toLocaleLowerCase()) {
+                case 'say':
+                    let sentence = msg.content.slice(5);
+                    msg.delete();
+                    client.channels.get(`667783025811259448`).send(sentence);
+            }
+        }
+
     if (msg.content.toLocaleLowerCase().includes('furry')) {
         let furryArray = ['UwU', 'OwO', 'Uwuristen', '(　・`ω・´)', 'fuwurykról van szó?', 'Kruwuzor fuwury UwU'];
         let randomNumber = Math.floor(Math.random() * furryArray.length);
