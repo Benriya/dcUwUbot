@@ -22,13 +22,18 @@ fs = require('fs');
 let files;
 let chosenFile;
 let attachment;
+let sayAgain = [];
+let swearStack = 0;
 
 client.on('message', msg => {
-
-    //const chanel = client.channels.find('kuwuka', kuwuka)
-    //671309309757358123
-
     if(msg.author.bot) return;
+
+    sayAgain.push({message: msg.content, author: msg.author});
+    if (mimicSentence()) {
+        msg.channel.send(sayAgain[1].message);
+        sayAgain = [];
+    }
+
     if (msg.content === 'ping') {
         msg.reply('Pong!');
     }
@@ -70,6 +75,22 @@ client.on('message', msg => {
             }
         }
 
+    if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
+        msg.channel.send('<a:uwu_flotespanking:677984852963885075>');
+    }
+
+    if (swearListCheck(msg.content)) {
+        swearStack++;
+        console.log(swearStack);
+        console.log(msg.content);
+        let textArray = ['hagyd abba', 'Ne beszélj már csúnyán', 'Kell a baj?', 'Mit káromkodsz?', 'Hát már megint káromkodik :kekwall:', 'Kőban?', 'ffs'];
+        let randomNumber = Math.floor(Math.random() * textArray.length);
+        if (swearStack === 5) {
+            msg.channel.send(textArray[randomNumber]);
+            swearStack = 0;
+        }
+    }
+
     if (msg.content.toLocaleLowerCase().includes('furry')) {
         let furryArray = ['UwU', 'OwO', 'Uwuristen', '(　・`ω・´)', 'fuwurykról van szó?', 'Kruwuzor fuwury UwU'];
         let randomNumber = Math.floor(Math.random() * furryArray.length);
@@ -77,4 +98,34 @@ client.on('message', msg => {
     }
 
 });
+
+function mimicSentence() {
+    if (sayAgain.length > 3) {
+        sayAgain.shift();
+        if (checkIfSame()) {
+            return true;
+        }
+    }
+    if (sayAgain.length === 3) {
+        if (checkIfSame()) {
+            return true;
+        }
+    }
+}
+
+function checkIfSame() {
+    if (sayAgain[0].message === sayAgain[1].message && sayAgain[0].message === sayAgain[2].message && sayAgain[0].author !== sayAgain[1].author && sayAgain[0].author !== sayAgain[2].author) {
+        return true;
+    }
+}
+
+function swearListCheck(message) {
+    let swearList = ['anyád', 'geci', 'hugy', 'kurva', 'ribanc', 'buzi', 'picsába', 'fasz', 'szar ', 'fos', 'rühes', 'gedva', 'csicska', 'pina'];
+    for (let i = 0; i < swearList.length; i++) {
+        if(message.toLowerCase().includes(swearList[i])) {
+            return true;
+        }
+    }
+}
+
 client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvcZA.DbM0EvrKsUQpe43XnltT6ryVkHc');
