@@ -65,18 +65,48 @@ client.on('message', msg => {
         if (msg.content.substring(0, 1) === '.' && msg.channel.id === '704983142452428933') {
             let args = msg.content.substring(1).split(' ');
             let cmd = args[0];
+            let channel = args[1];
 
             args = args.splice(1);
             switch (cmd.toLocaleLowerCase()) {
                 case 'say':
+                    console.log(channel);
                     let sentence = msg.content.slice(5);
                     msg.delete();
-                    client.channels.get(`667783025811259448`).send(sentence);
+                    switch (channel) {
+                        case 'suwuli':
+                            client.channels.get(`706776570836156426`).send(sentence.slice(7));
+                            break;
+
+                        case 'kuwuka':
+                            client.channels.get(`671309309757358123`).send(sentence.slice(7));
+                            break;
+
+                        case '18':
+                            client.channels.get(`667779656363278367`).send(sentence.slice(3));
+                            break;
+
+                        case 'mowozi':
+                            client.channels.get(`699657394506170469`).send(sentence.slice(7));
+                            break;
+
+                        case 'owoff':
+                            client.channels.get(`667783025811259448`).send(sentence.slice(6));
+                            break;
+
+                        default:
+                            client.channels.get(`667783025811259448`).send(sentence);
+                            break;
+                    }
             }
         }
 
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
         msg.channel.send('<a:uwu_flotespanking:677984852963885075>');
+    }
+
+    if (msg.content === 'test') {
+        msg.channel.send('<a:kittyroll:597942521536053261>');
     }
 
     if (swearListCheck(msg.content)) {
