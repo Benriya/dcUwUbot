@@ -11,7 +11,8 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });
-const { Client, Attachment } = require('discord.js');
+
+const { Client, Attachment, Discord, MessageCollector } = require('discord.js');
 const client = new Client();
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -37,76 +38,78 @@ client.on('message', msg => {
     if (msg.content === 'ping') {
         msg.reply('Pong!');
     }
-        if (msg.content.substring(0, 1) === '!') {
-            let args = msg.content.substring(1).split(' ');
-            let cmd = args[0];
 
-            args = args.splice(1);
-            switch (cmd.toLocaleLowerCase()) {
-                case 'kuss':
-                    user = msg.content.slice(6);
-                    break;
-                case 'meme':
-                    files = fs.readdirSync('./net');
-                    chosenFile = files[Math.floor(Math.random() * files.length)];
-                    attachment = new Attachment('./net/' + chosenFile);
-                    msg.channel.send(attachment);
-                    break;
+    if (msg.content.substring(0, 1) === '!') {
+        let args = msg.content.substring(1).split(' ');
+        let cmd = args[0];
 
-                case 'porn':
-                    files = fs.readdirSync('./18');
-                     chosenFile = files[Math.floor(Math.random() * files.length)];
-                    attachment = new Attachment('./18/' + chosenFile);
-                    msg.channel.send(attachment);
-                    break;
-            }
+        switch (cmd.toLocaleLowerCase()) {
+            case 'meme':
+                files = fs.readdirSync('./net');
+                chosenFile = files[Math.floor(Math.random() * files.length)];
+                attachment = new Attachment('./net/' + chosenFile);
+                msg.channel.send(attachment);
+                break;
+            case 'porn':
+                files = fs.readdirSync('./18');
+                chosenFile = files[Math.floor(Math.random() * files.length)];
+                attachment = new Attachment('./18/' + chosenFile);
+                msg.channel.send(attachment);
+                break;
+            case 'game':
+                if (msg.channel.id === '713415837356392508') {
+                    msg.channel.send("Milyen game-t szeretnél?");
+                    const collector = new MessageCollector(msg.channel, m => m.author.id === msg.author.id);
+                    collector.on('collect', message => {
+                        if (message.content.toLowerCase() === "wow") {
+                            message.channel.send('Gyertek ' + taglist('wow', msg.author.id) + ' induljon az ungibungi');
+                        } else if (message.content.toLowerCase() === "kf2") {
+                            message.channel.send('Na ' + taglist('kf2', msg.author.id) + ' zombikat meg ki a faszom fog ölni?');
+                        } else if (message.content.toLowerCase() === "lol") {
+                            message.channel.send('Liga?? ' + taglist('lol', msg.author.id) + ' tesok gyertek apunak kéne win');
+                        } else {
+                            message.channel.send('Hát ezzel ti nem játszotok');
+                        }
+                        collector.stop();
+                    });
+                } else {
+                    msg.channel.send('Ez nem az a szoba haver');
+                    collector.stop();
+                }
+                break;
         }
+    }
 
-        if (msg.content.substring(0, 1) === '.' && msg.channel.id === '704983142452428933') {
-            let args = msg.content.substring(1).split(' ');
-            let cmd = args[0];
-            let channel = args[1];
+    if (msg.content.substring(0, 1) === '.' && msg.channel.id === '704983142452428933') {
+        let args = msg.content.substring(1).split(' ');
+        let cmd = args[0];
+        let channel = args[1];
 
-            args = args.splice(1);
-            switch (cmd.toLocaleLowerCase()) {
-                case 'say':
-                    console.log(channel);
-                    let sentence = msg.content.slice(5);
-                    msg.delete();
-                    switch (channel) {
-                        case 'suwuli':
-                            client.channels.get(`706776570836156426`).send(sentence.slice(7));
-                            break;
+        let channelId = getChannel(channel);
+        msg.delete();
+        let sentence = msg.content.slice(5);
+        switch (cmd.toLocaleLowerCase()) {
+            case 'say':
+                if (channelId === '667783025811259448') {
+                    client.channels.get('667783025811259448').send(sentence);
+                } else {
+                    client.channels.get(channelId).send(sentence.slice(channel.length + 1)).catch(data => {
+                        console.log(data);
+                    });
+                }
+                break;
 
-                        case 'kuwuka':
-                            client.channels.get(`671309309757358123`).send(sentence.slice(7));
-                            break;
-
-                        case '18':
-                            client.channels.get(`667779656363278367`).send(sentence.slice(3));
-                            break;
-
-                        case 'mowozi':
-                            client.channels.get(`699657394506170469`).send(sentence.slice(7));
-                            break;
-
-                        case 'owoff':
-                            client.channels.get(`667783025811259448`).send(sentence.slice(6));
-                            break;
-
-                        default:
-                            client.channels.get(`667783025811259448`).send(sentence);
-                            break;
-                    }
-            }
+            case 'sup':
+                client.channels.get(channelId).send('<:surp:708969952354500658>');
+                break;
+            case 'tri':
+                client.channels.get(channelId).send('<:trigger:708979797895938168>');
+                break;
         }
+    }
 
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
         msg.channel.send('<a:uwu_flotespanking:677984852963885075>');
-    }
-
-    if (msg.content === 'test') {
-        msg.channel.send('<a:kittyroll:597942521536053261>');
     }
 
     if (swearListCheck(msg.content)) {
@@ -115,7 +118,7 @@ client.on('message', msg => {
         console.log(msg.content);
         let textArray = ['hagyd abba', 'Ne beszélj már csúnyán', 'Kell a baj?', 'Mit káromkodsz?', 'Hát már megint káromkodik :kekwall:', 'Kőban?', 'ffs'];
         let randomNumber = Math.floor(Math.random() * textArray.length);
-        if (swearStack === 5) {
+        if (swearStack === 10) {
             msg.channel.send(textArray[randomNumber]);
             swearStack = 0;
         }
@@ -128,6 +131,34 @@ client.on('message', msg => {
     }
 
 });
+
+function getChannel(channel) {
+    switch (channel) {
+        case 'suwuli':
+            return '706776570836156426';
+
+        case 'kuwuka':
+            return '671309309757358123';
+
+        case '18':
+            return '667779656363278367';
+
+        case 'mowozi':
+            return '699657394506170469';
+
+        case 'owoff':
+            return '667783025811259448';
+
+        case 'altalanowos':
+            return '661569831111491618';
+
+        case 'jatekowos':
+            return '713415837356392508';
+
+        default:
+            return '667783025811259448';
+    }
+}
 
 function mimicSentence() {
     if (sayAgain.length > 3) {
@@ -158,4 +189,37 @@ function swearListCheck(message) {
     }
 }
 
+function playerChange(players, author) {
+    return players.replace('<@' + author + '>', '');
+}
+
+function taglist(game, author) {
+    let players;
+    switch (game) {
+        case 'wow':
+            players = '<@491660100990140436> <@518823389008232460> <@318072258465628161>';
+            break;
+        case 'kf2':
+            players = '<@279565175588388865> <@295485347138240513> <@602525564217327637> <@376439826549047296> <@318072258465628161> <@518823389008232460>';
+            break;
+        case 'lol':
+            players = '<@295485347138240513> <@310397550173880320> <@239028474696826891> <@279565175588388865>';
+            break;
+    }
+    return playerChange(players, author);
+
+}
+
 client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvcZA.DbM0EvrKsUQpe43XnltT6ryVkHc');
+
+/*
+<@491660100990140436> flote
+<@518823389008232460> dante
+<@318072258465628161> senki
+<@376439826549047296> ninja
+<@602525564217327637> kurzi
+<@295485347138240513> swarci
+<@279565175588388865> karcsi
+<@310397550173880320> vazul
+<@239028474696826891> villanyos
+ */
