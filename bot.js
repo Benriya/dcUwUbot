@@ -56,6 +56,13 @@ client.on('message', msg => {
                 attachment = new Attachment('./18/' + chosenFile);
                 msg.channel.send(attachment);
                 break;
+            case '!help':
+                msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n!meme: Küldök egy meme-t a channelre \n!porn: Küldök egy pornó képet a channelre (csak 18+ channelre használd). \n' +
+                    'Játékowosban használható parancsom: !game majd megkérdem melyik játékkal szeretnél játszani, ha rendelkezem vele akkor meg tagelem azokat akik azzal a játékkal szoktak játszani. \n' +
+                    'Egyébként meg tájékoztatlak, hogy az adott játék nem szerepel nálam. \nElérhető game-k: "lol", "wow", "kf2" (bővülni fog). \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
+                    'Furrykról szóló tartalomhoz szívesen becsatlakozok én is beszélgetni. \nIlletve "megcsap" vagy "paskol" szövegrészekre is reagálok ha a mondandódban van. \nVégül ha ' +
+                    'valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
+                break;
             case 'game':
                 if (msg.channel.id === '713415837356392508') {
                     msg.channel.send("Milyen game-t szeretnél?");
