@@ -11,7 +11,6 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });
-
 const { Client, Attachment, Discord, MessageCollector } = require('discord.js');
 const client = new Client();
 client.on('ready', () => {
@@ -65,9 +64,16 @@ client.on('message', msg => {
                 break;
             case 'game':
                 if (msg.channel.id === '713415837356392508') {
-                    msg.channel.send("Milyen game-t szeretnél?");
+                    msg.channel.send('Milyen game-t szeretnél?');
                     const collector = new MessageCollector(msg.channel, m => m.author.id === msg.author.id);
                     collector.on('collect', message => {
+                        /*const gameName = message.content;
+                        if (gameSelect(message.content)) {
+                            message.channel.send('Fel, le akarsz iratkozni vagy tagelni?');
+                            if (message.content.toLowerCase() === 'add') {
+                                postPlayer(msg.author.id, gameName);
+                            }
+                        }*/
                         if (message.content.toLowerCase() === "wow") {
                             message.channel.send('Gyertek ' + taglist('wow', msg.author.id) + ' induljon az ungibungi');
                         } else if (message.content.toLowerCase() === "kf2") {
@@ -81,7 +87,6 @@ client.on('message', msg => {
                     });
                 } else {
                     msg.channel.send('Ez nem az a szoba haver');
-                    collector.stop();
                 }
                 break;
         }
@@ -112,6 +117,13 @@ client.on('message', msg => {
             case 'tri':
                 client.channels.get(channelId).send('<:trigger:708979797895938168>');
                 break;
+            case 'cute':
+                client.channels.get(channelId).send('<:cute:735574079851200582>');
+                break;
+            case 'oh_no':
+                client.channels.get(channelId).send('oh...nooo');
+                client.channels.get(channelId).send('<:oh_no:735574451088785498>');
+                break;
         }
     }
 
@@ -135,6 +147,20 @@ client.on('message', msg => {
         let furryArray = ['UwU', 'OwO', 'Uwuristen', '(　・`ω・´)', 'fuwurykról van szó?', 'Kruwuzor fuwury UwU'];
         let randomNumber = Math.floor(Math.random() * furryArray.length);
         msg.channel.send(furryArray[randomNumber]);
+    }
+
+    if (msg.content.toLocaleLowerCase().includes('nem mered')) {
+        msg.channel.send('hang vaaaagy');
+    }
+
+    if (msg.content.toLocaleLowerCase().includes('nem leszek')) {
+        msg.channel.send('Miért nem leszel? ( ._.) Lehet páran örülnének neki...');
+    }
+
+    if (msg.content.toLocaleLowerCase() === 'ok') {
+        let flegmahResponse = ['Legalább nem flegmulj, másokat megsértesz :(', 'ok ok ok', 'flegma f***', 'Jó, inkább ne is írj semmit', 'Ne, ne írj rendeset', '"k" legalább csináld rendesen'];
+        let randomNumber = Math.floor(Math.random() * flegmahResponse.length);
+        msg.channel.send(flegmahResponse[randomNumber]);
     }
 
 });
@@ -191,6 +217,15 @@ function swearListCheck(message) {
     let swearList = ['anyád', 'geci', 'hugy', 'kurva', 'ribanc', 'buzi', 'picsába', 'fasz', 'szar ', 'fos', 'rühes', 'gedva', 'csicska', 'pina'];
     for (let i = 0; i < swearList.length; i++) {
         if(message.toLowerCase().includes(swearList[i])) {
+            return true;
+        }
+    }
+}
+
+function gameSelect(message) {
+    let gameList = ['wow', 'lol', 'kf2'];
+    for (let i = 0; i < gameList.length; i++) {
+        if(message.toLowerCase().includes(gameList[i])) {
             return true;
         }
     }
