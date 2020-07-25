@@ -219,7 +219,7 @@ function getChannel(channel) {
 }*/
 
 function checkIfSame(array) {
-    if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
+    if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
         return true;
     }
 }
