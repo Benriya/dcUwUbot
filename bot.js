@@ -22,17 +22,28 @@ fs = require('fs');
 let files;
 let chosenFile;
 let attachment;
-let sayAgain = [];
+//let sayAgain = [];
 let swearStack = 0;
 
 client.on('message', msg => {
     if(msg.author.bot) return;
 
-    sayAgain.push({message: msg.content, author: msg.author});
+    /*sayAgain.push({message: msg.content, author: msg.author});
     if (mimicSentence()) {
         msg.channel.send(sayAgain[1].message);
         sayAgain = [];
-    }
+    }*/
+
+    msg.channel.fetchMessages({limit: 3}).then(messages => {
+        let lastMessage = messages.first();
+        let lastMessages = messages.array();
+
+        if (!lastMessage.author.bot) {
+            if (checkIfSame(lastMessages)){
+                msg.channel.send(lastMessage);
+            }
+        }
+    }).catch(console.error);
 
     if (msg.content === 'ping') {
         msg.reply('Pong!');
@@ -133,8 +144,8 @@ client.on('message', msg => {
 
     if (swearListCheck(msg.content)) {
         swearStack++;
-        console.log(swearStack);
-        console.log(msg.content);
+        /*console.log(swearStack);
+        console.log(msg.content);*/
         let textArray = ['hagyd abba', 'Ne beszélj már csúnyán', 'Kell a baj?', 'Mit káromkodsz?', 'Hát már megint káromkodik :kekwall:', 'Kőban?', 'ffs'];
         let randomNumber = Math.floor(Math.random() * textArray.length);
         if (swearStack === 10) {
@@ -193,28 +204,28 @@ function getChannel(channel) {
     }
 }
 
-function mimicSentence() {
+/*function mimicSentence() {
     if (sayAgain.length > 3) {
         sayAgain.shift();
-        if (checkIfSame()) {
+        if (checkIfSame(sayAgain)) {
             return true;
         }
     }
     if (sayAgain.length === 3) {
-        if (checkIfSame()) {
+        if (checkIfSame(sayAgain)) {
             return true;
         }
     }
-}
+}*/
 
-function checkIfSame() {
-    if (sayAgain[0].message === sayAgain[1].message && sayAgain[0].message === sayAgain[2].message && sayAgain[0].author !== sayAgain[1].author && sayAgain[0].author !== sayAgain[2].author) {
+function checkIfSame(array) {
+    if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
         return true;
     }
 }
 
 function swearListCheck(message) {
-    let swearList = ['anyád', 'geci', 'hugy', 'kurva', 'ribanc', 'buzi', 'picsába', 'fasz', 'szar ', 'fos', 'rühes', 'gedva', 'csicska', 'pina'];
+    let swearList = ['anyád', 'geci', 'hugy', 'kurva', 'ribanc', 'buzi', 'picsába', 'fasz', 'szar ', 'rühes', 'gedva', 'csicska', 'pina'];
     for (let i = 0; i < swearList.length; i++) {
         if(message.toLowerCase().includes(swearList[i])) {
             return true;
