@@ -40,7 +40,7 @@ client.on('message', msg => {
 
         if (!lastMessage.author.bot) {
             if (checkIfSame(lastMessages)){
-                msg.channel.send(lastMessage[0]);
+                msg.channel.send(lastMessage.content);
             }
         }
     }).catch(console.error);
@@ -216,6 +216,7 @@ function getChannel(channel) {
             return true;
         }
     }
+
 }*/
 
 function checkIfSame(array) {
