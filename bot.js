@@ -189,11 +189,12 @@ client.on('message', msg => {
 });
 
 client.on('messageDelete', message => {
+    let channel = message.channel;
     let attachment = (message.attachments).array();
     if (message.attachments.size > 0) {
-        client.channels.get("740536932303634473").send(`${message.author.username} üzenete: "${message.cleanContent}". Kép: ${attachment[0].proxyURL}`);
+        client.channels.get("740536932303634473").send(`${message.author.username} üzenete: "${message.cleanContent}". From: ${channel} Kép: ${attachment[0].proxyURL}`);
     } else {
-        client.channels.get("740536932303634473").send(`${message.author.username} üzenete: "${message.cleanContent}".`);
+        client.channels.get("740536932303634473").send(`${message.author.username} üzenete: "${message.cleanContent}" From: ${channel}.`);
     }
 });
 
