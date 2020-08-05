@@ -19,20 +19,14 @@ client.on('ready', () => {
 
 user = '';
 fs = require('fs');
+let voters = [];
 let files;
 let chosenFile;
 let attachment;
-//let sayAgain = [];
 let swearStack = 0;
 
 client.on('message', msg => {
     if(msg.author.bot) return;
-
-    /*sayAgain.push({message: msg.content, author: msg.author});
-    if (mimicSentence()) {
-        msg.channel.send(sayAgain[1].message);
-        sayAgain = [];
-    }*/
 
     msg.channel.fetchMessages({limit: 3}).then(messages => {
         let lastMessage = messages.first();
@@ -53,6 +47,7 @@ client.on('message', msg => {
         let args = msg.content.substring(1).split(' ');
         let cmd = args[0];
 
+        let sentence = msg.content.slice(9);
         switch (cmd.toLocaleLowerCase()) {
             case 'meme':
                 files = fs.readdirSync('./net');
@@ -68,6 +63,7 @@ client.on('message', msg => {
                 break;
             case '!help':
                 msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n!meme: Küldök egy meme-t a channelre \n!porn: Küldök egy pornó képet a channelre (csak 18+ channelre használd). \n' +
+                    '!votemute "tag": (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n' +
                     'Játékowosban használható parancsom: !game majd megkérdem melyik játékkal szeretnél játszani, ha rendelkezem vele akkor meg tagelem azokat akik azzal a játékkal szoktak játszani. \n' +
                     'Egyébként meg tájékoztatlak, hogy az adott játék nem szerepel nálam. \nElérhető game-k: "lol", "wow", "kf2" (bővülni fog). \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
                     'Furrykról szóló tartalomhoz szívesen becsatlakozok én is beszélgetni. \nIlletve "megcsap" vagy "paskol" szövegrészekre is reagálok ha a mondandódban van. \nVégül ha ' +
@@ -100,6 +96,24 @@ client.on('message', msg => {
                     msg.channel.send('Ez nem az a szoba haver');
                 }
                 break;
+            case 'votemute':
+                msg.react('👍');
+
+                msg.awaitReactions(filter, { max: 1, time: 10000, errors: ['time']})
+                    .then( () => {
+                        let mute_role = msg.guild.roles.find("name", "Mute");
+                        let member = msg.mentions.members.first();
+                        let hasRole = checkRole(msg, member);
+                        member.addRole(mute_role); // <- this assign the role
+                        member.removeRole(hasRole);
+                        msg.channel.send('Muteolva');
+                        setTimeout(() => {member.removeRole(mute_role); member.addRole(hasRole);}, 30 * 1000);
+                    }).catch(r => {
+                            msg.channel.send('Elutasítva');
+                            console.log(r);
+                        });
+                break;
+
         }
     }
 
@@ -144,8 +158,6 @@ client.on('message', msg => {
 
     if (swearListCheck(msg.content)) {
         swearStack++;
-        /*console.log(swearStack);
-        console.log(msg.content);*/
         let textArray = ['hagyd abba', 'Ne beszélj már csúnyán', 'Kell a baj?', 'Mit káromkodsz?', 'Hát már megint káromkodik :kekwall:', 'Kőban?', 'ffs'];
         let randomNumber = Math.floor(Math.random() * textArray.length);
         if (swearStack === 10) {
@@ -176,6 +188,15 @@ client.on('message', msg => {
 
 });
 
+client.on('messageDelete', message => {
+    let attachment = (message.attachments).array();
+    if (message.attachments.size > 0) {
+        client.channels.get("740536932303634473").send(`${message.author.username} üzenete: "${message.cleanContent}". Kép: ${attachment[0].proxyURL}`);
+    } else {
+        client.channels.get("740536932303634473").send(`${message.author.username} üzenete: "${message.cleanContent}".`);
+    }
+});
+
 function getChannel(channel) {
     switch (channel) {
         case 'suwuli':
@@ -204,20 +225,35 @@ function getChannel(channel) {
     }
 }
 
-/*function mimicSentence() {
-    if (sayAgain.length > 3) {
-        sayAgain.shift();
-        if (checkIfSame(sayAgain)) {
-            return true;
-        }
-    }
-    if (sayAgain.length === 3) {
-        if (checkIfSame(sayAgain)) {
-            return true;
-        }
-    }
+function checkRole(message, member) {
+    let freeman = message.guild.roles.find("name", "Freeman");
+    let osmagyar = message.guild.roles.find("name", "Ősmagyar");
+    let kanker = message.guild.roles.find("name", "Kanker");
+    let kanker2 = message.guild.roles.find("name", "kanker csak hupikék");
+    let streamer = message.guild.roles.find("name", "Streamer");
+    let vili = message.guild.roles.find("name", "Csiling-Csiling");
+    let dino = message.guild.roles.find("name", "Dinoszaurusz");
 
-}*/
+    let roleArray = [freeman, osmagyar, kanker, kanker2, streamer, vili, dino];
+
+    for (let i = 0; i < roleArray.length ; i++) {
+        if (member.roles.has(roleArray[i].id)) {
+            return roleArray[i];
+        }
+    }
+}
+
+function filter(reaction, user) {
+    if (['👍'].includes(reaction.emoji.name)) {
+        if (!voters.includes(user.id)) {
+            voters.push(user.id);
+        }
+    }
+    if (voters.length === 4) {
+        voters = [];
+        return true;
+    }
+}
 
 function checkIfSame(array) {
     if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
