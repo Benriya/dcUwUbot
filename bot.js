@@ -11,29 +11,40 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });
-const { Client, Attachment, Discord, MessageCollector } = require('discord.js');
-const client = new Client();
+
+const PornSearch = require('pornsearch');
+
+const func = require('./functions');
+const Discord = require('discord.js');
+const client = new Discord.Client();
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-user = '';
-fs = require('fs');
-let voters = [];
+let user = '';
+let fs = require('fs');
 let files;
 let chosenFile;
 let attachment;
 let swearStack = 0;
+let voters = [];
+let tag = '';
 
 client.on('message', msg => {
     if(msg.author.bot) return;
+
+    let channel = msg.channel;
+    let attachment = (msg.attachments).array();
+    if (msg.attachments.size > 0) {
+        client.channels.get("745317754256490567").send(`${msg.author.username} üzenete: "${msg.cleanContent}". From: ${channel} Kép: ${attachment[0].proxyURL} id: ${attachment[0].id}`);
+    }
 
     msg.channel.fetchMessages({limit: 3}).then(messages => {
         let lastMessage = messages.first();
         let lastMessages = messages.array();
 
         if (!lastMessage.author.bot) {
-            if (checkIfSame(lastMessages)){
+            if (func.checkIfSame(lastMessages)){
                 msg.channel.send(lastMessage.content);
             }
         }
@@ -47,46 +58,40 @@ client.on('message', msg => {
         let args = msg.content.substring(1).split(' ');
         let cmd = args[0];
 
-        let sentence = msg.content.slice(9);
+        let sentence = msg.content.slice(5);
         switch (cmd.toLocaleLowerCase()) {
             case 'meme':
                 files = fs.readdirSync('./net');
                 chosenFile = files[Math.floor(Math.random() * files.length)];
-                attachment = new Attachment('./net/' + chosenFile);
+                attachment = new Discord.Attachment('./net/' + chosenFile);
                 msg.channel.send(attachment);
                 break;
             case 'porn':
-                files = fs.readdirSync('./18');
-                chosenFile = files[Math.floor(Math.random() * files.length)];
-                attachment = new Attachment('./18/' + chosenFile);
-                msg.channel.send(attachment);
+                const Searcher = new PornSearch(sentence);
+                Searcher.gifs()
+                    .then(gifs => {
+                        msg.channel.send(gifs[Math.floor(Math.random() * gifs.length)].webm)
+                    });
                 break;
             case '!help':
-                msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n!meme: Küldök egy meme-t a channelre \n!porn: Küldök egy pornó képet a channelre (csak 18+ channelre használd). \n' +
+                msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n!meme: Küldök egy meme-t a channelre \n!porn + "tematika": Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n' +
                     '!votemute "tag": (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n' +
                     'Játékowosban használható parancsom: !game majd megkérdem melyik játékkal szeretnél játszani, ha rendelkezem vele akkor meg tagelem azokat akik azzal a játékkal szoktak játszani. \n' +
                     'Egyébként meg tájékoztatlak, hogy az adott játék nem szerepel nálam. \nElérhető game-k: "lol", "wow", "kf2" (bővülni fog). \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
                     'Furrykról szóló tartalomhoz szívesen becsatlakozok én is beszélgetni. \nIlletve "megcsap" vagy "paskol" szövegrészekre is reagálok ha a mondandódban van. \nVégül ha ' +
                     'valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
                 break;
-            case 'game':
+            /*case 'game':
                 if (msg.channel.id === '713415837356392508') {
                     msg.channel.send('Milyen game-t szeretnél?');
-                    const collector = new MessageCollector(msg.channel, m => m.author.id === msg.author.id);
+                    const collector = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id);
                     collector.on('collect', message => {
-                        /*const gameName = message.content;
-                        if (gameSelect(message.content)) {
-                            message.channel.send('Fel, le akarsz iratkozni vagy tagelni?');
-                            if (message.content.toLowerCase() === 'add') {
-                                postPlayer(msg.author.id, gameName);
-                            }
-                        }*/
                         if (message.content.toLowerCase() === "wow") {
-                            message.channel.send('Gyertek ' + taglist('wow', msg.author.id) + ' induljon az ungibungi');
+                            message.channel.send('Gyertek ' + func.tagList('wow', msg.author.id) + ' induljon az ungibungi');
                         } else if (message.content.toLowerCase() === "kf2") {
-                            message.channel.send('Na ' + taglist('kf2', msg.author.id) + ' zombikat meg ki a faszom fog ölni?');
+                            message.channel.send('Na ' + func.tagList('kf2', msg.author.id) + ' zombikat meg ki a faszom fog ölni?');
                         } else if (message.content.toLowerCase() === "lol") {
-                            message.channel.send('Liga?? ' + taglist('lol', msg.author.id) + ' tesok gyertek apunak kéne win');
+                            message.channel.send('Liga?? ' + func.tagList('lol', msg.author.id) + ' tesok gyertek apunak kéne win');
                         } else {
                             message.channel.send('Hát ezzel ti nem játszotok');
                         }
@@ -95,7 +100,7 @@ client.on('message', msg => {
                 } else {
                     msg.channel.send('Ez nem az a szoba haver');
                 }
-                break;
+                break;*/
             case 'votemute':
                 msg.react('👍');
 
@@ -103,7 +108,7 @@ client.on('message', msg => {
                     .then( () => {
                         let mute_role = msg.guild.roles.find("name", "Mute");
                         let member = msg.mentions.members.first();
-                        let hasRole = checkRole(msg, member);
+                        let hasRole = func.checkRole(msg, member);
                         member.addRole(mute_role); // <- this assign the role
                         member.removeRole(hasRole);
                         msg.channel.send('Muteolva');
@@ -122,7 +127,7 @@ client.on('message', msg => {
         let cmd = args[0];
         let channel = args[1];
 
-        let channelId = getChannel(channel);
+        let channelId = func.getChannel(channel);
         msg.delete();
         let sentence = msg.content.slice(5);
         switch (cmd.toLocaleLowerCase()) {
@@ -149,6 +154,18 @@ client.on('message', msg => {
                 client.channels.get(channelId).send('oh...nooo');
                 client.channels.get(channelId).send('<:oh_no:735574451088785498>');
                 break;
+            case 'gimme':
+                client.channels.get(channelId).send('<:gimme:744540992430145586>');
+                break;
+            case 'simp':
+                client.channels.get(channelId).send('<:simp:744540966215483442>');
+                break;
+            case 'ew':
+                client.channels.get(channelId).send('<:ew:744540932967235674>');
+                break;
+            case 'burn':
+                client.channels.get(channelId).send('<:burn:744540895478808626>');
+                break;
         }
     }
 
@@ -156,9 +173,9 @@ client.on('message', msg => {
         msg.channel.send('<a:uwu_flotespanking:677984852963885075>');
     }
 
-    if (swearListCheck(msg.content)) {
+    if (func.swearListCheck(msg.content)) {
         swearStack++;
-        let textArray = ['hagyd abba', 'Ne beszélj már csúnyán', 'Kell a baj?', 'Mit káromkodsz?', 'Hát már megint káromkodik :kekwall:', 'Kőban?', 'ffs'];
+        let textArray = ['hagyd abba', 'Ne beszélj már csúnyán', 'Kell a baj?', 'Mit káromkodsz?', 'Moderáljad már magad', 'Szépen meg ki fog beszélni?', 'Kőban?', 'ffs'];
         let randomNumber = Math.floor(Math.random() * textArray.length);
         if (swearStack === 10) {
             msg.channel.send(textArray[randomNumber]);
@@ -188,61 +205,37 @@ client.on('message', msg => {
 
 });
 
+/*const DIL = require("discord.js-image-logger");
+
+DIL(client, {
+    method: "embed",
+    serverWide: true,
+    logChannel: "740517221364924446",
+    logging: true,
+    acceptRole: true
+})*/
+
 client.on('messageDelete', message => {
     let channel = message.channel;
     let attachment = (message.attachments).array();
     if (message.attachments.size > 0) {
-        client.channels.get("740536932303634473").send(`${message.author.username} üzenete: "${message.cleanContent}". From: ${channel} Kép: ${attachment[0].proxyURL}`);
+        let message = '';
+        client.channels.get("745317754256490567").fetchMessages({limit: 5}).then(messages => {
+            let lastMessages = messages.array();
+
+            for (let i = 0; i < lastMessages.length; i++) {
+                if(lastMessages[i].content.includes(attachment[0].id)) {
+                    message = lastMessages[i].content;
+                    client.channels.get("740536932303634473").send(message);
+                }
+            }
+        }).catch(console.error);
     } else {
         client.channels.get("740536932303634473").send(`${message.author.username} üzenete: "${message.cleanContent}" From: ${channel}.`);
     }
 });
 
-function getChannel(channel) {
-    switch (channel) {
-        case 'suwuli':
-            return '706776570836156426';
-
-        case 'kuwuka':
-            return '671309309757358123';
-
-        case '18':
-            return '667779656363278367';
-
-        case 'mowozi':
-            return '699657394506170469';
-
-        case 'owoff':
-            return '667783025811259448';
-
-        case 'altalanowos':
-            return '661569831111491618';
-
-        case 'jatekowos':
-            return '713415837356392508';
-
-        default:
-            return '667783025811259448';
-    }
-}
-
-function checkRole(message, member) {
-    let freeman = message.guild.roles.find("name", "Freeman");
-    let osmagyar = message.guild.roles.find("name", "Ősmagyar");
-    let kanker = message.guild.roles.find("name", "Kanker");
-    let kanker2 = message.guild.roles.find("name", "kanker csak hupikék");
-    let streamer = message.guild.roles.find("name", "Streamer");
-    let vili = message.guild.roles.find("name", "Csiling-Csiling");
-    let dino = message.guild.roles.find("name", "Dinoszaurusz");
-
-    let roleArray = [freeman, osmagyar, kanker, kanker2, streamer, vili, dino];
-
-    for (let i = 0; i < roleArray.length ; i++) {
-        if (member.roles.has(roleArray[i].id)) {
-            return roleArray[i];
-        }
-    }
-}
+client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvcZA.DbM0EvrKsUQpe43XnltT6ryVkHc');
 
 function filter(reaction, user) {
     if (['👍'].includes(reaction.emoji.name)) {
@@ -255,53 +248,6 @@ function filter(reaction, user) {
         return true;
     }
 }
-
-function checkIfSame(array) {
-    if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
-        return true;
-    }
-}
-
-function swearListCheck(message) {
-    let swearList = ['anyád', 'geci', 'hugy', 'kurva', 'ribanc', 'buzi', 'picsába', 'fasz', 'szar ', 'rühes', 'gedva', 'csicska', 'pina'];
-    for (let i = 0; i < swearList.length; i++) {
-        if(message.toLowerCase().includes(swearList[i])) {
-            return true;
-        }
-    }
-}
-
-function gameSelect(message) {
-    let gameList = ['wow', 'lol', 'kf2'];
-    for (let i = 0; i < gameList.length; i++) {
-        if(message.toLowerCase().includes(gameList[i])) {
-            return true;
-        }
-    }
-}
-
-function playerChange(players, author) {
-    return players.replace('<@' + author + '>', '');
-}
-
-function taglist(game, author) {
-    let players;
-    switch (game) {
-        case 'wow':
-            players = '<@491660100990140436> <@518823389008232460> <@318072258465628161>';
-            break;
-        case 'kf2':
-            players = '<@279565175588388865> <@295485347138240513> <@602525564217327637> <@376439826549047296> <@318072258465628161> <@518823389008232460>';
-            break;
-        case 'lol':
-            players = '<@295485347138240513> <@310397550173880320> <@239028474696826891> <@279565175588388865>';
-            break;
-    }
-    return playerChange(players, author);
-
-}
-
-client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvcZA.DbM0EvrKsUQpe43XnltT6ryVkHc');
 
 /*
 <@491660100990140436> flote
