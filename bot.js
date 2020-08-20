@@ -36,7 +36,7 @@ client.on('message', msg => {
     let channel = msg.channel;
     let attachment = (msg.attachments).array();
     if (msg.attachments.size > 0) {
-        client.channels.get("745317754256490567").send(`${msg.author.username} üzenete: "${msg.cleanContent}". From: ${channel} Kép: ${attachment[0].proxyURL} id: ${attachment[0].id}`);
+        client.channels.get("745317754256490567").send(`${attachment[0].proxyURL} id: ${attachment[0].id}`);
     }
 
     msg.channel.fetchMessages({limit: 3}).then(messages => {
@@ -205,36 +205,52 @@ client.on('message', msg => {
 
 });
 
-/*const DIL = require("discord.js-image-logger");
-
-DIL(client, {
-    method: "embed",
-    serverWide: true,
-    logChannel: "740517221364924446",
-    logging: true,
-    acceptRole: true
-})*/
-
 client.on('messageDelete', message => {
     let channel = message.channel;
+    let messagePic = '';
+    let messageContent = '*none*';
+    if (message.cleanContent.length > 0) {
+        messageContent = message.cleanContent;
+    }
+    const textEmbed = new Discord.RichEmbed()
+        .setColor('#9b18bf')
+        .setTitle('Deleted Message')
+        .setThumbnail(`${message.author.avatarURL}`)
+        .setAuthor(`${message.author.username}`)
+        .setDescription(`${channel}`)
+        .addField('Message: ', messageContent, true)
+        .setTimestamp();
+
     let attachment = (message.attachments).array();
-    if (message.attachments.size > 0) {
-        let message = '';
+    if (message.author.bot || message.channel.id === '704983142452428933' || message.channel.id === '740536932303634473') {
+
+    }
+    else if (message.attachments.size > 0) {
         client.channels.get("745317754256490567").fetchMessages({limit: 5}).then(messages => {
             let lastMessages = messages.array();
 
             for (let i = 0; i < lastMessages.length; i++) {
                 if(lastMessages[i].content.includes(attachment[0].id)) {
-                    message = lastMessages[i].content;
-                    client.channels.get("740536932303634473").send(message);
+                    messagePic = lastMessages[i].content.split(' ');
+                    const pictureEmbed = new Discord.RichEmbed()
+                        .setColor('#9b18bf')
+                        .setTitle('Deleted Picture')
+                        .setThumbnail(`${message.author.avatarURL}`)
+                        .setAuthor(`${message.author.username}`)
+                        .setImage(messagePic[0])
+                        .setDescription(`${channel}`)
+                        .addField('Message: ', messageContent, true)
+                        .setTimestamp();
+                    client.channels.get("740536932303634473").send(pictureEmbed);
                 }
             }
         }).catch(console.error);
     } else {
-        client.channels.get("740536932303634473").send(`${message.author.username} üzenete: "${message.cleanContent}" From: ${channel}.`);
+        client.channels.get("740536932303634473").send(textEmbed);
     }
 });
 
+//740536932303634473
 client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvcZA.DbM0EvrKsUQpe43XnltT6ryVkHc');
 
 function filter(reaction, user) {
