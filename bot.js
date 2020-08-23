@@ -225,6 +225,7 @@ client.on('messageDelete', message => {
     if (message.author.bot || message.channel.id === '704983142452428933' || message.channel.id === '740536932303634473') {
 
     }
+    
     else if (message.attachments.size > 0) {
         client.channels.get("745317754256490567").fetchMessages({limit: 5}).then(messages => {
             let lastMessages = messages.array();

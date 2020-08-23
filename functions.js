@@ -46,9 +46,12 @@ module.exports = {
 },
 
  checkIfSame: (array) => {
-    if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
-        return true;
-    }
+        if (array[0].author.bot || array[1].author.bot || array[2].author.bot) {
+            return false;
+        }
+        if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
+            return true;
+        }
 },
 
  swearListCheck: (message) => {
