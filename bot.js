@@ -21,19 +21,15 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-let user = '';
 let fs = require('fs');
 let files;
 let chosenFile;
-let attachment;
 let swearStack = 0;
 let voters = [];
-let tag = '';
 
 client.on('message', msg => {
     if(msg.author.bot) return;
 
-    let channel = msg.channel;
     let attachment = (msg.attachments).array();
     if (msg.attachments.size > 0) {
         client.channels.get("745317754256490567").send(`${attachment[0].proxyURL} id: ${attachment[0].id}`);
@@ -76,10 +72,20 @@ client.on('message', msg => {
             case '!help':
                 msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n!meme: Küldök egy meme-t a channelre \n!porn + "tematika": Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n' +
                     '!votemute "tag": (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n' +
-                    'Játékowosban használható parancsom: !game majd megkérdem melyik játékkal szeretnél játszani, ha rendelkezem vele akkor meg tagelem azokat akik azzal a játékkal szoktak játszani. \n' +
-                    'Egyébként meg tájékoztatlak, hogy az adott játék nem szerepel nálam. \nElérhető game-k: "lol", "wow", "kf2" (bővülni fog). \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
+                    '!kiVagy + "tag" megmondja hogy te ki is vagy valójában. \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
                     'Furrykról szóló tartalomhoz szívesen becsatlakozok én is beszélgetni. \nIlletve "megcsap" vagy "paskol" szövegrészekre is reagálok ha a mondandódban van. \nVégül ha ' +
                     'valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
+                break;
+            case 'kivagy':
+                files = fs.readdirSync('./szerb');
+                let member = msg.mentions.members.first();
+                if (member.id === '518823389008232460' || '602525564217327637') {
+                    attachment = new Discord.Attachment('./szerb/szerb_1.jpg');
+                } else {
+                    attachment = new Discord.Attachment('./szerb/szerb_0.jpg');
+                }
+
+                msg.channel.send(attachment);
                 break;
             /*case 'game':
                 if (msg.channel.id === '713415837356392508') {
@@ -198,7 +204,7 @@ client.on('message', msg => {
     }
 
     if (msg.content.toLocaleLowerCase() === 'ok') {
-        let flegmahResponse = ['Legalább nem flegmulj, másokat megsértesz :(', 'ok ok ok', 'flegma f***', 'Jó, inkább ne is írj semmit', 'Ne, ne írj rendeset', '"k" legalább csináld rendesen'];
+        let flegmahResponse = ['Legalább ne flegmulj, másokat megsértesz :(', 'ok ok ok', 'flegma f***', 'Jó, inkább ne is írj semmit', 'Ne, ne írj rendeset', '"k" legalább csináld rendesen'];
         let randomNumber = Math.floor(Math.random() * flegmahResponse.length);
         msg.channel.send(flegmahResponse[randomNumber]);
     }
@@ -225,7 +231,7 @@ client.on('messageDelete', message => {
     if (message.author.bot || message.channel.id === '704983142452428933' || message.channel.id === '740536932303634473') {
 
     }
-    
+
     else if (message.attachments.size > 0) {
         client.channels.get("745317754256490567").fetchMessages({limit: 5}).then(messages => {
             let lastMessages = messages.array();
