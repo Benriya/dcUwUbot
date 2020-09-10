@@ -79,7 +79,7 @@ client.on('message', msg => {
             case 'kivagy':
                 files = fs.readdirSync('./szerb');
                 let member = msg.mentions.members.first();
-                if (member.id === '518823389008232460' || '602525564217327637') {
+                if (member.id === '518823389008232460' || member.id === '602525564217327637') {
                     attachment = new Discord.Attachment('./szerb/szerb_1.jpg');
                 } else {
                     attachment = new Discord.Attachment('./szerb/szerb_0.jpg');
