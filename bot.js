@@ -81,7 +81,10 @@ client.on('message', msg => {
                 let member = msg.mentions.members.first();
                 if (member.id === '518823389008232460' || member.id === '602525564217327637') {
                     attachment = new Discord.Attachment('./szerb/szerb_1.jpg');
-                } else {
+                }
+                else if (member.id === '376439826549047296'){
+                    attachment = new Discord.Attachment('./szerb/TAP.png');
+                }else {
                     attachment = new Discord.Attachment('./szerb/szerb_0.jpg');
                 }
 
