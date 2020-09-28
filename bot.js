@@ -62,6 +62,12 @@ client.on('message', msg => {
                 attachment = new Discord.Attachment('./net/' + chosenFile);
                 msg.channel.send(attachment);
                 break;
+            case 'kezelhetetlen':
+                files = fs.readdirSync('./slap');
+                chosenFile = files[Math.floor(Math.random() * files.length)];
+                attachment = new Discord.Attachment('./slap/' + chosenFile);
+                msg.channel.send(attachment);
+                break;
             case 'porn':
                 const Searcher = new PornSearch(sentence);
                 Searcher.gifs()
@@ -175,7 +181,13 @@ client.on('message', msg => {
             case 'burn':
                 client.channels.get(channelId).send('<:burn:744540895478808626>');
                 break;
+            case 'nameselj':
+                client.channels.get(channelId).send('<:marotihaha:759804122139983873>');
         }
+    }
+
+    if (msg.content.toLowerCase().includes('maróti') || msg.content.toLowerCase().includes('dimat') || msg.content.toLowerCase().includes('maroti')) {
+        msg.react('759804122139983873');
     }
 
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
