@@ -35,9 +35,10 @@ module.exports = {
     let streamer = message.guild.roles.find("name", "Kokeró");
     let vili = message.guild.roles.find("name", "Csiling-Csiling");
     let dino = message.guild.roles.find("name", "Hurma");
-     let tap = message.guild.roles.find("name", "AutistaParaszt");
+    let tap = message.guild.roles.find("name", "AutistaParaszt");
+    let deci = message.guild.roles.find("name", "DeciVodka");
 
-    let roleArray = [freeman, osmagyar, kanker, kanker2, streamer, vili, dino, tap];
+    let roleArray = [freeman, osmagyar, kanker, kanker2, streamer, vili, dino, tap, deci];
 
     for (let i = 0; i < roleArray.length ; i++) {
         if (member.roles.has(roleArray[i].id)) {
