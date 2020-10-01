@@ -13,6 +13,7 @@ server.listen(PORT, () => {
 });
 
 const PornSearch = require('pornsearch');
+const gifSearch = require('gif-search');
 
 const func = require('./functions');
 const Discord = require('discord.js');
@@ -62,7 +63,16 @@ client.on('message', msg => {
                 attachment = new Discord.Attachment('./net/' + chosenFile);
                 msg.channel.send(attachment);
                 break;
+            case 'rule':
+                attachment = new Discord.Attachment('./rule.png');
+                msg.channel.send(attachment);
+                break;
             case 'kezelhetetlen':
+                /*gifSearch.random('slap').then(
+                    gifUrl => msg.channel.send(gifUrl)
+                ).catch( error => {
+                    console.log(error);
+                });*/
                 files = fs.readdirSync('./slap');
                 chosenFile = files[Math.floor(Math.random() * files.length)];
                 attachment = new Discord.Attachment('./slap/' + chosenFile);
@@ -78,7 +88,9 @@ client.on('message', msg => {
             case '!help':
                 msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n!meme: Küldök egy meme-t a channelre \n!porn + "tematika": Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n' +
                     '!votemute "tag": (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n' +
-                    '!kiVagy + "tag" megmondja hogy te ki is vagy valójában. \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
+                    '!kivagy + "tag" megmondja hogy te ki is vagy valójában. \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
+                    '!kezelhetetlen: ha valaki rosszul viselkedik, helyre teszem egy pofon giffel.\n' +
+                    '"no bully" a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére. \n' +
                     'Furrykról szóló tartalomhoz szívesen becsatlakozok én is beszélgetni. \nIlletve "megcsap" vagy "paskol" szövegrészekre is reagálok ha a mondandódban van. \nVégül ha ' +
                     'valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
                 break;
@@ -185,6 +197,9 @@ client.on('message', msg => {
                 client.channels.get(channelId).send('<:marotihaha:759804122139983873>');
         }
     }
+    if (msg.content.toLowerCase().includes('no bully')) {
+        msg.channel.send('https://i.pinimg.com/originals/78/e3/6c/78e36c8c096aeb13b46a3b41cd934c9f.jpg');
+    }
 
     if (msg.content.toLowerCase().includes('maróti') || msg.content.toLowerCase().includes('dimat') || msg.content.toLowerCase().includes('maroti')) {
         msg.react('759804122139983873');
@@ -288,6 +303,7 @@ function filter(reaction, user) {
 }
 
 /*
+<@251831600512368641> kuba
 <@491660100990140436> flote
 <@518823389008232460> dante
 <@318072258465628161> senki
