@@ -31,12 +31,13 @@ module.exports = {
     let freeman = message.guild.roles.find("name", "Freeman");
     let osmagyar = message.guild.roles.find("name", "Ősmagyar");
     let kanker = message.guild.roles.find("name", "Kanker");
-    let kanker2 = message.guild.roles.find("name", "kanker csak hupikék");
-    let streamer = message.guild.roles.find("name", "Streamer");
+    let kanker2 = message.guild.roles.find("name", "Cigány");
+    let streamer = message.guild.roles.find("name", "Kokeró");
     let vili = message.guild.roles.find("name", "Csiling-Csiling");
-    let dino = message.guild.roles.find("name", "Dinoszaurusz");
+    let dino = message.guild.roles.find("name", "Hurma");
+     let tap = message.guild.roles.find("name", "AutistaParaszt");
 
-    let roleArray = [freeman, osmagyar, kanker, kanker2, streamer, vili, dino];
+    let roleArray = [freeman, osmagyar, kanker, kanker2, streamer, vili, dino, tap];
 
     for (let i = 0; i < roleArray.length ; i++) {
         if (member.roles.has(roleArray[i].id)) {

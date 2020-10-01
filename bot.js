@@ -197,6 +197,12 @@ client.on('message', msg => {
                 client.channels.get(channelId).send('<:marotihaha:759804122139983873>');
         }
     }
+    if (msg.content.toLowerCase() === 'baszadék') {
+        msg.channel.send('szopadék');
+    } else if (msg.content.toLowerCase() === 'szopadék') {
+        msg.channel.send('baszadék');
+    }
+
     if (msg.content.toLowerCase().includes('no bully')) {
         msg.channel.send('https://i.pinimg.com/originals/78/e3/6c/78e36c8c096aeb13b46a3b41cd934c9f.jpg');
     }
