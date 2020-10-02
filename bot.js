@@ -197,6 +197,7 @@ client.on('message', msg => {
                 client.channels.get(channelId).send('<:marotihaha:759804122139983873>');
         }
     }
+
     if (msg.content.toLowerCase() === 'baszadék') {
         msg.channel.send('szopadék');
     } else if (msg.content.toLowerCase() === 'szopadék') {
@@ -290,6 +291,22 @@ client.on('messageDelete', message => {
         }).catch(console.error);
     } else {
         client.channels.get("740536932303634473").send(textEmbed);
+    }
+});
+
+//const clientReact = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+client.on('messageReactionAdd', async (reaction, user) => {
+    if (reaction.message.partial) {
+        try {
+            await reaction.message.fetch();
+        } catch (error) {
+            console.error('Something went wrong when fetching the message: ', error);
+        }
+    }
+    if (reaction.emoji.name === '📌' ){
+        await reaction.message.pin();
+    } else{
+        console.log(`${reaction.emoji.name}`);
     }
 });
 
