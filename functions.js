@@ -35,7 +35,7 @@ module.exports = {
     let streamer = message.guild.roles.find("name", "Kokeró");
     let vili = message.guild.roles.find("name", "Csiling-Csiling");
     let dino = message.guild.roles.find("name", "Hurma");
-    let tap = message.guild.roles.find("name", "AutistaParaszt");
+    let tap = message.guild.roles.find("name", "Autista Paraszt");
     let deci = message.guild.roles.find("name", "DeciVodka");
 
     let roleArray = [freeman, osmagyar, kanker, kanker2, streamer, vili, dino, tap, deci];
@@ -84,18 +84,4 @@ module.exports = {
         }
         return playerChange(players, author);
     },
-
-    /*messageIdCheck: async (id, client) => {
-        let message = '';
-        await client.channels.get("745317754256490567").fetchMessages({limit: 5}).then(messages => {
-            let lastMessages = messages.array();
-
-            for (let i = 0; i < lastMessages.length; i++) {
-                if(lastMessages[i].content.includes(id)) {
-                     message = lastMessages[i].content;
-                     return message;
-                }
-            }
-        }).catch(console.error);
-    }*/
 }

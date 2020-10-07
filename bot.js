@@ -56,13 +56,14 @@ client.on('message', msg => {
         let cmd = args[0];
 
         let sentence = msg.content.slice(5);
+        let nickname = args[1];
         switch (cmd.toLocaleLowerCase()) {
-            case 'meme':
+            /*case 'meme':
                 files = fs.readdirSync('./net');
                 chosenFile = files[Math.floor(Math.random() * files.length)];
                 attachment = new Discord.Attachment('./net/' + chosenFile);
                 msg.channel.send(attachment);
-                break;
+                break;*/
             case 'rule':
                 attachment = new Discord.Attachment('./rule.png');
                 msg.channel.send(attachment);
@@ -86,8 +87,9 @@ client.on('message', msg => {
                     });
                 break;
             case '!help':
-                msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n!meme: Küldök egy meme-t a channelre \n!porn + "tematika": Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n' +
+                msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n!porn + "tematika": Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n' +
                     '!votemute "tag": (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n' +
+                    '!votenick "nicknév" "tag: nicknév helyére beírod a kívánt nevet, és tageled akinek a nevét meg akarod változtatni, ehhez 6 szavazat kell, hogy sikeres legyen. \n' +
                     '!kivagy + "tag" megmondja hogy te ki is vagy valójában. \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
                     '!kezelhetetlen: ha valaki rosszul viselkedik, helyre teszem egy pofon giffel.\n' +
                     '"no bully" a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére. \n' +
@@ -131,7 +133,7 @@ client.on('message', msg => {
             case 'votemute':
                 msg.react('👍');
 
-                msg.awaitReactions(filter, { max: 1, time: 10000, errors: ['time']})
+                msg.awaitReactions(voteMuteFilter, { max: 1, time: 10000, errors: ['time']})
                     .then( () => {
                         let mute_role = msg.guild.roles.find("name", "Mute");
                         let member = msg.mentions.members.first();
@@ -145,7 +147,24 @@ client.on('message', msg => {
                             console.log(r);
                         });
                 break;
+            case 'votenick':
+                let uwuMember = msg.mentions.members.first();
+                if (uwuMember.roles.has('671107459858956299')) {
+                    msg.channel.send('Botot nem nevezhetsz át');
+                    break;
+                }
+                msg.react('👍');
 
+                msg.awaitReactions(voteNickFilter, { max: 1, time: 30000, errors: ['time']})
+                    .then( () => {
+
+                        uwuMember.setNickname(nickname, 'Sikeres Szavazás');
+                        msg.channel.send('Sikeres átnevezés: ' + uwuMember);
+                    }).catch(r => {
+                    msg.channel.send('Elutasítva');
+                    console.log(r);
+                });
+                break;
         }
     }
 
@@ -199,9 +218,9 @@ client.on('message', msg => {
     }
 
     if (msg.content.toLowerCase() === 'baszadék') {
-        msg.channel.send('szopadék');
+        msg.channel.send('Szopadék');
     } else if (msg.content.toLowerCase() === 'szopadék') {
-        msg.channel.send('baszadék');
+        msg.channel.send('Baszadék');
     }
 
     if (msg.content.toLowerCase().includes('no bully')) {
@@ -294,7 +313,6 @@ client.on('messageDelete', message => {
     }
 });
 
-//const clientReact = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.on('messageReactionAdd', async (reaction, user) => {
     if (reaction.message.partial) {
         try {
@@ -305,6 +323,14 @@ client.on('messageReactionAdd', async (reaction, user) => {
     }
     if (reaction.emoji.name === '📌' ){
         await reaction.message.pin();
+        const textEmbed = new Discord.RichEmbed()
+            .setColor('#ff0015')
+            .setTitle('Pinned Message')
+            .setThumbnail(`${user.avatarURL}`)
+            .setAuthor(`${user.username}`)
+            .addField('Message: ', reaction.message.url, true)
+            .setTimestamp();
+        client.channels.get("740536932303634473").send(textEmbed);
     } else{
         console.log(`${reaction.emoji.name}`);
     }
@@ -313,13 +339,25 @@ client.on('messageReactionAdd', async (reaction, user) => {
 //740536932303634473
 client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvcZA.DbM0EvrKsUQpe43XnltT6ryVkHc');
 
-function filter(reaction, user) {
+function voteMuteFilter(reaction, user) {
     if (['👍'].includes(reaction.emoji.name)) {
         if (!voters.includes(user.id)) {
             voters.push(user.id);
         }
     }
     if (voters.length === 4) {
+        voters = [];
+        return true;
+    }
+}
+
+function voteNickFilter(reaction, user) {
+    if (['👍'].includes(reaction.emoji.name)) {
+        if (!voters.includes(user.id)) {
+            voters.push(user.id);
+        }
+    }
+    if (voters.length === 7) {
         voters = [];
         return true;
     }
