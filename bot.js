@@ -217,6 +217,7 @@ client.on('message', msg => {
         }
     }
 
+
     if (msg.content.toLowerCase() === 'baszadék') {
         msg.channel.send('Szopadék');
     } else if (msg.content.toLowerCase() === 'szopadék') {
