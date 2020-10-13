@@ -357,7 +357,7 @@ function voteNickFilter(reaction, user) {
             voters.push(user.id);
         }
     }
-    if (voters.length === 7) {
+    if (voters.length === 5) {
         voters = [];
         return true;
     }
