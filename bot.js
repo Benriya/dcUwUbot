@@ -14,7 +14,7 @@ server.listen(PORT, () => {
 
 const PornSearch = require('pornsearch');
 const gifSearch = require('gif-search');
-
+const songs = require('./songs');
 const func = require('./functions');
 const Discord = require('discord.js');
 const client = new Discord.Client();
@@ -58,22 +58,19 @@ client.on('message', msg => {
         let sentence = msg.content.slice(5);
         let nickname = args[1];
         switch (cmd.toLocaleLowerCase()) {
-            /*case 'meme':
-                files = fs.readdirSync('./net');
-                chosenFile = files[Math.floor(Math.random() * files.length)];
-                attachment = new Discord.Attachment('./net/' + chosenFile);
-                msg.channel.send(attachment);
-                break;*/
             case 'rule':
                 attachment = new Discord.Attachment('./rule.png');
                 msg.channel.send(attachment);
                 break;
+            case 'praise1':
+                msg.channel.send(nickname + '<:head:767421798786138154>');
+                msg.channel.send('<:hand:767421873360601168>' + '<:face:767421929366749184>');
+                break;
+            case 'praise2':
+                msg.channel.send(nickname + '<:popehead:767494031193407509>');
+                msg.channel.send('<:popehand:767494212794843186>' + '<:popeface:767494094616133683>');
+                break;
             case 'kezelhetetlen':
-                /*gifSearch.random('slap').then(
-                    gifUrl => msg.channel.send(gifUrl)
-                ).catch( error => {
-                    console.log(error);
-                });*/
                 files = fs.readdirSync('./slap');
                 chosenFile = files[Math.floor(Math.random() * files.length)];
                 attachment = new Discord.Attachment('./slap/' + chosenFile);
@@ -165,6 +162,18 @@ client.on('message', msg => {
                     console.log(r);
                 });
                 break;
+        }
+    }
+
+    if (songs.song.toLowerCase().includes(msg.content.toLowerCase())) {
+        const startSong = msg.content.toLowerCase();
+        const lowerCase = songs.song.toLowerCase();
+        const splitSong = lowerCase.split('\n');
+        for (let i = 0; i < splitSong.length; i++){
+            if (splitSong[i] === startSong){
+                msg.channel.send(splitSong[i+1]);
+                break;
+            }
         }
     }
 
@@ -315,9 +324,9 @@ client.on('messageDelete', message => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-    if (reaction.message.partial) {
+    if (reaction.partial) {
         try {
-            await reaction.message.fetch();
+            await reaction.fetch();
         } catch (error) {
             console.error('Something went wrong when fetching the message: ', error);
         }
@@ -375,4 +384,5 @@ function voteNickFilter(reaction, user) {
 <@279565175588388865> karcsi
 <@310397550173880320> vazul
 <@239028474696826891> villanyos
+<@623899095224025088> medimadi
  */
