@@ -79,8 +79,28 @@ client.on('message', msg => {
                 Searcher.gifs()
                     .then(gifs => {
                         msg.channel.send(gifs[Math.floor(Math.random() * gifs.length)].webm)
-                    });
+                    }).catch(err =>{
+                        console.log(err);
+                });
                 break;
+            /*case 'test':
+                let pornSauce = [];
+                const pornSearch = new PornSearch(sentence);
+                pornSearch.gifs()
+                    .then(gifs => {
+                        msg.channel.send(gifs[Math.floor(Math.random() * gifs.length)].webm);
+                    }).catch(err =>{
+                    console.log(err);
+                });
+                pornSearch.videos()
+                    .then(videos => {
+                        pornSauce = videos.map(videos => videos.url);
+                        console.log(pornSauce);
+                        msg.channel.send(pornSauce[Math.floor(Math.random() * pornSauce.length)]);
+                    }).catch(err =>{
+                    console.log(err);
+                });
+                break;*/
             case '!help':
                 msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n' +
                     '!porn + "tematika": Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n' +
@@ -97,7 +117,7 @@ client.on('message', msg => {
             case 'kivagy':
                 files = fs.readdirSync('./szerb');
                 let member = msg.mentions.members.first();
-                if (member.id === '518823389008232460' || member.id === '602525564217327637') {
+                if (member.id === '518823389008232460' || member.id === '602525564217327637' || member.id === '623899095224025088') {
                     attachment = new Discord.Attachment('./szerb/szerb_1.jpg');
                 }
                 else if (member.id === '376439826549047296'){
@@ -227,6 +247,10 @@ client.on('message', msg => {
         }
     }
 
+    if (msg.author.id === '376439826549047296' && msg.content.toLowerCase() === 'tap') {
+        attachment = new Discord.Attachment('./szerb/ninjatap.png');
+        msg.channel.send(attachment);
+    }
 
     if (msg.content.toLowerCase() === 'baszadék') {
         msg.channel.send('Szopadék');
