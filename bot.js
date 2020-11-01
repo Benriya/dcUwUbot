@@ -31,6 +31,17 @@ let voters = [];
 client.on('message', msg => {
     if(msg.author.bot) return;
 
+    const istenEmbed = new Discord.RichEmbed()
+        .setColor('#fff200')
+        .setTitle('Az Isten')
+        .setThumbnail(`${msg.author.avatarURL}`)
+        .setAuthor(`${msg.author.username}`)
+        .addField('Message: ',
+            '┌──── •✧Wall Of Isten✧• ────┐\n' +
+            `           (っ◔◡◔)っ-${msg.author.username}\n` +
+            '└───── •✧✧✧✧✧✧✧• ─────┘', true)
+        .setTimestamp();
+
     let attachment = (msg.attachments).array();
     if (msg.attachments.size > 0) {
         client.channels.get("745317754256490567").send(`${attachment[0].proxyURL} id: ${attachment[0].id}`);
@@ -80,7 +91,7 @@ client.on('message', msg => {
                     .then(gifs => {
                         msg.channel.send(gifs[Math.floor(Math.random() * gifs.length)].webm)
                     }).catch(err =>{
-                        console.log(err);
+                        console.log('cannot find anything');
                 });
                 break;
             /*case 'test':
@@ -109,6 +120,9 @@ client.on('message', msg => {
                     '!kivagy + "tag" megmondja hogy te ki is vagy valójában. \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
                     '!kezelhetetlen: ha valaki rosszul viselkedik, helyre teszem egy pofon giffel.\n' +
                     '!praise1 vagy !praise2 + "emote" vagy "szöveg": isteni magaslatba emelem azt amit megadtál\n' +
+                    '!csicskawall: kilistázom a csicska tanárokat\n' +
+                    '!aranywall: kilistázom aranyember tanárokat\n' +
+                    '!istenwall: meg mondom ki az isten\n' +
                     'Ha elkezded a bohen rapsody vagy a never gonna give you up egy részletét, akkor folytatom azt, így együtt tudunk dalolászni (fontos, hogy pontos legyen aposztróf szükséges, hogy jó helyen legyen)\n' +
                     '"no bully" a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére. \n' +
                     'Furrykról szóló tartalomhoz szívesen becsatlakozok én is beszélgetni. \nIlletve "megcsap" vagy "paskol" szövegrészekre is reagálok ha a mondandódban van. \nVégül ha ' +
@@ -126,6 +140,47 @@ client.on('message', msg => {
                     attachment = new Discord.Attachment('./szerb/szerb_0.jpg');
                 }
 
+                msg.channel.send(attachment);
+                break;
+            case 'csicskawall':
+                msg.channel.send(
+                    '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
+                    '      **Csendes Tibor**\n' +
+                    '      Csókás Eszter\n' +
+                    '      Gazdag-Tóth Boglárka Dr.\n' +
+                    '      Hirling Dominik\n' +
+                    '      **Kulin Julia**\n' +
+                    '      Márkus András\n' +
+                    '      Pflanzer Tamás\n' +
+                    '      Pluhár András\n' +
+                    '      London András\n' +
+                    '      Vida Ágnes\n' +
+                    '└───── •✧✧✧✧✧✧✧✧✧✧• ─────┘');
+                break;
+            case 'aranywall':
+                msg.channel.send(
+                    '┌──── •✧Wall Of Aranyember✧• ────┐\n' +
+                    '      Balogh András\n' +
+                    '      Cservenák Bence\n' +
+                    '      Győrffy Lajos\n' +
+                    '      Heinc Emília\n' +
+                    '      Kátai Kamilla\n' +
+                    '      Kardos Péter\n' +
+                    '      Kardos Péter Dr.\n' +
+                    '      Fülöp Vanda\n' +
+                    '      Keleti Márton\n' +
+                    '      Kicsi András\n' +
+                    '      Kunos Ádám\n' +
+                    '      Maróti Miklós\n' +
+                    '      Szabó Tamás\n' +
+                    '      Szabolcs Iván\n' +
+                    '└───── •✧✧✧✧✧✧✧✧✧• ─────┘');
+                break;
+            case 'istenwall':
+                msg.channel.send(istenEmbed);
+                break;
+            case 'hess':
+                attachment = new Discord.Attachment('./szerb/hess.gif');
                 msg.channel.send(attachment);
                 break;
             /*case 'game':
@@ -167,10 +222,15 @@ client.on('message', msg => {
                 break;
             case 'votenick':
                 let uwuMember = msg.mentions.members.first();
-                if (uwuMember.roles.has('671107459858956299')) {
-                    msg.channel.send('Botot nem nevezhetsz át');
-                    break;
+                try{
+                    if (uwuMember.roles.has('671107459858956299')) {
+                        msg.channel.send('Botot nem nevezhetsz át');
+                        break;
+                    }
+                } catch (err){
+                    console.log('error');
                 }
+
                 msg.react('👍');
 
                 msg.awaitReactions(voteNickFilter, { max: 1, time: 30000, errors: ['time']})
@@ -185,15 +245,16 @@ client.on('message', msg => {
                 break;
         }
     }
-
-    if (songs.song.toLowerCase().includes(msg.content.toLowerCase())) {
-        const startSong = msg.content.toLowerCase();
-        const lowerCase = songs.song.toLowerCase();
-        const splitSong = lowerCase.split('\n');
-        for (let i = 0; i < splitSong.length; i++){
-            if (splitSong[i] === startSong){
-                msg.channel.send(splitSong[i+1]);
-                break;
+    if(msg.attachments.size === 0) {
+        if (songs.song.toLowerCase().includes(msg.content.toLowerCase())) {
+            const startSong = msg.content.toLowerCase();
+            const lowerCase = songs.song.toLowerCase();
+            const splitSong = lowerCase.split('\n');
+            for (let i = 0; i < splitSong.length; i++) {
+                if (splitSong[i] === startSong) {
+                    msg.channel.send(splitSong[i + 1]);
+                    break;
+                }
             }
         }
     }
@@ -262,8 +323,12 @@ client.on('message', msg => {
         msg.channel.send('https://i.pinimg.com/originals/78/e3/6c/78e36c8c096aeb13b46a3b41cd934c9f.jpg');
     }
 
-    if (msg.content.toLowerCase().includes('maróti') || msg.content.toLowerCase().includes('dimat') || msg.content.toLowerCase().includes('maroti')) {
+    if (msg.content.toLowerCase().includes('maróti') || msg.content.toLowerCase().includes('dimat') || msg.content.toLowerCase().includes('maroti') || msg.content.toLowerCase().includes('aranyember')) {
         msg.react('759804122139983873');
+    }
+
+    if (msg.content.toLowerCase().includes('brc')) {
+        msg.react('767665863649787924');
     }
 
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
@@ -381,6 +446,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
             console.error('Something went wrong when fetching the message: ', error);
         }
     }
+
     if (reaction.emoji.name === '📌' ){
         await reaction.message.pin();
         const textEmbed = new Discord.RichEmbed()
@@ -391,8 +457,6 @@ client.on('messageReactionAdd', async (reaction, user) => {
             .addField('Message: ', reaction.message.url, true)
             .setTimestamp();
         client.channels.get("740536932303634473").send(textEmbed);
-    } else{
-        console.log(`${reaction.emoji.name}`);
     }
 });
 

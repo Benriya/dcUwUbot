@@ -10,7 +10,9 @@
     "discord.js-image-logger": "^1.1.0",
     "gif-search": "^2.1.0",
     "heroku-self-ping": "^2.0.0",
+    "mysql": "^2.18.1",
     "pornsearch": "^2.4.3",
+    "pouchdb": "^7.2.2",
     "winston": "^3.2.1"
   },
   "scripts": {
