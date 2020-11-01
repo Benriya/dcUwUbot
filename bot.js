@@ -91,7 +91,8 @@ client.on('message', msg => {
                     .then(gifs => {
                         msg.channel.send(gifs[Math.floor(Math.random() * gifs.length)].webm)
                     }).catch(err =>{
-                        console.log('cannot find anything');
+                        msg.channel.send('SENKIIIII nem megy a bot, javítsd meg');
+                        console.log('nothing found');
                 });
                 break;
             /*case 'test':
