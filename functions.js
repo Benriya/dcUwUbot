@@ -28,21 +28,27 @@ module.exports = {
 },
 
  checkRole: (message, member) => {
-    let freeman = message.guild.roles.find("name", "Freeman");
-    let osmagyar = message.guild.roles.find("name", "Ősmagyar");
-    let kanker = message.guild.roles.find("name", "Kanker");
-    let kanker2 = message.guild.roles.find("name", "Cigány");
-    let streamer = message.guild.roles.find("name", "Kokeró");
-    let vili = message.guild.roles.find("name", "Csiling-Csiling");
-    let dino = message.guild.roles.find("name", "Hurma");
-    let tap = message.guild.roles.find("name", "Autista Paraszt");
-    let deci = message.guild.roles.find("name", "DeciVodka");
+    let freeman = message.guild.roles.cache.get("699692497986912316");
+    let osmagyar = message.guild.roles.cache.get("704023208072052836");
+    let kanker = message.guild.roles.cache.get("667784518937083985");
+    let kanker2 = message.guild.roles.cache.get("715313396152533082");
+    let kokero = message.guild.roles.cache.get("667785010874417222");
+    let vili = message.guild.roles.cache.get("703947497676079134");
+    let hurma = message.guild.roles.cache.get("737305438705680504");
+    let tap = message.guild.roles.cache.get("760808363712839680");
+    let deci = message.guild.roles.cache.get("742093821566779435");
 
-    let roleArray = [freeman, osmagyar, kanker, kanker2, streamer, vili, dino, tap, deci];
+    let roleArray = [freeman, osmagyar, kanker, kanker2, kokero, vili, hurma, tap, deci];
 
-    for (let i = 0; i < roleArray.length ; i++) {
-        if (member.roles.has(roleArray[i].id)) {
-            return roleArray[i];
+    for (let i = 0; i < message.guild.roles.cache.size ; i++) {
+        console.log(member.roles.cache.array()[i].id);
+
+        for (let j = 0; j < roleArray.length; j++) {
+            console.log(roleArray[j]);
+            if (member.roles.cache.array()[i].id === roleArray[j].id) {
+                console.log(roleArray[j]);
+                return roleArray[j];
+            }
         }
     }
 },

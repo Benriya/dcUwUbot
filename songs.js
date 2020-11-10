@@ -133,5 +133,57 @@ module.exports = {
     "de szóval se\n" +
     "bántjuk egymást\n" +
     "Bármi legyen is\n" +
-    "együtt van a 4 barát\n"
+    "együtt van a 4 barát\n" +
+    "Tudom a kislánynak van egy szép pöttyös labdája amit odaadunk\n" +
+        "neki hogy nehogy legyártsa mert egy ember felelhet\n" +
+        "ő érte Mr Container az akit megkértem\n" +
+        "Ő majd figyel hogy mindenki megkapja szépen a constructorból\n" +
+        "vagy a setterből miért ne? Csak paraméterként\n" +
+        "ő átadja ha az autowired jelzést meglátja Tudjuk\n" +
+        "a microservice az egy adok-kapok és nem kellenek hozzá túl nagy feladatok\n" +
+        "Mindent kis egységekre majd szépen lebont\n" +
+        "A skálázhatóság egy fontos szempont Minden használhatsz\n" +
+        "bátran én is kipróbáltam az IntelliJ-t STS-t Ecplipset látva\n" +
+        "Majd eldöntöd mi jó a kedvednek csak ne kezdj ragaszkodni\n" +
+        "egyetlenhez Hogy ha a lelked egy terminal-t\n" +
+        "vissza rí akkor tudd hogy ott van a Spring Boot CLI\n" +
+        "amivel generálhatsz mindent mi kell neked  vagy a\n" +
+        "startspringio -ról letöltheted\n" +
+        "oo spring boot\n" +
+        "hiányzol de piszkosul\n" +
+        "Minden apró kis részleteddel\n" +
+        "óó spring boot\n" +
+        "Egyszer mindenki megtanul\n" +
+        "a beépített tomcateddel\n" +
+        "Tudod ott van a Java a Kotlin a Groovy de nem kell egyszerre mindhármat\n" +
+        "tanulni A fontosabb hogy csomagolod be az így dukál\n" +
+        "a nagy végtermék legyen egy szép Fat jar\n" +
+        "Az Ant most már régi a Gradle meg új a Maven-t ajánlom először hogy tanulj\n" +
+        "Ezért egy jó kis MVN clean install\n" +
+        "Amíg összepakolja talán bealszol\n" +
+        "Érkezik az info mint egy szép roller\n" +
+        "Elkaphatja sima vagy a RestController\n" +
+        "az egyik egy nézetet ad neki a másikat össze kell állítani\n" +
+        "A DevTools-al nem kell hogy újraindíts a Controller-ből\n" +
+        "a Service-be gyorsíts Onnan Repo-ból kérhetsz ki bármit majd\n" +
+        "de ha nincs Entityd az lesz nagy baj\n" +
+        "oo spring boot hiányzol de piszkosul\n" +
+        "minden apró kis részleteddel\n" +
+        "ooo spring boot\n" +
+        "egyszer mindenki megtanul\n" +
+        "értékes vagy\n" +
+        "a beépített tomcat-eddel\n" +
+        "Most csukd be a szemed és jöjj velem itt a JDBC vagy ORM\n" +
+        "de vár téged a JPA a szabászat ami egy interface\n" +
+        "vagyis egy nagy szabályzat A Hibernate jól tudja  mit vár\n" +
+        "el tőle az Entity reláció tervez előre\n" +
+        "A kapcsolat innenső része az Én\n" +
+        "a To loldalon van a másik szomszéd\n" +
+        "az I18n-t még elmondom de ha a hosszú formájában mondom elrontom\n" +
+        "A# jelzi énnekem hogy\n" +
+        "a messagesből kapom ha átveszem\n" +
+        "A locale alapján eldönthetem hogy es No Please\n" +
+        "Nem kérem vagy Nein bitte\n" +
+        "Az Error Page fel lesz véve rendesen csak\n" +
+        "ThymeLeaf-et használj a front end-eden\n"
 }

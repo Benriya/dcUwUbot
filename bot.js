@@ -17,7 +17,7 @@ const gifSearch = require('gif-search');
 const songs = require('./songs');
 const func = require('./functions');
 const Discord = require('discord.js');
-const client = new Discord.Client();
+const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
@@ -31,10 +31,10 @@ let voters = [];
 client.on('message', msg => {
     if(msg.author.bot) return;
 
-    const istenEmbed = new Discord.RichEmbed()
+    const istenEmbed = new Discord.MessageEmbed()
         .setColor('#fff200')
         .setTitle('Az Isten')
-        .setThumbnail(`${msg.author.avatarURL}`)
+        .setThumbnail(`${msg.author.avatarURL()}`)
         .setAuthor(`${msg.author.username}`)
         .addField('Message: ',
             '┌──── •✧Wall Of Isten✧• ────┐\n' +
@@ -44,16 +44,16 @@ client.on('message', msg => {
 
     let attachment = (msg.attachments).array();
     if (msg.attachments.size > 0) {
-        client.channels.get("745317754256490567").send(`${attachment[0].proxyURL} id: ${attachment[0].id}`);
+        client.channels.cache.get("745317754256490567").send(`${attachment[0].proxyURL} id: ${attachment[0].id}`);
     }
 
-    msg.channel.fetchMessages({limit: 3}).then(messages => {
+    msg.channel.messages.fetch({limit: 3}).then(messages => {
         let lastMessage = messages.first();
         let lastMessages = messages.array();
 
         if (!lastMessage.author.bot) {
             if (func.checkIfSame(lastMessages)){
-                msg.channel.send(lastMessage.content);
+                client.channels.cache.get(msg.channel.id).send(lastMessage.content);
             }
         }
     }).catch(console.error);
@@ -70,28 +70,28 @@ client.on('message', msg => {
         let nickname = args[1];
         switch (cmd.toLocaleLowerCase()) {
             case 'rule':
-                attachment = new Discord.Attachment('./rule.png');
-                msg.channel.send(attachment);
+                attachment = new Discord.MessageAttachment('./rule.png');
+                client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
             case 'praise1':
-                msg.channel.send(nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
+                client.channels.cache.get(msg.channel.id).send(nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
                 break;
             case 'praise2':
-                msg.channel.send(nickname + '<:popehead:767494031193407509>\n' + '<:popehand:767494212794843186>' + '<:popeface:767494094616133683>');
+                client.channels.cache.get(msg.channel.id).send(nickname + '<:popehead:767494031193407509>\n' + '<:popehand:767494212794843186>' + '<:popeface:767494094616133683>');
                 break;
             case 'kezelhetetlen':
                 files = fs.readdirSync('./slap');
                 chosenFile = files[Math.floor(Math.random() * files.length)];
-                attachment = new Discord.Attachment('./slap/' + chosenFile);
-                msg.channel.send(attachment);
+                attachment = new Discord.MessageAttachment('./slap/' + chosenFile);
+                client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
             case 'porn':
                 const Searcher = new PornSearch(sentence);
                 Searcher.gifs()
                     .then(gifs => {
-                        msg.channel.send(gifs[Math.floor(Math.random() * gifs.length)].webm)
+                        client.channels.cache.get(msg.channel.id).send(gifs[Math.floor(Math.random() * gifs.length)].webm)
                     }).catch(err =>{
-                        msg.channel.send('SENKIIIII nem megy a bot, javítsd meg');
+                    client.channels.cache.get(msg.channel.id).send('Nincs találat');
                         console.log('nothing found');
                 });
                 break;
@@ -130,21 +130,21 @@ client.on('message', msg => {
                     'valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
                 break;
             case 'kivagy':
-                files = fs.readdirSync('./szerb');
-                let member = msg.mentions.members.first();
+                let member = msg.mentions.users.first();
+
                 if (member.id === '518823389008232460' || member.id === '602525564217327637' || member.id === '623899095224025088') {
-                    attachment = new Discord.Attachment('./szerb/szerb_1.jpg');
+                    attachment = new Discord.MessageAttachment('./szerb/szerb_1.jpg');
                 }
                 else if (member.id === '376439826549047296'){
-                    attachment = new Discord.Attachment('./szerb/TAP.png');
+                    attachment = new Discord.MessageAttachment('./szerb/TAP.png');
                 }else {
-                    attachment = new Discord.Attachment('./szerb/szerb_0.jpg');
+                    attachment = new Discord.MessageAttachment('./szerb/szerb_0.jpg');
                 }
 
-                msg.channel.send(attachment);
+                client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
             case 'csicskawall':
-                msg.channel.send(
+                client.channels.cache.get(msg.channel.id).send(
                     '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
                     '      **Csendes Tibor**\n' +
                     '      Csókás Eszter\n' +
@@ -159,7 +159,7 @@ client.on('message', msg => {
                     '└───── •✧✧✧✧✧✧✧✧✧✧• ─────┘');
                 break;
             case 'aranywall':
-                msg.channel.send(
+                client.channels.cache.get(msg.channel.id).send(
                     '┌──── •✧Wall Of Aranyember✧• ────┐\n' +
                     '      Balogh András\n' +
                     '      Cservenák Bence\n' +
@@ -178,54 +178,33 @@ client.on('message', msg => {
                     '└───── •✧✧✧✧✧✧✧✧✧• ─────┘');
                 break;
             case 'istenwall':
-                msg.channel.send(istenEmbed);
+                client.channels.cache.get(msg.channel.id).send(istenEmbed);
                 break;
             case 'hess':
-                attachment = new Discord.Attachment('./szerb/hess.gif');
-                msg.channel.send(attachment);
+                attachment = new Discord.MessageAttachment('./szerb/hess.gif');
+                client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
-            /*case 'game':
-                if (msg.channel.id === '713415837356392508') {
-                    msg.channel.send('Milyen game-t szeretnél?');
-                    const collector = new Discord.MessageCollector(msg.channel, m => m.author.id === msg.author.id);
-                    collector.on('collect', message => {
-                        if (message.content.toLowerCase() === "wow") {
-                            message.channel.send('Gyertek ' + func.tagList('wow', msg.author.id) + ' induljon az ungibungi');
-                        } else if (message.content.toLowerCase() === "kf2") {
-                            message.channel.send('Na ' + func.tagList('kf2', msg.author.id) + ' zombikat meg ki a faszom fog ölni?');
-                        } else if (message.content.toLowerCase() === "lol") {
-                            message.channel.send('Liga?? ' + func.tagList('lol', msg.author.id) + ' tesok gyertek apunak kéne win');
-                        } else {
-                            message.channel.send('Hát ezzel ti nem játszotok');
-                        }
-                        collector.stop();
-                    });
-                } else {
-                    msg.channel.send('Ez nem az a szoba haver');
-                }
-                break;*/
             case 'votemute':
                 msg.react('👍');
 
                 msg.awaitReactions(voteMuteFilter, { max: 1, time: 10000, errors: ['time']})
-                    .then( () => {
-                        let mute_role = msg.guild.roles.find("name", "Mute");
+                    .then(async () => {
+                        let mute_role = msg.guild.roles.cache.get("686288799109480523");
                         let member = msg.mentions.members.first();
-                        let hasRole = func.checkRole(msg, member);
-                        member.addRole(mute_role); // <- this assign the role
-                        member.removeRole(hasRole);
-                        msg.channel.send('Muteolva');
-                        setTimeout(() => {member.removeRole(mute_role); member.addRole(hasRole);}, 30 * 1000);
+                        await member.roles.add(mute_role);
+                        await client.channels.cache.get(msg.channel.id).send('Muteolva');
+                        setTimeout(() => {member.roles.remove(mute_role);
+                        }, 30 * 1000);
                     }).catch(r => {
-                            msg.channel.send('Elutasítva');
+                    client.channels.cache.get(msg.channel.id).send('Elutasítva');
                             console.log(r);
                         });
                 break;
             case 'votenick':
                 let uwuMember = msg.mentions.members.first();
                 try{
-                    if (uwuMember.roles.has('671107459858956299')) {
-                        msg.channel.send('Botot nem nevezhetsz át');
+                    if (uwuMember.roles.cache.has('671107459858956299')) {
+                        client.channels.cache.get(msg.channel.id).send('Botot nem nevezhetsz át');
                         break;
                     }
                 } catch (err){
@@ -238,9 +217,9 @@ client.on('message', msg => {
                     .then( () => {
 
                         uwuMember.setNickname(nickname, 'Sikeres Szavazás');
-                        msg.channel.send('Sikeres átnevezés: ' + uwuMember);
+                        client.channels.cache.get(msg.channel.id).send('Sikeres átnevezés: ' + uwuMember.user.username);
                     }).catch(r => {
-                    msg.channel.send('Elutasítva');
+                    client.channels.cache.get(msg.channel.id).send('Elutasítva');
                     console.log(r);
                 });
                 break;
@@ -253,7 +232,7 @@ client.on('message', msg => {
             const splitSong = lowerCase.split('\n');
             for (let i = 0; i < splitSong.length; i++) {
                 if (splitSong[i] === startSong) {
-                    msg.channel.send(splitSong[i + 1]);
+                    client.channels.cache.get(msg.channel.id).send(splitSong[i + 1]);
                     break;
                 }
             }
@@ -271,57 +250,57 @@ client.on('message', msg => {
         switch (cmd.toLocaleLowerCase()) {
             case 'say':
                 if (channelId === '667783025811259448') {
-                    client.channels.get('667783025811259448').send(sentence);
+                    client.channels.cache.get('667783025811259448').send(sentence);
                 } else {
-                    client.channels.get(channelId).send(sentence.slice(channel.length + 1)).catch(data => {
+                    client.channels.cache.get(channelId).send(sentence.slice(channel.length + 1)).catch(data => {
                         console.log(data);
                     });
                 }
                 break;
 
             case 'sup':
-                client.channels.get(channelId).send('<:surp:708969952354500658>');
+                client.channels.cache.get(channelId).send('<:surp:708969952354500658>');
                 break;
             case 'tri':
-                client.channels.get(channelId).send('<:trigger:708979797895938168>');
+                client.channels.cache.get(channelId).send('<:trigger:708979797895938168>');
                 break;
             case 'cute':
-                client.channels.get(channelId).send('<:cute:735574079851200582>');
+                client.channels.cache.get(channelId).send('<:cute:735574079851200582>');
                 break;
             case 'oh_no':
-                client.channels.get(channelId).send('oh...nooo');
-                client.channels.get(channelId).send('<:oh_no:735574451088785498>');
+                client.channels.cache.get(channelId).send('oh...nooo');
+                client.channels.cache.get(channelId).send('<:oh_no:735574451088785498>');
                 break;
             case 'gimme':
-                client.channels.get(channelId).send('<:gimme:744540992430145586>');
+                client.channels.cache.get(channelId).send('<:gimme:744540992430145586>');
                 break;
             case 'simp':
-                client.channels.get(channelId).send('<:simp:744540966215483442>');
+                client.channels.cache.get(channelId).send('<:simp:744540966215483442>');
                 break;
             case 'ew':
-                client.channels.get(channelId).send('<:ew:744540932967235674>');
+                client.channels.cache.get(channelId).send('<:ew:744540932967235674>');
                 break;
             case 'burn':
-                client.channels.get(channelId).send('<:burn:744540895478808626>');
+                client.channels.cache.get(channelId).send('<:burn:744540895478808626>');
                 break;
             case 'nameselj':
-                client.channels.get(channelId).send('<:marotihaha:759804122139983873>');
+                client.channels.cache.get(channelId).send('<:marotihaha:759804122139983873>');
         }
     }
 
     if (msg.author.id === '376439826549047296' && msg.content.toLowerCase() === 'tap') {
-        attachment = new Discord.Attachment('./szerb/ninjatap.png');
-        msg.channel.send(attachment);
+        attachment = new Discord.MessageAttachment('./szerb/ninjatap.png');
+        client.channels.cache.get(msg.channel.id).send(attachment);
     }
 
     if (msg.content.toLowerCase() === 'baszadék') {
-        msg.channel.send('Szopadék');
+        client.channels.cache.get(msg.channel.id).send('Szopadék');
     } else if (msg.content.toLowerCase() === 'szopadék') {
-        msg.channel.send('Baszadék');
+        client.channels.cache.get(msg.channel.id).send('Baszadék');
     }
 
     if (msg.content.toLowerCase().includes('no bully')) {
-        msg.channel.send('https://i.pinimg.com/originals/78/e3/6c/78e36c8c096aeb13b46a3b41cd934c9f.jpg');
+        client.channels.cache.get(msg.channel.id).send('https://i.pinimg.com/originals/78/e3/6c/78e36c8c096aeb13b46a3b41cd934c9f.jpg');
     }
 
     if (msg.content.toLowerCase().includes('maróti') || msg.content.toLowerCase().includes('dimat') || msg.content.toLowerCase().includes('maroti') || msg.content.toLowerCase().includes('aranyember')) {
@@ -333,7 +312,7 @@ client.on('message', msg => {
     }
 
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
-        msg.channel.send('<a:uwu_flotespanking:677984852963885075>');
+        client.channels.cache.get(msg.channel.id).send('<a:uwu_flotespanking:677984852963885075>');
     }
 
     if (func.swearListCheck(msg.content)) {
@@ -341,7 +320,7 @@ client.on('message', msg => {
         let textArray = ['hagyd abba', 'Ne beszélj már csúnyán', 'Kell a baj?', 'Mit káromkodsz?', 'Moderáljad már magad', 'Szépen meg ki fog beszélni?', 'Kőban?', 'ffs'];
         let randomNumber = Math.floor(Math.random() * textArray.length);
         if (swearStack === 10) {
-            msg.channel.send(textArray[randomNumber]);
+            client.channels.cache.get(msg.channel.id).send(textArray[randomNumber]);
             swearStack = 0;
         }
     }
@@ -349,48 +328,23 @@ client.on('message', msg => {
     if (msg.content.toLocaleLowerCase().includes('furry')) {
         let furryArray = ['UwU', 'OwO', 'Uwuristen', '(　・`ω・´)', 'fuwurykról van szó?', 'Kruwuzor fuwury UwU'];
         let randomNumber = Math.floor(Math.random() * furryArray.length);
-        msg.channel.send(furryArray[randomNumber]);
+        client.channels.cache.get(msg.channel.id).send(furryArray[randomNumber]);
     }
 
     if (msg.content.toLocaleLowerCase().includes('nem mered')) {
-        msg.channel.send('hang vaaaagy');
+        client.channels.cache.get(msg.channel.id).send('hang vaaaagy');
     }
 
     if (msg.content.toLocaleLowerCase().includes('nem leszek')) {
-        msg.channel.send('Miért nem leszel? ( ._.) Lehet páran örülnének neki...');
+        client.channels.cache.get(msg.channel.id).send('Miért nem leszel? ( ._.) Lehet páran örülnének neki...');
     }
 
     if (msg.content.toLocaleLowerCase() === 'ok') {
         let flegmahResponse = ['Legalább ne flegmulj, másokat megsértesz :(', 'ok ok ok', 'flegma f***', 'Jó, inkább ne is írj semmit', 'Ne, ne írj rendeset', '"k" legalább csináld rendesen'];
         let randomNumber = Math.floor(Math.random() * flegmahResponse.length);
-        msg.channel.send(flegmahResponse[randomNumber]);
+        client.channels.cache.get(msg.channel.id).send(flegmahResponse[randomNumber]);
     }
 
-});
-
-client.on('raw', packet => {
-    // We don't want this to run on unrelated packets
-    if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
-    // Grab the channel to check the message from
-    const channel = client.channels.get(packet.d.channel_id);
-    // There's no need to emit if the message is cached, because the event will fire anyway for that
-    if (channel.messages.has(packet.d.message_id)) return;
-    // Since we have confirmed the message is not cached, let's fetch it
-    channel.fetchMessage(packet.d.message_id).then(message => {
-        // Emojis can have identifiers of name:id format, so we have to account for that case as well
-        const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
-        // This gives us the reaction we need to emit the event properly, in top of the message object
-        const reaction = message.reactions.get(emoji);
-        // Adds the currently reacting user to the reaction's users collection.
-        if (reaction) reaction.users.set(packet.d.user_id, client.users.get(packet.d.user_id));
-        // Check which type of event it is before emitting
-        if (packet.t === 'MESSAGE_REACTION_ADD') {
-            client.emit('messageReactionAdd', reaction, client.users.get(packet.d.user_id));
-        }
-        if (packet.t === 'MESSAGE_REACTION_REMOVE') {
-            client.emit('messageReactionRemove', reaction, client.users.get(packet.d.user_id));
-        }
-    });
 });
 
 client.on('messageDelete', message => {
@@ -400,10 +354,10 @@ client.on('messageDelete', message => {
     if (message.cleanContent.length > 0) {
         messageContent = message.cleanContent;
     }
-    const textEmbed = new Discord.RichEmbed()
+    const textEmbed = new Discord.MessageEmbed()
         .setColor('#9b18bf')
         .setTitle('Deleted Message')
-        .setThumbnail(`${message.author.avatarURL}`)
+        .setThumbnail(`${message.author.avatarURL()}`)
         .setAuthor(`${message.author.username}`)
         .setDescription(`${channel}`)
         .addField('Message: ', messageContent, true)
@@ -415,49 +369,76 @@ client.on('messageDelete', message => {
     }
 
     else if (message.attachments.size > 0) {
-        client.channels.get("745317754256490567").fetchMessages({limit: 5}).then(messages => {
+        client.channels.cache.get("745317754256490567").messages.fetch({limit: 5}).then(messages => {
             let lastMessages = messages.array();
 
             for (let i = 0; i < lastMessages.length; i++) {
                 if(lastMessages[i].content.includes(attachment[0].id)) {
                     messagePic = lastMessages[i].content.split(' ');
-                    const pictureEmbed = new Discord.RichEmbed()
+                    const pictureEmbed = new Discord.MessageEmbed()
                         .setColor('#9b18bf')
                         .setTitle('Deleted Picture')
-                        .setThumbnail(`${message.author.avatarURL}`)
+                        .setThumbnail(`${message.author.avatarURL()}`)
                         .setAuthor(`${message.author.username}`)
                         .setImage(messagePic[0])
                         .setDescription(`${channel}`)
                         .addField('Message: ', messageContent, true)
                         .setTimestamp();
-                    client.channels.get("740536932303634473").send(pictureEmbed);
+                    client.channels.cache.get("740536932303634473").send(pictureEmbed);
                 }
             }
         }).catch(console.error);
     } else {
-        client.channels.get("740536932303634473").send(textEmbed);
+        client.channels.cache.get("740536932303634473").send(textEmbed);
     }
+});
+
+client.on('raw', packet => {
+    // We don't want this to run on unrelated packets
+    if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
+    // Grab the channel to check the message from
+    const channel = client.channels.cache.get(packet.d.channel_id);
+    // There's no need to emit if the message is cached, because the event will fire anyway for that
+    if (channel.messages.cache.has(packet.d.message_id)) return;
+    // Since we have confirmed the message is not cached, let's fetch it
+    channel.messages.fetch(packet.d.message_id).then(message => {
+        // Emojis can have identifiers of name:id format, so we have to account for that case as well
+        const emoji = packet.d.emoji.id ? `${packet.d.emoji.name}:${packet.d.emoji.id}` : packet.d.emoji.name;
+        // This gives us the reaction we need to emit the event properly, in top of the message object
+        const reaction = message.reactions.cache.get(emoji);
+        // Adds the currently reacting user to the reaction's users collection.
+        if (reaction) reaction.users.cache.set(packet.d.user_id, client.users.cache.get(packet.d.user_id));
+        // Check which type of event it is before emitting
+        if (packet.t === 'MESSAGE_REACTION_ADD') {
+            client.emit('messageReactionAdd', reaction, client.users.cache.get(packet.d.user_id));
+        }
+        if (packet.t === 'MESSAGE_REACTION_REMOVE') {
+            client.emit('messageReactionRemove', reaction, client.users.cache.get(packet.d.user_id));
+        }
+    });
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
     if (reaction.message.partial) {
         try {
-            await reaction.message.fetch();
+            if (reaction.emoji.name === '😄') {
+                await reaction.message.fetch();
+            }
         } catch (error) {
             console.error('Something went wrong when fetching the message: ', error);
         }
     }
 
-    if (reaction.emoji.name === '📌' ){
+    if (reaction.emoji.name === '😄'){
         await reaction.message.pin();
-        const textEmbed = new Discord.RichEmbed()
+        const textEmbed = new Discord.MessageEmbed()
             .setColor('#ff0015')
             .setTitle('Pinned Message')
-            .setThumbnail(`${user.avatarURL}`)
+            .setThumbnail(`${user.avatarURL()}`)
             .setAuthor(`${user.username}`)
             .addField('Message: ', reaction.message.url, true)
             .setTimestamp();
-        client.channels.get("740536932303634473").send(textEmbed);
+        client.channels.cache.get("740536932303634473").send(textEmbed);
     }
 });
 
@@ -469,6 +450,8 @@ function voteMuteFilter(reaction, user) {
         if (!voters.includes(user.id)) {
             voters.push(user.id);
         }
+    }else {
+        console.log(reaction.emoji.name);
     }
     if (voters.length === 4) {
         voters = [];
