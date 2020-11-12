@@ -421,7 +421,7 @@ client.on('raw', packet => {
 client.on('messageReactionAdd', async (reaction, user) => {
     if (reaction.message.partial) {
         try {
-            if (reaction.emoji.name === '😄') {
+            if (reaction.emoji.name === '📌') {
                 await reaction.message.fetch();
             }
         } catch (error) {
@@ -429,7 +429,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
         }
     }
 
-    if (reaction.emoji.name === '😄'){
+    if (reaction.emoji.name === '📌'){
         await reaction.message.pin();
         const textEmbed = new Discord.MessageEmbed()
             .setColor('#ff0015')
