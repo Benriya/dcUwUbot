@@ -149,6 +149,7 @@ client.on('message', msg => {
                     '      **Csendes Tibor**\n' +
                     '      Csókás Eszter\n' +
                     '      Gazdag-Tóth Boglárka Dr.\n' +
+                    '      Pletl Szilveszter Dr.\n' +
                     '      Hirling Dominik\n' +
                     '      **Kulin Julia**\n' +
                     '      Márkus András\n' +
