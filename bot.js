@@ -139,20 +139,21 @@ client.on('message', msg => {
                     attachment = new Discord.MessageAttachment('./szerb/TAP.png');
                 }else {
                     attachment = new Discord.MessageAttachment('./szerb/szerb_0.jpg');
-                }
+                }her
 
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
             case 'csicskawall':
                 client.channels.cache.get(msg.channel.id).send(
                     '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
+                    '      Bánhelyi Balázs\n' +
                     '      **Csendes Tibor**\n' +
                     '      Csókás Eszter\n' +
                     '      Gazdag-Tóth Boglárka Dr.\n' +
-                    '      Pletl Szilveszter Dr.\n' +
                     '      Hirling Dominik\n' +
                     '      **Kulin Julia**\n' +
                     '      Márkus András\n' +
+                    '      Pletl Szilveszter Dr.\n' +
                     '      Pflanzer Tamás\n' +
                     '      Pluhár András\n' +
                     '      London András\n' +
