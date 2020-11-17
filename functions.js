@@ -27,11 +27,6 @@ module.exports = {
     }
 },
 
- addMemberLotto: (message, member, array) => {
-    array.set(member, message);
-    return array;
-},
-
  checkIfSame: (array) => {
         if (array[0].author.bot || array[1].author.bot || array[2].author.bot) {
             return false;
@@ -54,19 +49,31 @@ module.exports = {
         return players.replace('<@' + author + '>', '');
     },
 
-    tagList: (game, author) => {
-        let players;
-        switch (game) {
-            case 'wow':
-                players = '<@491660100990140436> <@518823389008232460> <@318072258465628161>';
-                break;
-            case 'kf2':
-                players = '<@279565175588388865> <@295485347138240513> <@602525564217327637> <@376439826549047296> <@318072258465628161> <@518823389008232460>';
-                break;
-            case 'lol':
-                players = '<@295485347138240513> <@310397550173880320> <@239028474696826891> <@279565175588388865>';
-                break;
-        }
-        return playerChange(players, author);
+    drawWinners: (array, winningNumbers) => {
+        array.forEach((value, key, map) =>{
+            console.log(`m[${key}] = ${value}`);
+            if (value === `${winningNumbers[0]} ${winningNumbers[1]}`) {
+                console.log(key)
+            }
+        });
+        /*console.log(array);
+        for (const arrayKey in array) {
+            if (array.hasOwnProperty(arrayKey))
+            console.log(arrayKey);
+        }*/
     },
+
+    addMemberLotto: (message, member, array) => {
+        array.set(member, message);
+        return array;
+    },
+
+    drawNumbers: () => {
+        let winningNumbers = [];
+        //setTimeout(() => {
+        winningNumbers = [6, 6];
+            //winningNumbers = [Math.round(Math.random()* 10 + 1), Math.round(Math.random()* 10 + 1)];
+        //},30 * 1000);
+        return winningNumbers;
+    }
 }

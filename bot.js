@@ -1,4 +1,4 @@
-/*require('heroku-self-ping').default("https://discord8w8bot.herokuapp.com");
+require('heroku-self-ping').default("https://discord8w8bot.herokuapp.com");
 
 const http = require('http');
 
@@ -10,9 +10,9 @@ const server = http.createServer((req, res) => {
 });
 server.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
-});*/
+});
 
-const http = require('http');
+/*const http = require('http');
 const express = require('express');
 const app = express();
 app.get("/", (request, response) => {
@@ -22,7 +22,7 @@ app.get("/", (request, response) => {
 app.listen(process.env.PORT);
 setInterval(() => {
     http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
-}, 280000);
+}, 280000);*/
 
 const PornSearch = require('pornsearch');
 const gifSearch = require('gif-search');
@@ -40,9 +40,17 @@ let chosenFile;
 let swearStack = 0;
 let voters = [];
 let member;
-let lottoArray = new Map() ;
+let lottoArray = new Map();
+let winningNumbers = [];
+
+/*setTimeout(() => {
+    winningNumbers = func.drawNumbers();
+    client.channels.cache.get("740517221364924446").send(winningNumbers);
+    func.drawWinners(lottoArray, winningNumbers );
+},30 * 1000);*/
 
 client.on('message', msg => {
+    client.user.setActivity("with depression and OJO");
     if(msg.author.bot) return;
 
     const istenEmbed = new Discord.MessageEmbed()
@@ -100,14 +108,18 @@ client.on('message', msg => {
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
             case 'porn':
-                const Searcher = new PornSearch(sentence);
-                Searcher.gifs()
-                    .then(gifs => {
-                        client.channels.cache.get(msg.channel.id).send(gifs[Math.floor(Math.random() * gifs.length)].webm)
-                    }).catch(err =>{
-                    client.channels.cache.get(msg.channel.id).send('Nincs találat');
+                if (msg.channel.id === '667779656363278367') {
+                    const Searcher = new PornSearch(sentence);
+                    Searcher.gifs()
+                        .then(gifs => {
+                            client.channels.cache.get(msg.channel.id).send(gifs[Math.floor(Math.random() * gifs.length)].webm)
+                        }).catch(err => {
+                        client.channels.cache.get(msg.channel.id).send('Nincs találat');
                         console.log('nothing found');
-                });
+                    });
+                }else{
+                    client.channels.cache.get(msg.channel.id).send('Ne ebbe a channelbe írd');
+                }
                 break;
             /*case 'test':
                 let pornSauce = [];
@@ -153,7 +165,7 @@ client.on('message', msg => {
                     attachment = new Discord.MessageAttachment('./szerb/TAP.png');
                 }else {
                     attachment = new Discord.MessageAttachment('./szerb/szerb_0.jpg');
-                }her
+                }
 
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
@@ -196,12 +208,10 @@ client.on('message', msg => {
             case 'istenwall':
                 client.channels.cache.get(msg.channel.id).send(istenEmbed);
                 break;
-            case 'lotto':
+            case 'lotto2':
                 member = msg.author.username;
-                let tips = args[1];
+                let tips = `${args[1]} ${args[2]}`;
                 lottoArray = func.addMemberLotto(tips, member, lottoArray);
-                console.log(lottoArray);
-                //client.channels.cache.get(msg.channel.id).send(istenEmbed);
                 break;
             case 'hess':
                 attachment = new Discord.MessageAttachment('./szerb/hess.gif');
@@ -466,7 +476,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 });
 
 //740536932303634473
-client.login('token');
+client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvZ1g.pD5CXOTEyBkiA0G-L_jMRAlPVbo');
 
 function voteMuteFilter(reaction, user) {
     if (['👍'].includes(reaction.emoji.name)) {
