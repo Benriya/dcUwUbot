@@ -1,4 +1,4 @@
-require('heroku-self-ping').default("https://discord8w8bot.herokuapp.com");
+/*require('heroku-self-ping').default("https://discord8w8bot.herokuapp.com");
 
 const http = require('http');
 
@@ -10,7 +10,19 @@ const server = http.createServer((req, res) => {
 });
 server.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
+});*/
+
+const http = require('http');
+const express = require('express');
+const app = express();
+app.get("/", (request, response) => {
+    console.log(Date.now() + " Ping Received");
+    response.sendStatus(200);
 });
+app.listen(process.env.PORT);
+setInterval(() => {
+    http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+}, 280000);
 
 const PornSearch = require('pornsearch');
 const gifSearch = require('gif-search');
@@ -27,6 +39,8 @@ let files;
 let chosenFile;
 let swearStack = 0;
 let voters = [];
+let member;
+let lottoArray = new Map() ;
 
 client.on('message', msg => {
     if(msg.author.bot) return;
@@ -130,7 +144,7 @@ client.on('message', msg => {
                     'valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
                 break;
             case 'kivagy':
-                let member = msg.mentions.users.first();
+                member = msg.mentions.users.first();
 
                 if (member.id === '518823389008232460' || member.id === '602525564217327637' || member.id === '623899095224025088') {
                     attachment = new Discord.MessageAttachment('./szerb/szerb_1.jpg');
@@ -181,6 +195,13 @@ client.on('message', msg => {
                 break;
             case 'istenwall':
                 client.channels.cache.get(msg.channel.id).send(istenEmbed);
+                break;
+            case 'lotto':
+                member = msg.author.username;
+                let tips = args[1];
+                lottoArray = func.addMemberLotto(tips, member, lottoArray);
+                console.log(lottoArray);
+                //client.channels.cache.get(msg.channel.id).send(istenEmbed);
                 break;
             case 'hess':
                 attachment = new Discord.MessageAttachment('./szerb/hess.gif');
@@ -445,7 +466,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 });
 
 //740536932303634473
-client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvcZA.DbM0EvrKsUQpe43XnltT6ryVkHc');
+client.login('token');
 
 function voteMuteFilter(reaction, user) {
     if (['👍'].includes(reaction.emoji.name)) {
