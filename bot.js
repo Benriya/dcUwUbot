@@ -44,7 +44,7 @@ let lottoArray = new Map();
 let winningNumbers = [];
 let winners = [];
 
-    setInterval(() => {
+    /*setInterval(() => {
         winningNumbers = func.drawNumbers();
         client.channels.cache.get('779395227688501298').send('Nyertes számok: ' + winningNumbers);
         winners = func.drawWinners(lottoArray, winningNumbers);
@@ -59,7 +59,7 @@ let winners = [];
                 }
             }
         });
-    },3600 * 1000);
+    },3600 * 1000);*/
 
 client.on('message', msg => {
     client.user.setActivity("with depression and OJO");
