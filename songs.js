@@ -103,10 +103,6 @@ module.exports = {
     "Pushed as far as I can go\n" +
     "For all this\n" +
     "There's only one thing you should know\n" +
-    "I've put my trust in you\n" +
-    "Pushed as far as I can go\n" +
-    "For all this\n" +
-    "There's only one thing you should know\n" +
     "I tried so hard\n" +
     "And got so far\n" +
     "But in the end\n" +

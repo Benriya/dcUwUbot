@@ -42,12 +42,24 @@ let voters = [];
 let member;
 let lottoArray = new Map();
 let winningNumbers = [];
+let winners = [];
 
-/*setTimeout(() => {
-    winningNumbers = func.drawNumbers();
-    client.channels.cache.get("740517221364924446").send(winningNumbers);
-    func.drawWinners(lottoArray, winningNumbers );
-},30 * 1000);*/
+    setInterval(() => {
+        winningNumbers = func.drawNumbers();
+        client.channels.cache.get('779395227688501298').send('Nyertes számok: ' + winningNumbers);
+        winners = func.drawWinners(lottoArray, winningNumbers);
+
+        const list = client.guilds.cache.get("661569830469632007");
+        let nyertes = list.roles.cache.get('779370085487083520');
+        list.members.cache.array().forEach(member => {
+            for (let i = 0; i < client.users.cache.array().length; i++) {
+                if (member.user.username === winners[i]) {
+                    member.roles.add(nyertes);
+                    client.channels.cache.get("779395227688501298").send('Nyertes: ' + member.user.username);
+                }
+            }
+        });
+    },3600 * 1000);
 
 client.on('message', msg => {
     client.user.setActivity("with depression and OJO");
@@ -121,24 +133,6 @@ client.on('message', msg => {
                     client.channels.cache.get(msg.channel.id).send('Ne ebbe a channelbe írd');
                 }
                 break;
-            /*case 'test':
-                let pornSauce = [];
-                const pornSearch = new PornSearch(sentence);
-                pornSearch.gifs()
-                    .then(gifs => {
-                        msg.channel.send(gifs[Math.floor(Math.random() * gifs.length)].webm);
-                    }).catch(err =>{
-                    console.log(err);
-                });
-                pornSearch.videos()
-                    .then(videos => {
-                        pornSauce = videos.map(videos => videos.url);
-                        console.log(pornSauce);
-                        msg.channel.send(pornSauce[Math.floor(Math.random() * pornSauce.length)]);
-                    }).catch(err =>{
-                    console.log(err);
-                });
-                break;*/
             case '!help':
                 msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n' +
                     '!porn + "tematika": Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n' +
@@ -208,10 +202,15 @@ client.on('message', msg => {
             case 'istenwall':
                 client.channels.cache.get(msg.channel.id).send(istenEmbed);
                 break;
-            case 'lotto2':
-                member = msg.author.username;
-                let tips = `${args[1]} ${args[2]}`;
-                lottoArray = func.addMemberLotto(tips, member, lottoArray);
+            case 'lotto':
+                if (msg.channel.id === '779395227688501298') {
+                    member = msg.author.username;
+                    let tips = `${args[1]} ${args[2]}`;
+                    lottoArray = func.addMemberLotto(tips, member, lottoArray);
+                    client.channels.cache.get(msg.channel.id).send('Tipped mentve');
+                } else {
+                    client.channels.cache.get(msg.channel.id).send('Itt nem tippelhetsz');
+                }
                 break;
             case 'hess':
                 attachment = new Discord.MessageAttachment('./szerb/hess.gif');

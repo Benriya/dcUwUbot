@@ -50,17 +50,15 @@ module.exports = {
     },
 
     drawWinners: (array, winningNumbers) => {
+        let winners = [];
         array.forEach((value, key, map) =>{
             console.log(`m[${key}] = ${value}`);
             if (value === `${winningNumbers[0]} ${winningNumbers[1]}`) {
-                console.log(key)
+                winners.push(key);
             }
         });
-        /*console.log(array);
-        for (const arrayKey in array) {
-            if (array.hasOwnProperty(arrayKey))
-            console.log(arrayKey);
-        }*/
+        console.log(winners);
+        return winners;
     },
 
     addMemberLotto: (message, member, array) => {
@@ -70,10 +68,8 @@ module.exports = {
 
     drawNumbers: () => {
         let winningNumbers = [];
-        //setTimeout(() => {
-        winningNumbers = [6, 6];
-            //winningNumbers = [Math.round(Math.random()* 10 + 1), Math.round(Math.random()* 10 + 1)];
-        //},30 * 1000);
+            winningNumbers = [1, 1];
+        //winningNumbers = [Math.round(Math.random()* 10 + 1), Math.round(Math.random()* 10 + 1)];
         return winningNumbers;
     }
 }
