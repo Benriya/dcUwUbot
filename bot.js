@@ -100,6 +100,7 @@ client.on('message', msg => {
         let args = msg.content.substring(1).split(' ');
         let cmd = args[0];
 
+        let pornChannel = '667779656363278367';
         let sentence = msg.content.slice(5);
         let nickname = args[1];
         switch (cmd.toLocaleLowerCase()) {
@@ -119,8 +120,16 @@ client.on('message', msg => {
                 attachment = new Discord.MessageAttachment('./slap/' + chosenFile);
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
+            case 'pornpics':
+                if (msg.channel.id === pornChannel) {
+                    const picsSource = `https://www.pornpics.com/?q=${args[1]}+${args[2] === undefined ? ' ' : args[2]}`;
+                    client.channels.cache.get(msg.channel.id).send(picsSource)
+                }else{
+                    client.channels.cache.get(msg.channel.id).send('Ne ebbe a channelbe írd');
+                }
+                break;
             case 'porn':
-                if (msg.channel.id === '667779656363278367') {
+                if (msg.channel.id === pornChannel) {
                     const Searcher = new PornSearch(sentence);
                     Searcher.gifs()
                         .then(gifs => {
@@ -317,6 +326,11 @@ client.on('message', msg => {
                 break;
             case 'nameselj':
                 client.channels.cache.get(channelId).send('<:marotihaha:759804122139983873>');
+                break;
+            case 'hmm':
+                client.channels.cache.get(channelId).send('<:pepehmm:780723259355824128>');
+                break;
+
         }
     }
 
@@ -502,7 +516,7 @@ function voteNickFilter(reaction, user) {
         return true;
     }
 }
-
+//Zsolf,zsolf57@gmail.com
 /*
 <@251831600512368641> kuba
 <@491660100990140436> flote
