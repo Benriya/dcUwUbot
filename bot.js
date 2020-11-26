@@ -6,23 +6,11 @@ const PORT = process.env.PORT || 4040;
 const server = http.createServer((req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello World 2');
+    res.end('Szia Dawe');
 });
 server.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });
-
-/*const http = require('http');
-const express = require('express');
-const app = express();
-app.get("/", (request, response) => {
-    console.log(Date.now() + " Ping Received");
-    response.sendStatus(200);
-});
-app.listen(process.env.PORT);
-setInterval(() => {
-    http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
-}, 280000);*/
 
 const PornSearch = require('pornsearch');
 const gifSearch = require('gif-search');
@@ -106,6 +94,10 @@ client.on('message', msg => {
         switch (cmd.toLocaleLowerCase()) {
             case 'rule':
                 attachment = new Discord.MessageAttachment('./rule.png');
+                client.channels.cache.get(msg.channel.id).send(attachment);
+                break;
+            case 'faszom':
+                attachment = new Discord.MessageAttachment('./szerb/picsaba.png');
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
             case 'praise1':
@@ -332,6 +324,10 @@ client.on('message', msg => {
                 break;
 
         }
+    }
+
+    if (msg.mentions.members.first().user.username === 'Pearly') {
+        client.channels.cache.get(msg.channel.id).send('Szeretnél valamit?');
     }
 
     if (msg.author.id === '376439826549047296' && msg.content.toLowerCase() === 'tap') {
