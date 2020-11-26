@@ -325,10 +325,15 @@ client.on('message', msg => {
 
         }
     }
-
-    if (msg.mentions.members.first().user.username === 'Pearly') {
-        client.channels.cache.get(msg.channel.id).send('Szeretnél valamit?');
+    
+    try {
+        if (msg.mentions.members.first().user.username === 'Pearly') {
+            client.channels.cache.get(msg.channel.id).send('Szeretnél valamit?');
+        }
+    }catch (e) {
+        return;
     }
+
 
     if (msg.author.id === '376439826549047296' && msg.content.toLowerCase() === 'tap') {
         attachment = new Discord.MessageAttachment('./szerb/ninjatap.png');
