@@ -258,6 +258,7 @@ client.on('message', msg => {
                 break;
         }
     }
+
     if(msg.attachments.size === 0) {
         if (songs.song.toLowerCase().includes(msg.content.toLowerCase())) {
             const startSong = msg.content.toLowerCase();
@@ -325,15 +326,6 @@ client.on('message', msg => {
 
         }
     }
-    
-    try {
-        if (msg.mentions.members.first().user.username === 'Pearly') {
-            client.channels.cache.get(msg.channel.id).send('Szeretnél valamit?');
-        }
-    }catch (e) {
-        return;
-    }
-
 
     if (msg.author.id === '376439826549047296' && msg.content.toLowerCase() === 'tap') {
         attachment = new Discord.MessageAttachment('./szerb/ninjatap.png');
@@ -390,6 +382,14 @@ client.on('message', msg => {
         let flegmahResponse = ['Legalább ne flegmulj, másokat megsértesz :(', 'ok ok ok', 'flegma f***', 'Jó, inkább ne is írj semmit', 'Ne, ne írj rendeset', '"k" legalább csináld rendesen'];
         let randomNumber = Math.floor(Math.random() * flegmahResponse.length);
         client.channels.cache.get(msg.channel.id).send(flegmahResponse[randomNumber]);
+    }
+
+    try {
+        if (msg.mentions.members.first().user.username === 'Pearly') {
+            client.channels.cache.get(msg.channel.id).send('Szeretnél valamit?');
+        }
+    }catch (e) {
+
     }
 
 });
