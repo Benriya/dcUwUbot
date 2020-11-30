@@ -32,7 +32,7 @@ let lottoArray = new Map();
 let winningNumbers = [];
 let winners = [];
 
-    /*setInterval(() => {
+    setInterval(() => {
         winningNumbers = func.drawNumbers();
         client.channels.cache.get('779395227688501298').send('Nyertes számok: ' + winningNumbers);
         winners = func.drawWinners(lottoArray, winningNumbers);
@@ -40,6 +40,9 @@ let winners = [];
         const list = client.guilds.cache.get("661569830469632007");
         let nyertes = list.roles.cache.get('779370085487083520');
         list.members.cache.array().forEach(member => {
+            if (member.roles.cache.has('686288799109480523')) {
+                member.roles.remove('686288799109480523');
+            }
             for (let i = 0; i < client.users.cache.array().length; i++) {
                 if (member.user.username === winners[i]) {
                     member.roles.add(nyertes);
@@ -47,7 +50,11 @@ let winners = [];
                 }
             }
         });
-    },3600 * 1000);*/
+        winners = [];
+        winningNumbers = [];
+        lottoArray = new Map();
+        client.channels.cache.get("779395227688501298").send('Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
+    },604800 * 1000);
 
 client.on('message', msg => {
     client.user.setActivity("with depression and OJO");
@@ -205,10 +212,13 @@ client.on('message', msg => {
                 break;
             case 'lotto':
                 if (msg.channel.id === '779395227688501298') {
+                    if (args.length > 3) {
+                        client.channels.cache.get(msg.channel.id).send('2 egész számot adj meg');
+                    }
                     member = msg.author.username;
                     let tips = `${args[1]} ${args[2]}`;
                     lottoArray = func.addMemberLotto(tips, member, lottoArray);
-                    client.channels.cache.get(msg.channel.id).send('Tipped mentve');
+                    client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
                 } else {
                     client.channels.cache.get(msg.channel.id).send('Itt nem tippelhetsz');
                 }
