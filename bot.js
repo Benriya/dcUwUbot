@@ -40,8 +40,8 @@ let winners = [];
         const list = client.guilds.cache.get("661569830469632007");
         let nyertes = list.roles.cache.get('779370085487083520');
         list.members.cache.array().forEach(member => {
-            if (member.roles.cache.has('686288799109480523')) {
-                member.roles.remove('686288799109480523');
+            if (member.roles.cache.has('779370085487083520')) {
+                member.roles.remove('779370085487083520');
             }
             for (let i = 0; i < client.users.cache.array().length; i++) {
                 if (member.user.username === winners[i]) {
@@ -54,8 +54,8 @@ let winners = [];
         winningNumbers = [];
         lottoArray = new Map();
         client.channels.cache.get("779395227688501298").send('Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
-    },604800 * 1000);
-
+    },86400 * 1000);
+//604800
 client.on('message', msg => {
     client.user.setActivity("with depression and OJO");
     if(msg.author.bot) return;
@@ -214,6 +214,7 @@ client.on('message', msg => {
                 if (msg.channel.id === '779395227688501298') {
                     if (args.length > 3) {
                         client.channels.cache.get(msg.channel.id).send('2 egész számot adj meg');
+                        return;
                     }
                     member = msg.author.username;
                     let tips = `${args[1]} ${args[2]}`;

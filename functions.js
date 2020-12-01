@@ -69,7 +69,7 @@ module.exports = {
     drawNumbers: () => {
         let winningNumbers = [];
            // winningNumbers = [1, 1];
-        winningNumbers = [Math.round(Math.random()* 10 + 1), Math.round(Math.random()* 10 + 1)];
+        winningNumbers = [Math.round(Math.random()* 8 + 1), Math.round(Math.random()* 8 + 1)];
         return winningNumbers;
     }
 }
