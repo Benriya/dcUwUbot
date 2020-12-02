@@ -32,30 +32,38 @@ let lottoArray = new Map();
 let winningNumbers = [];
 let winners = [];
 
-    setInterval(() => {
-        winningNumbers = func.drawNumbers();
-        client.channels.cache.get('779395227688501298').send('Nyertes számok: ' + winningNumbers);
-        winners = func.drawWinners(lottoArray, winningNumbers);
 
-        const list = client.guilds.cache.get("661569830469632007");
-        let nyertes = list.roles.cache.get('779370085487083520');
-        list.members.cache.array().forEach(member => {
-            if (member.roles.cache.has('779370085487083520')) {
-                member.roles.remove('779370085487083520');
-            }
-            for (let i = 0; i < client.users.cache.array().length; i++) {
-                if (member.user.username === winners[i]) {
-                    member.roles.add(nyertes);
-                    client.channels.cache.get("779395227688501298").send('Nyertes: ' + member.user.username);
+    setInterval(() => {
+        let nowDate = new Date();
+        console.log(nowDate.getHours());
+        console.log(nowDate.getMinutes());
+        if (nowDate.getMinutes() === 0) {
+            client.channels.cache.get("779395227688501298").send('***Lotto***');
+            winningNumbers = func.drawNumbers();
+            client.channels.cache.get('779395227688501298').send('Nyertes számok: ' + winningNumbers);
+            winners = func.drawWinners(lottoArray, winningNumbers);
+
+            const list = client.guilds.cache.get("661569830469632007");
+            let nyertes = list.roles.cache.get('779370085487083520');
+            list.members.cache.array().forEach(member => {
+                if (member.roles.cache.has('779370085487083520')) {
+                    member.roles.remove('779370085487083520');
                 }
-            }
-        });
-        winners = [];
-        winningNumbers = [];
-        lottoArray = new Map();
-        client.channels.cache.get("779395227688501298").send('Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
-    },86400 * 1000);
+                for (let i = 0; i < client.users.cache.array().length; i++) {
+                    if (member.user.username === winners[i]) {
+                        member.roles.add(nyertes);
+                        client.channels.cache.get("779395227688501298").send('Nyertes: ' + member.user.username);
+                    }
+                }
+            });
+            winners = [];
+            winningNumbers = [];
+            lottoArray = new Map();
+            client.channels.cache.get("779395227688501298").send('Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
+        }
+    },60 * 1000);
 //604800
+//86400
 client.on('message', msg => {
     client.user.setActivity("with depression and OJO");
     if(msg.author.bot) return;
@@ -101,6 +109,11 @@ client.on('message', msg => {
         switch (cmd.toLocaleLowerCase()) {
             case 'rule':
                 attachment = new Discord.MessageAttachment('./rule.png');
+                client.channels.cache.get(msg.channel.id).send(attachment);
+                console.log(nowDate.getHours() === 13);
+                break;
+            case 'hirling':
+                attachment = new Discord.MessageAttachment('./szerb/hirling.png');
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
             case 'faszom':
@@ -175,7 +188,7 @@ client.on('message', msg => {
                 client.channels.cache.get(msg.channel.id).send(
                     '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
                     '      Bánhelyi Balázs\n' +
-                    '      **Csendes Tibor**\n' +
+                    '      ***Csendes Tibor***\n' +
                     '      Csókás Eszter\n' +
                     '      Gazdag-Tóth Boglárka Dr.\n' +
                     '      Hirling Dominik\n' +
@@ -223,6 +236,10 @@ client.on('message', msg => {
                 } else {
                     client.channels.cache.get(msg.channel.id).send('Itt nem tippelhetsz');
                 }
+                break;
+            case 'tippek':
+                let checkNumbers = func.getLottoNumbers(lottoArray);
+                client.channels.cache.get(msg.channel.id).send(checkNumbers);
                 break;
             case 'hess':
                 attachment = new Discord.MessageAttachment('./szerb/hess.gif');

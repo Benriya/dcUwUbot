@@ -49,6 +49,15 @@ module.exports = {
         return players.replace('<@' + author + '>', '');
     },
 
+    getLottoNumbers: (array) => {
+        let returnArray = [];
+        array.forEach((value, key, map) =>{
+            returnArray.push(`[${key}] = ${value}`);
+        });
+
+        return returnArray;
+    },
+
     drawWinners: (array, winningNumbers) => {
         let winners = [];
         array.forEach((value, key, map) =>{
