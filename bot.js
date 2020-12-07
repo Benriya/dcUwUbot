@@ -39,6 +39,8 @@ let winners = [];
         console.log(nowDate.getHours() % 2);
         if (nowDate.getMinutes() === 0 && nowDate.getHours() % 2 === 0) {
             client.channels.cache.get("779395227688501298").send('***Lotto***');
+            let checkNumbers = func.getLottoNumbers(lottoArray);
+            client.channels.cache.get('779395227688501298').send(checkNumbers);
             winningNumbers = func.drawNumbers();
             client.channels.cache.get('779395227688501298').send('Nyertes számok: ' + winningNumbers);
             winners = func.drawWinners(lottoArray, winningNumbers);
