@@ -54,7 +54,7 @@ let winners = [];
                 for (let i = 0; i < client.users.cache.array().length; i++) {
                     if (member.user.username === winners[i]) {
                         member.roles.add(nyertes);
-                        client.channels.cache.get("779395227688501298").send('Nyertes: ' + member.user.username);
+                        client.channels.cache.get("779395227688501298").send('Nyertes: ' + '<@' + member.user.id + '>');
                     }
                 }
             });
@@ -112,7 +112,6 @@ client.on('message', msg => {
             case 'rule':
                 attachment = new Discord.MessageAttachment('./rule.png');
                 client.channels.cache.get(msg.channel.id).send(attachment);
-                console.log(nowDate.getHours() === 13);
                 break;
             case 'hirling':
                 attachment = new Discord.MessageAttachment('./szerb/hirling.png');
@@ -217,7 +216,7 @@ client.on('message', msg => {
                     '      Keleti Márton\n' +
                     '      Kicsi András\n' +
                     '      Kunos Ádám\n' +
-                    '      Maróti Miklós\n' +
+                    '      ***Maróti Miklós***\n' +
                     '      Szabó Tamás\n' +
                     '      Szabolcs Iván\n' +
                     '└───── •✧✧✧✧✧✧✧✧✧• ─────┘');
@@ -353,7 +352,9 @@ client.on('message', msg => {
             case 'hmm':
                 client.channels.cache.get(channelId).send('<:pepehmm:780723259355824128>');
                 break;
-
+            case 'dayum':
+                client.channels.cache.get(channelId).send('<:dayum:785148917326675998>');
+                break;
         }
     }
 
