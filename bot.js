@@ -76,9 +76,9 @@ client.on('message', msg => {
         .setThumbnail(`${msg.author.avatarURL()}`)
         .setAuthor(`${msg.author.username}`)
         .addField('Message: ',
-            '┌──── •✧Wall Of Isten✧• ────┐\n' +
+            '┌─ •✧Wall Of Isten✧• ─┐\n' +
             `           (っ◔◡◔)っ-${msg.author.username}\n` +
-            '└───── •✧✧✧✧✧✧✧• ─────┘', true)
+            '└── •✧✧✧✧✧✧✧• ──┘', true)
         .setTimestamp();
 
     let attachment = (msg.attachments).array();
@@ -166,6 +166,8 @@ client.on('message', msg => {
                     '!csicskawall: kilistázom a csicska tanárokat\n' +
                     '!aranywall: kilistázom aranyember tanárokat\n' +
                     '!istenwall: meg mondom ki az isten\n' +
+                    '!lotto "szám" "szám": a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n' +
+                    '!tippek: kilistázza milyen tippek voltak eddig\n' +
                     'Ha elkezded a bohen rapsody vagy a never gonna give you up egy részletét, akkor folytatom azt, így együtt tudunk dalolászni (fontos, hogy pontos legyen aposztróf szükséges, hogy jó helyen legyen)\n' +
                     '"no bully" a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére. \n' +
                     'Furrykról szóló tartalomhoz szívesen becsatlakozok én is beszélgetni. \nIlletve "megcsap" vagy "paskol" szövegrészekre is reagálok ha a mondandódban van. \nVégül ha ' +
@@ -232,6 +234,9 @@ client.on('message', msg => {
                     }
                     member = msg.author.username;
                     let tips = `${args[1]} ${args[2]}`;
+                    if (`${args[1]} ${args[2]}` === 'kurva anyád') {
+                        client.channels.cache.get(msg.channel.id).send('Flote egy barom');
+                    }
                     lottoArray = func.addMemberLotto(tips, member, lottoArray);
                     client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
                 } else {
@@ -302,7 +307,7 @@ client.on('message', msg => {
         }
     }
 
-    if (msg.content.substring(0, 1) === '.' && msg.channel.id === '704983142452428933') {
+    if (msg.content.substring(0, 1) === '.' && (msg.channel.id === '704983142452428933' || msg.channel.id === '786140249809354793')) {
         let args = msg.content.substring(1).split(' ');
         let cmd = args[0];
         let channel = args[1];
@@ -311,6 +316,11 @@ client.on('message', msg => {
         msg.delete();
         let sentence = msg.content.slice(5);
         switch (cmd.toLocaleLowerCase()) {
+            case 'help':
+                client.channels.cache.get(msg.channel.id).send('Elérhető kommandok:\n ".say" + "channel név" + "szöveg" -> az adott channel-re a szöveget kiírja\n' +
+                'elérhető channelek: "suwuli", "owoff (ezt nem kötelező kiírni), "kuwuka", "18", "mowozi", "jatekowos", "altalanowos"' +
+                '.sup\n.tri\n.cute\n.on_no\n.gimme\n.simp\n.burn\n.ew\n.nameselj\n.hmm\n.dayum')
+                break;
             case 'say':
                 if (channelId === '667783025811259448') {
                     client.channels.cache.get('667783025811259448').send(sentence);
