@@ -176,7 +176,7 @@ client.on('message', msg => {
             case 'kivagy':
                 member = msg.mentions.users.first();
 
-                if (member.id === '518823389008232460' || member.id === '602525564217327637' || member.id === '623899095224025088') {
+                if (member.id === '518823389008232460' || member.id === '602525564217327637' || member.id === '623899095224025088' || member.id ==='491660100990140436') {
                     attachment = new Discord.MessageAttachment('./szerb/szerb_1.jpg');
                 }
                 else if (member.id === '376439826549047296'){
@@ -191,9 +191,10 @@ client.on('message', msg => {
                 client.channels.cache.get(msg.channel.id).send(
                     '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
                     '      Bánhelyi Balázs\n' +
-                    '      ***Csendes Tibor***\n' +
+                    '      ***C*** ***s*** ***e*** ***n*** ***d*** ***e*** ***s*** ***T*** ***i*** ***b*** ***o*** ***r***\n' +
                     '      Csókás Eszter\n' +
                     '      Gazdag-Tóth Boglárka Dr.\n' +
+                    '      Gingl Zoltán\n' +
                     '      Hirling Dominik\n' +
                     '      **Kulin Julia**\n' +
                     '      Márkus András\n' +
@@ -207,6 +208,7 @@ client.on('message', msg => {
             case 'aranywall':
                 client.channels.cache.get(msg.channel.id).send(
                     '┌──── •✧Wall Of Aranyember✧• ────┐\n' +
+                    '      Antal Gábor\n' +
                     '      Balogh András\n' +
                     '      Cservenák Bence\n' +
                     '      Győrffy Lajos\n' +
@@ -236,6 +238,7 @@ client.on('message', msg => {
                     let tips = `${args[1]} ${args[2]}`;
                     if (`${args[1]} ${args[2]}` === 'kurva anyád') {
                         client.channels.cache.get(msg.channel.id).send('Flote egy barom');
+                        return;
                     }
                     lottoArray = func.addMemberLotto(tips, member, lottoArray);
                     client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
@@ -318,8 +321,11 @@ client.on('message', msg => {
         switch (cmd.toLocaleLowerCase()) {
             case 'help':
                 client.channels.cache.get(msg.channel.id).send('Elérhető kommandok:\n ".say" + "channel név" + "szöveg" -> az adott channel-re a szöveget kiírja\n' +
-                'elérhető channelek: "suwuli", "owoff (ezt nem kötelező kiírni), "kuwuka", "18", "mowozi", "jatekowos", "altalanowos"' +
-                '.sup\n.tri\n.cute\n.on_no\n.gimme\n.simp\n.burn\n.ew\n.nameselj\n.hmm\n.dayum')
+                'elérhető channelek: "suwuli", "owoff (ezt nem kötelező kiírni), "kuwuka", "18", "mowozi", "jatekowos", "altalanowos"\n' +
+                '.sup <:surp:708969952354500658>\n.tri <:trigger:708979797895938168>\n.cute <:cute:735574079851200582>\n' +
+                    '.on_no <:oh_no:735574451088785498>\n.gimme <:gimme:744540992430145586>\n.simp <:simp:744540966215483442>\n' +
+                    '.burn <:burn:744540895478808626>\n.ew <:ew:744540932967235674>\n.nameselj <:marotihaha:759804122139983873>\n' +
+                    '.hmm <:pepehmm:780723259355824128>\n.dayum <:dayum:785148917326675998>');
                 break;
             case 'say':
                 if (channelId === '667783025811259448') {
@@ -507,14 +513,21 @@ client.on('raw', packet => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-    if (reaction.message.partial) {
-        try {
-            if (reaction.emoji.name === '📌') {
-                await reaction.message.fetch();
-            }
-        } catch (error) {
-            console.error('Something went wrong when fetching the message: ', error);
+    try{
+        if (reaction === undefined) {
+            return;
         }
+        if (reaction.message.partial) {
+            try {
+                if (reaction.emoji.name === '📌') {
+                    await reaction.message.fetch();
+                }
+            } catch (error) {
+                console.error('Something went wrong when fetching the message: ', error);
+            }
+        }
+    } catch (e) {
+     console.error(e);
     }
 
     if (reaction.emoji.name === '📌'){

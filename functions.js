@@ -63,7 +63,7 @@ module.exports = {
         array.forEach((value, key, map) =>{
             console.log(`m[${key}] = ${value}`);
             let reverseValue = value.split("").reverse().join("");
-            if (value === `${winningNumbers[0]} ${winningNumbers[1]}` || reverseValue === `${winningNumbers[1]} ${winningNumbers[0]}`) {
+            if (value === `${winningNumbers[0]} ${winningNumbers[1]}` || reverseValue === `${winningNumbers[0]} ${winningNumbers[1]}`) {
                 winners.push(key);
             }
         });
