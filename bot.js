@@ -401,7 +401,7 @@ client.on('message', msg => {
         client.channels.cache.get(msg.channel.id).send('<a:uwu_flotespanking:677984852963885075>');
     }
 
-    if (func.swearListCheck(msg.content)) {
+    /*if (func.swearListCheck(msg.content)) {
         swearStack++;
         let textArray = ['hagyd abba', 'Ne beszélj már csúnyán', 'Kell a baj?', 'Mit káromkodsz?', 'Moderáljad már magad', 'Szépen meg ki fog beszélni?', 'Kőban?', 'ffs'];
         let randomNumber = Math.floor(Math.random() * textArray.length);
@@ -415,7 +415,7 @@ client.on('message', msg => {
         let furryArray = ['UwU', 'OwO', 'Uwuristen', '(　・`ω・´)', 'fuwurykról van szó?', 'Kruwuzor fuwury UwU'];
         let randomNumber = Math.floor(Math.random() * furryArray.length);
         client.channels.cache.get(msg.channel.id).send(furryArray[randomNumber]);
-    }
+    }*/
 
     if (msg.content.toLocaleLowerCase().includes('nem mered')) {
         client.channels.cache.get(msg.channel.id).send('hang vaaaagy');
@@ -425,11 +425,11 @@ client.on('message', msg => {
         client.channels.cache.get(msg.channel.id).send('Miért nem leszel? ( ._.) Lehet páran örülnének neki...');
     }
 
-    if (msg.content.toLocaleLowerCase() === 'ok') {
+    /*if (msg.content.toLocaleLowerCase() === 'ok') {
         let flegmahResponse = ['Legalább ne flegmulj, másokat megsértesz :(', 'ok ok ok', 'flegma f***', 'Jó, inkább ne is írj semmit', 'Ne, ne írj rendeset', '"k" legalább csináld rendesen'];
         let randomNumber = Math.floor(Math.random() * flegmahResponse.length);
         client.channels.cache.get(msg.channel.id).send(flegmahResponse[randomNumber]);
-    }
+    }*/
 
     try {
         if (msg.mentions.members.first().user.username === 'Pearly') {
