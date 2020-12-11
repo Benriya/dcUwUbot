@@ -117,6 +117,13 @@ client.on('message', msg => {
                 attachment = new Discord.MessageAttachment('./szerb/hirling.png');
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
+            case 'csokas':
+                attachment = new Discord.MessageAttachment('./szerb/csokas.png');
+                client.channels.cache.get(msg.channel.id).send('Csókás csókás');
+                client.channels.cache.get(msg.channel.id).send(attachment);
+                attachment = new Discord.MessageAttachment('./szerb/fasszopokas.png');
+                client.channels.cache.get(msg.channel.id).send(attachment);
+                break;
             case 'faszom':
                 attachment = new Discord.MessageAttachment('./szerb/picsaba.png');
                 client.channels.cache.get(msg.channel.id).send(attachment);
@@ -425,11 +432,12 @@ client.on('message', msg => {
         client.channels.cache.get(msg.channel.id).send('Miért nem leszel? ( ._.) Lehet páran örülnének neki...');
     }
 
-    /*if (msg.content.toLocaleLowerCase() === 'ok') {
-        let flegmahResponse = ['Legalább ne flegmulj, másokat megsértesz :(', 'ok ok ok', 'flegma f***', 'Jó, inkább ne is írj semmit', 'Ne, ne írj rendeset', '"k" legalább csináld rendesen'];
-        let randomNumber = Math.floor(Math.random() * flegmahResponse.length);
-        client.channels.cache.get(msg.channel.id).send(flegmahResponse[randomNumber]);
-    }*/
+    if (msg.content.toLocaleLowerCase() === 'ok') {
+        let randomNumber = Math.floor(Math.random() * 5);
+        if (randomNumber === 4) {
+            client.channels.cache.get(msg.channel.id).send('"k" legalább csináld rendesen');
+        }
+    }
 
     try {
         if (msg.mentions.members.first().user.username === 'Pearly') {
