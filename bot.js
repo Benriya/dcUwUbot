@@ -236,8 +236,8 @@ client.on('message', msg => {
             case 'istenwall':
                 client.channels.cache.get(msg.channel.id).send(istenEmbed);
                 break;
-            case 'csicska':
-                client.channels.cache.get(msg.channel.id).send('oh igen ' + args[1]);
+            case 'geci':
+                client.channels.cache.get(msg.channel.id).send('oh igen ' + sentence);
                 client.channels.cache.get(msg.channel.id).send('<a:yourmom:787410945541537842>');
 
                 break;
