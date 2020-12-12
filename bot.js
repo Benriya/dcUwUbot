@@ -108,9 +108,22 @@ client.on('message', msg => {
         let pornChannel = '667779656363278367';
         let sentence = msg.content.slice(5);
         let nickname = args[1];
-        if (sentence.includes('@') || args[1].includes('@')){
-            return;
+
+        try {
+            if (sentence !== undefined) {
+                if (sentence.includes('@')) {
+                    return;
+                }
+            }
+            if (args[1] !== undefined) {
+                if (args[1].includes('@')) {
+                    return;
+                }
+            }
+        } catch (e) {
+            console.log(e);
         }
+
         switch (cmd.toLocaleLowerCase()) {
             case 'rule':
                 attachment = new Discord.MessageAttachment('./rule.png');
@@ -342,7 +355,7 @@ client.on('message', msg => {
         switch (cmd.toLocaleLowerCase()) {
             case 'help':
                 client.channels.cache.get(msg.channel.id).send('Elérhető kommandok:\n ".say" + "channel név" + "szöveg" -> az adott channel-re a szöveget kiírja\n' +
-                'elérhető channelek: "suwuli", "owoff (ezt nem kötelező kiírni), "kuwuka", "18", "mowozi", "jatekowos", "altalanowos", "lotto"\n' +
+                'elérhető channelek: "suwuli", "owoff (ezt nem kötelező kiírni)", "kuwuka", "18", "mowozi", "jatekowos", "altalanowos", "lotto"\n' +
                 '.sup <:surp:708969952354500658>\n.tri <:trigger:708979797895938168>\n.cute <:cute:735574079851200582>\n' +
                     '.on_no <:oh_no:735574451088785498>\n.gimme <:gimme:744540992430145586>\n.simp <:simp:744540966215483442>\n' +
                     '.burn <:burn:744540895478808626>\n.ew <:ew:744540932967235674>\n.nameselj <:marotihaha:759804122139983873>\n' +
