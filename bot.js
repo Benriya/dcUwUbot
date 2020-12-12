@@ -173,6 +173,7 @@ client.on('message', msg => {
                     '!csicskawall: kilistázom a csicska tanárokat\n' +
                     '!aranywall: kilistázom aranyember tanárokat\n' +
                     '!istenwall: meg mondom ki az isten\n' +
+                    '!csicska + "valami": meg dingi-dongizom\n' +
                     '!lotto "szám" "szám": a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n' +
                     '!tippek: kilistázza milyen tippek voltak eddig\n' +
                     'Ha elkezded a bohen rapsody vagy a never gonna give you up egy részletét, akkor folytatom azt, így együtt tudunk dalolászni (fontos, hogy pontos legyen aposztróf szükséges, hogy jó helyen legyen)\n' +
@@ -234,6 +235,11 @@ client.on('message', msg => {
                 break;
             case 'istenwall':
                 client.channels.cache.get(msg.channel.id).send(istenEmbed);
+                break;
+            case 'csicska':
+                client.channels.cache.get(msg.channel.id).send('oh igen ' + args[1]);
+                client.channels.cache.get(msg.channel.id).send('<a:yourmom:787410945541537842>');
+
                 break;
             case 'lotto':
                 if (msg.channel.id === '779395227688501298') {
@@ -332,7 +338,8 @@ client.on('message', msg => {
                 '.sup <:surp:708969952354500658>\n.tri <:trigger:708979797895938168>\n.cute <:cute:735574079851200582>\n' +
                     '.on_no <:oh_no:735574451088785498>\n.gimme <:gimme:744540992430145586>\n.simp <:simp:744540966215483442>\n' +
                     '.burn <:burn:744540895478808626>\n.ew <:ew:744540932967235674>\n.nameselj <:marotihaha:759804122139983873>\n' +
-                    '.hmm <:pepehmm:780723259355824128>\n.dayum <:dayum:785148917326675998>');
+                    '.hmm <:pepehmm:780723259355824128>\n.dayum <:dayum:785148917326675998>\n.fuck <a:yourmom:787410945541537842>\n' +
+                    '.kikerdezte <a:whoasked:719267371029889168>');
                 break;
             case 'say':
                 if (channelId === '667783025811259448') {
@@ -377,6 +384,12 @@ client.on('message', msg => {
                 break;
             case 'dayum':
                 client.channels.cache.get(channelId).send('<:dayum:785148917326675998>');
+                break;
+            case 'fuck':
+                client.channels.cache.get(channelId).send('<a:yourmom:787410945541537842>');
+                break;
+            case 'kikerdezte':
+                client.channels.cache.get(channelId).send('<a:whoasked:719267371029889168>');
                 break;
         }
     }
@@ -446,7 +459,6 @@ client.on('message', msg => {
     }catch (e) {
 
     }
-
 });
 
 client.on('messageDelete', message => {
