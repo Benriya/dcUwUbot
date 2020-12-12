@@ -22,6 +22,9 @@ module.exports = {
         case 'jatekowos':
             return '713415837356392508';
 
+        case 'lotto':
+            return '779395227688501298';
+
         default:
             return '667783025811259448';
     }
