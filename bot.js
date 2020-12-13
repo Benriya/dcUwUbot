@@ -147,6 +147,10 @@ client.on('message', msg => {
             case 'praise1':
                 client.channels.cache.get(msg.channel.id).send(nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
                 break;
+            case 'kurai':
+                let szoveg = func.randomKuraiSzoveg();
+                client.channels.cache.get(msg.channel.id).send(szoveg);
+                break;
             case 'praise2':
                 client.channels.cache.get(msg.channel.id).send(nickname + '<:popehead:767494031193407509>\n' + '<:popehand:767494212794843186>' + '<:popeface:767494094616133683>');
                 break;

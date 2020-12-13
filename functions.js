@@ -82,7 +82,18 @@ module.exports = {
     drawNumbers: () => {
         let winningNumbers = [];
            // winningNumbers = [1, 1];
-        winningNumbers = [Math.round(Math.random()* 8 + 1), Math.round(Math.random()* 8 + 1)];
+        winningNumbers = [Math.round(Math.random() * 8 + 1), Math.round(Math.random() * 8 + 1)];
         return winningNumbers;
+    },
+
+    randomKuraiSzoveg: () => {
+        let array = ['A', 'S', 'D', '?', ':', '_', ':', '_', '?', 'D', 'S', 'A'];
+        let random = Math.floor(Math.random() * 30 + 10);
+        let returnSzoveg = '';
+
+        for (let i = 0; i < random; i++) {
+            returnSzoveg += array[Math.floor(Math.random() * 12)];
+        }
+        return returnSzoveg;
     }
 }
