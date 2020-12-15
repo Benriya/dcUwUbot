@@ -35,8 +35,6 @@ let winners = [];
 
     setInterval(() => {
         let nowDate = new Date();
-        console.log(nowDate.getHours());
-        console.log(nowDate.getHours() % 2);
         if (nowDate.getMinutes() === 0 && nowDate.getHours() % 2 === 0) {
             client.channels.cache.get("779395227688501298").send('***Lotto***');
             let checkNumbers = func.getLottoNumbers(lottoArray);
@@ -151,6 +149,14 @@ client.on('message', msg => {
                 let szoveg = func.randomKuraiSzoveg();
                 client.channels.cache.get(msg.channel.id).send(szoveg);
                 break;
+            case 'monke':
+                attachment = new Discord.MessageAttachment('./szerb/monke.png');
+                client.channels.cache.get(msg.channel.id).send(attachment);
+                break;
+            case 'uwu':
+                attachment = new Discord.MessageAttachment('./szerb/uwu.gif');
+                client.channels.cache.get(msg.channel.id).send(attachment);
+                break;
             case 'praise2':
                 client.channels.cache.get(msg.channel.id).send(nickname + '<:popehead:767494031193407509>\n' + '<:popehand:767494212794843186>' + '<:popeface:767494094616133683>');
                 break;
@@ -257,9 +263,8 @@ client.on('message', msg => {
                 client.channels.cache.get(msg.channel.id).send(istenEmbed);
                 break;
             case 'geci':
-                client.channels.cache.get(msg.channel.id).send('oh igen ' + sentence);
+                client.channels.cache.get(msg.channel.id).send('oh igen' + sentence);
                 client.channels.cache.get(msg.channel.id).send('<a:yourmom:787410945541537842>');
-
                 break;
             case 'lotto':
                 if (msg.channel.id === '779395227688501298') {
@@ -428,6 +433,12 @@ client.on('message', msg => {
         client.channels.cache.get(msg.channel.id).send('Szopadék');
     } else if (msg.content.toLowerCase() === 'szopadék') {
         client.channels.cache.get(msg.channel.id).send('Baszadék');
+    }
+
+    if (msg.content.toLowerCase() === '<:medishrug:786185046469902336>') {
+        client.channels.cache.get(msg.channel.id).send('<:madishrug:788328467485032458>');
+    } else if (msg.content.toLowerCase() === '<:madishrug:787260903020167190>') {
+        client.channels.cache.get(msg.channel.id).send('<:medishrug:788328451550871552>');
     }
 
     if (msg.content.toLowerCase().includes('no bully')) {
