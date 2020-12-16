@@ -199,7 +199,8 @@ client.on('message', msg => {
                     '!csicskawall: kilistázom a csicska tanárokat\n' +
                     '!aranywall: kilistázom aranyember tanárokat\n' +
                     '!istenwall: meg mondom ki az isten\n' +
-                    '!csicska + "valami": meg dingi-dongizom\n' +
+                    '!geci + "valami": meg dingi-dongizom\n' +
+                    '!mock + "valami": retard spongyabobként beszélek\n' +
                     '!lotto "szám" "szám": a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n' +
                     '!tippek: kilistázza milyen tippek voltak eddig\n' +
                     'Ha elkezded a bohen rapsody vagy a never gonna give you up egy részletét, akkor folytatom azt, így együtt tudunk dalolászni (fontos, hogy pontos legyen aposztróf szükséges, hogy jó helyen legyen)\n' +
@@ -296,6 +297,12 @@ client.on('message', msg => {
             case 'geci':
                 client.channels.cache.get(msg.channel.id).send('oh igen' + sentence);
                 client.channels.cache.get(msg.channel.id).send('<a:yourmom:787410945541537842>');
+                break;
+            case 'mock':
+                let retardSentence = func.reardinator(sentence);
+                client.channels.cache.get(msg.channel.id).send('<a:retard:788703547335901184>');
+                client.channels.cache.get(msg.channel.id).send(retardSentence);
+                client.channels.cache.get(msg.channel.id).send('<a:retard:788703547335901184>');
                 break;
             case 'lotto':
                 if (msg.channel.id === '779395227688501298') {

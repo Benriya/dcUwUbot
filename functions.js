@@ -95,5 +95,14 @@ module.exports = {
             returnSzoveg += array[Math.floor(Math.random() * 12)];
         }
         return returnSzoveg;
+    },
+
+    reardinator: (sentence) => {
+        let splittedSentence = sentence.split("");
+        for (let i = 0; i < splittedSentence.length; i+=2) {
+            splittedSentence[i] = splittedSentence[i].toUpperCase();
+        }
+        splittedSentence = splittedSentence.join("");
+        return splittedSentence;
     }
 }
