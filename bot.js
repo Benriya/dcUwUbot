@@ -107,7 +107,9 @@ client.on('message', msg => {
         let sentence = msg.content.slice(5);
         let nickname = args[1];
 
-        try {
+        console.log(cmd.toLocaleLowerCase());
+
+        if(cmd.toLocaleLowerCase() !== 'kivagy' && cmd.toLocaleLowerCase() !== 'votenick' && cmd.toLocaleLowerCase() !== 'votemute') {
             if (sentence !== undefined) {
                 if (sentence.includes('@')) {
                     return;
@@ -118,10 +120,7 @@ client.on('message', msg => {
                     return;
                 }
             }
-        } catch (e) {
-            console.log(e);
         }
-
         switch (cmd.toLocaleLowerCase()) {
             case 'rule':
                 attachment = new Discord.MessageAttachment('./rule.png');
@@ -146,6 +145,7 @@ client.on('message', msg => {
                 client.channels.cache.get(msg.channel.id).send(nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
                 break;
             case 'kurai':
+                msg.delete();
                 let szoveg = func.randomKuraiSzoveg();
                 client.channels.cache.get(msg.channel.id).send(szoveg);
                 break;
@@ -295,10 +295,12 @@ client.on('message', msg => {
                 client.channels.cache.get(msg.channel.id).send(istenEmbed);
                 break;
             case 'geci':
+                msg.delete();
                 client.channels.cache.get(msg.channel.id).send('oh igen' + sentence);
                 client.channels.cache.get(msg.channel.id).send('<a:yourmom:787410945541537842>');
                 break;
             case 'mock':
+                msg.delete();
                 let retardSentence = func.reardinator(sentence);
                 client.channels.cache.get(msg.channel.id).send('<a:retard:788703547335901184>');
                 client.channels.cache.get(msg.channel.id).send(retardSentence);
