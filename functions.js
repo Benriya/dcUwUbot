@@ -98,7 +98,7 @@ module.exports = {
     },
 
     reardinator: (sentence) => {
-        let splittedSentence = sentence.split("");
+        let splittedSentence = sentence.toLowerCase().split("");
         for (let i = 0; i < splittedSentence.length; i+=2) {
             splittedSentence[i] = splittedSentence[i].toUpperCase();
         }
