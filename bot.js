@@ -104,7 +104,6 @@ client.on('message', msg => {
 
         let pornChannel = '667779656363278367';
         let sentence = msg.content.slice(5);
-        let pornChoice = msg.content.slice(7 + args[1].length);
         let nickname = args[1];
 
         console.log(cmd.toLocaleLowerCase());
@@ -175,11 +174,12 @@ client.on('message', msg => {
                 }
                 break;
             case 'porn':
+                let pornChoice = msg.content.slice(7 + args[1].length);
                 let Searcher;
                 if (msg.channel.id === pornChannel) {
                     switch (nickname.toLowerCase()) {
                         case 'xvideos':
-                            Searcher = new PornSearch(sentence, nickname);
+                            Searcher = new PornSearch(pornChoice, nickname);
                             Searcher.videos()
                                 .then(videos => {
                                     let random = Math.floor(Math.random() * videos.length);
@@ -190,13 +190,13 @@ client.on('message', msg => {
                             });
                             return;
                         case 'sex':
-                            Searcher = new PornSearch(sentence, nickname);
+                            Searcher = new PornSearch(pornChoice, nickname);
                             break;
                         case 'pornhub':
-                            Searcher = new PornSearch(sentence, nickname);
+                            Searcher = new PornSearch(pornChoice, nickname);
                             break;
                         default:
-                            Searcher = new PornSearch(sentence, nickname = 'pornhub');
+                            Searcher = new PornSearch(pornChoice, nickname = 'pornhub');
                             break;
                     }
                     Searcher.gifs()
