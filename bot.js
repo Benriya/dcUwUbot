@@ -25,7 +25,6 @@ client.on('ready', () => {
 let fs = require('fs');
 let files;
 let chosenFile;
-let swearStack = 0;
 let voters = [];
 let member;
 let lottoArray = new Map();
@@ -62,11 +61,11 @@ let winners = [];
             client.channels.cache.get("779395227688501298").send('Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
         }
     },60 * 1000);
-//604800
-//86400
+
 client.on('message', msg => {
-    client.user.setActivity("with depression and OJO");
-    if(msg.author.bot) return;
+    if (msg === undefined) return;
+    client.user.setActivity("The truth | !!help");
+    if (msg.author.bot) return;
 
     const istenEmbed = new Discord.MessageEmbed()
         .setColor('#fff200')
@@ -105,6 +104,7 @@ client.on('message', msg => {
 
         let pornChannel = '667779656363278367';
         let sentence = msg.content.slice(5);
+        let pornChoice = msg.content.slice(7 + args[1].length);
         let nickname = args[1];
 
         console.log(cmd.toLocaleLowerCase());
@@ -170,21 +170,45 @@ client.on('message', msg => {
                 if (msg.channel.id === pornChannel) {
                     const picsSource = `https://www.pornpics.com/?q=${args[1]}+${args[2] === undefined ? ' ' : args[2]}`;
                     client.channels.cache.get(msg.channel.id).send(picsSource)
-                }else{
+                } else {
                     client.channels.cache.get(msg.channel.id).send('Ne ebbe a channelbe írd');
                 }
                 break;
             case 'porn':
+                let Searcher;
                 if (msg.channel.id === pornChannel) {
-                    const Searcher = new PornSearch(sentence);
+                    switch (nickname.toLowerCase()) {
+                        case 'xvideos':
+                            Searcher = new PornSearch(sentence, nickname);
+                            Searcher.videos()
+                                .then(videos => {
+                                    let random = Math.floor(Math.random() * videos.length);
+                                    client.channels.cache.get(msg.channel.id).send(videos[random].url);
+                                }).catch(err => {
+                                client.channels.cache.get(msg.channel.id).send('Nincs találat');
+                                console.log('nothing found');
+                            });
+                            return;
+                        case 'sex':
+                            Searcher = new PornSearch(sentence, nickname);
+                            break;
+                        case 'pornhub':
+                            Searcher = new PornSearch(sentence, nickname);
+                            break;
+                        default:
+                            Searcher = new PornSearch(sentence, nickname = 'pornhub');
+                            break;
+                    }
                     Searcher.gifs()
                         .then(gifs => {
-                            client.channels.cache.get(msg.channel.id).send(gifs[Math.floor(Math.random() * gifs.length)].webm)
+                            let random = Math.floor(Math.random() * gifs.length);
+                            nickname === 'sex' ? client.channels.cache.get(msg.channel.id).send(gifs[random].url) : client.channels.cache.get(msg.channel.id).send(gifs[random].webm);
+                            client.channels.cache.get(msg.channel.id).send(gifs[random].title);
                         }).catch(err => {
                         client.channels.cache.get(msg.channel.id).send('Nincs találat');
                         console.log('nothing found');
                     });
-                }else{
+              }else{
                     client.channels.cache.get(msg.channel.id).send('Ne ebbe a channelbe írd');
                 }
                 break;
@@ -322,7 +346,7 @@ client.on('message', msg => {
                         lottoArray = func.addMemberLotto(tips, member, lottoArray);
                         client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
                     } else {
-                        client.channels.cache.get(msg.channel.id).send('2 egész egyjegyű számmal tippelj már seggarc');
+                        client.channels.cache.get(msg.channel.id).send('2 egész egyjegyű számmal tippelj');
                     }
 
                 } else {
@@ -541,9 +565,12 @@ client.on('messageDelete', message => {
     let channel = message.channel;
     let messagePic = '';
     let messageContent = '*none*';
-    if (message.cleanContent.length > 0) {
-        messageContent = message.cleanContent;
+    if (message.cleanContent !== null) {
+        if (message.cleanContent.length > 0) {
+            messageContent = message.cleanContent;
+        }
     }
+
     const textEmbed = new Discord.MessageEmbed()
         .setColor('#9b18bf')
         .setTitle('Deleted Message')
@@ -646,6 +673,7 @@ function voteMuteFilter(reaction, user) {
     if (['👍'].includes(reaction.emoji.name)) {
         if (!voters.includes(user.id)) {
             voters.push(user.id);
+            console.log('pushed');
         }
     }else {
         console.log(reaction.emoji.name);
@@ -660,6 +688,7 @@ function voteNickFilter(reaction, user) {
     if (['👍'].includes(reaction.emoji.name)) {
         if (!voters.includes(user.id)) {
             voters.push(user.id);
+            console.log('pushed');
         }
     }
     if (voters.length === 5) {
