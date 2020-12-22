@@ -274,6 +274,7 @@ client.on('message', msg => {
                     '      Kátai Kamilla\n' +
                     '      Kardos Péter\n' +
                     '      Kardos Péter Dr.\n' +
+                    '      Farkas Richárd\n' +
                     '      Fülöp Vanda\n' +
                     '      Keleti Márton\n' +
                     '      Kicsi András\n' +
