@@ -530,13 +530,22 @@ client.on('message', msg => {
             client.channels.cache.get(msg.channel.id).send(textArray[randomNumber]);
             swearStack = 0;
         }
-    }
+    }*/
 
-    if (msg.content.toLocaleLowerCase().includes('furry')) {
-        let furryArray = ['UwU', 'OwO', 'Uwuristen', '(　・`ω・´)', 'fuwurykról van szó?', 'Kruwuzor fuwury UwU'];
+    if (msg.content.toLocaleLowerCase() === 'beírta?' ||
+    msg.content.toLocaleLowerCase() === 'beírtamá?' ||
+    msg.content.toLocaleLowerCase() === 'beírta már?' ||
+    msg.content.toLocaleLowerCase() === 'mikor írja be?' ||
+    msg.content.toLocaleLowerCase() === 'mikor írja be'||
+        msg.content.toLocaleLowerCase() === 'beirta?' ||
+        msg.content.toLocaleLowerCase() === 'beirtamá?' ||
+        msg.content.toLocaleLowerCase() === 'beirta már?' ||
+        msg.content.toLocaleLowerCase() === 'mikor irja be?' ||
+        msg.content.toLocaleLowerCase() === 'mikor irja be') {
+        let furryArray = ['soha', 'úgyse fogja', 'csitt', 'engedd el', '(puskázás)', 'Tanultál volna'];
         let randomNumber = Math.floor(Math.random() * furryArray.length);
         client.channels.cache.get(msg.channel.id).send(furryArray[randomNumber]);
-    }*/
+    }
 
     if (msg.content.toLocaleLowerCase().includes('nem mered')) {
         client.channels.cache.get(msg.channel.id).send('hang vaaaagy');
