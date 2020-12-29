@@ -156,6 +156,10 @@ client.on('message', msg => {
                 attachment = new Discord.MessageAttachment('./szerb/uwu.gif');
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
+            case 'assemble':
+                attachment = new Discord.MessageAttachment('./szerb/assemble.gif');
+                client.channels.cache.get(msg.channel.id).send(attachment);
+                break;
             case 'praise2':
                 client.channels.cache.get(msg.channel.id).send(nickname + '<:popehead:767494031193407509>\n' + '<:popehand:767494212794843186>' + '<:popeface:767494094616133683>');
                 break;
