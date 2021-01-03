@@ -34,7 +34,7 @@ let winners = [];
 
     setInterval(() => {
         let nowDate = new Date();
-        if (nowDate.getMinutes() === 0 && nowDate.getHours() % 2 === 0) {
+        if (nowDate.getMinutes() === 0 && nowDate.getHours() % 3 === 0) {
             client.channels.cache.get("779395227688501298").send('***Lotto***');
             let checkNumbers = func.getLottoNumbers(lottoArray);
             client.channels.cache.get('779395227688501298').send(checkNumbers);
@@ -359,8 +359,12 @@ client.on('message', msg => {
                 }
                 break;
             case 'tippek':
-                let checkNumbers = func.getLottoNumbers(lottoArray);
-                client.channels.cache.get(msg.channel.id).send(checkNumbers);
+                if (msg.channel.id === '779395227688501298') {
+                    let checkNumbers = func.getLottoNumbers(lottoArray);
+                    client.channels.cache.get(msg.channel.id).send(checkNumbers);
+                } else {
+                    client.channels.cache.get(msg.channel.id).send('no');
+                }
                 break;
             case 'hess':
                 attachment = new Discord.MessageAttachment('./szerb/hess.gif');

@@ -82,7 +82,7 @@ module.exports = {
     drawNumbers: () => {
         let winningNumbers = [];
            // winningNumbers = [1, 1];
-        winningNumbers = [Math.round(Math.random() * 8 + 1), Math.round(Math.random() * 8 + 1)];
+        winningNumbers = [Math.round(Math.random() * 6 + 1), Math.round(Math.random() * 6 + 1)];
         return winningNumbers;
     },
 
@@ -99,34 +99,6 @@ module.exports = {
 
     reardinator: (sentence) => {
         let splittedSentence = sentence.toLowerCase().split("");
-        /*let kisBetu = 0;
-        let nagyBetu = 0;
-        for (let i = 1; i < splittedSentence.length; i++) {
-            if (kisBetu === 3) {
-                splittedSentence[i] = splittedSentence[i].toUpperCase();
-                kisBetu = 0;
-                nagyBetu++;
-
-                console.log('kis3');
-                continue;
-            } else if (nagyBetu === 3) {
-                nagyBetu = 0;
-                kisBetu++;
-                console.log('nagy3');
-                continue;
-            }
-
-            if (Math.round(Math.random()) === 0) {
-                splittedSentence[i] = splittedSentence[i].toUpperCase();
-                kisBetu = 0;
-                nagyBetu++;
-                console.log('nagy');
-            } else {
-                kisBetu++;
-                nagyBetu = 0;
-                console.log('kis');
-            }
-        }*/
         for (let i = 1; i < splittedSentence.length; i+=2) {
             splittedSentence[i] = splittedSentence[i].toUpperCase();
         }
