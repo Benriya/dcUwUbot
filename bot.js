@@ -17,6 +17,7 @@ const gifSearch = require('gif-search');
 const songs = require('./songs');
 const func = require('./functions');
 const Discord = require('discord.js');
+const database = require('./database/handle_database');
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -274,6 +275,7 @@ client.on('message', msg => {
                     '      Antal Gábor\n' +
                     '      Balogh András\n' +
                     '      Cservenák Bence\n' +
+                    '      Gazdag Zsolt\n' +
                     '      Győrffy Lajos\n' +
                     '      Heinc Emília\n' +
                     '      Kátai Kamilla\n' +
@@ -410,7 +412,41 @@ client.on('message', msg => {
                     console.log(r);
                 });
                 break;
+            case 'create':
+                if (msg.channel.id === '796405215279972353') {
+                    let description = msg.content.slice(9 + args[1].length);
+                    database.characterCreate(args[1], description, msg.author.id);
+                } else {
+                    client.channels.cache.get(msg.channel.id).send('nope');
+                }
+                break;
+            case 'info':
+                if (msg.channel.id === '796405215279972353') {
+                    checkCharacter();
+                } else {
+                    client.channels.cache.get(msg.channel.id).send('nope');
+                }
+                break;
         }
+    }
+
+    async function checkCharacter() {
+        const myChar = await func.getCharacter(msg.author.id);
+        const emberChar = new Discord.MessageEmbed()
+            .setColor('#36ff00')
+            .setTitle(`[${myChar.name}]`)
+            .setThumbnail(`${msg.author.avatarURL()}`)
+            .setAuthor(`${msg.author.username}`)
+            .addField('Message: ',
+                `*${myChar.description}*`)
+            .addField('Stats: ',
+                `Power: ${myChar.Power}\n` +
+                `Intellect: ${myChar.Intellect}\n` +
+                `Agility: ${myChar.Agility}\n` +
+                `Luck: ${myChar.Luck}`)
+            .addField('Experience: ',
+            `${myChar.experience}xp`);
+        client.channels.cache.get(msg.channel.id).send(emberChar);
     }
 
     if(msg.attachments.size === 0) {
@@ -687,6 +723,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
 //740536932303634473
 client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvZ1g.pD5CXOTEyBkiA0G-L_jMRAlPVbo');
+
 
 function voteMuteFilter(reaction, user) {
     if (['👍'].includes(reaction.emoji.name)) {

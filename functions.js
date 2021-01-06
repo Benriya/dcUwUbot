@@ -1,3 +1,4 @@
+const database = require('./database/handle_database');
 module.exports = {
     getChannel: (channel) => {
     switch (channel) {
@@ -50,6 +51,10 @@ module.exports = {
 
     playerChange: (players, author) => {
         return players.replace('<@' + author + '>', '');
+    },
+
+    getCharacter: async (id) => {
+        return await database.listCharacter(id);
     },
 
     getLottoNumbers: (array) => {
