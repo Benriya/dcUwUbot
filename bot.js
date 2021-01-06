@@ -140,7 +140,7 @@ client.on('message', msg => {
                 attachment = new Discord.MessageAttachment('./szerb/picsaba.png');
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
-            case 'praise1':
+            case 'praise':
                 client.channels.cache.get(msg.channel.id).send(nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
                 break;
             case 'kurai':
@@ -152,6 +152,10 @@ client.on('message', msg => {
                 attachment = new Discord.MessageAttachment('./szerb/monke.png');
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
+            case 'vicci':
+                attachment = new Discord.MessageAttachment('./szerb/vicci.jpg');
+                client.channels.cache.get(msg.channel.id).send(attachment);
+                break;
             case 'uwu':
                 attachment = new Discord.MessageAttachment('./szerb/uwu.gif');
                 client.channels.cache.get(msg.channel.id).send(attachment);
@@ -159,9 +163,6 @@ client.on('message', msg => {
             case 'assemble':
                 attachment = new Discord.MessageAttachment('./szerb/assemble.gif');
                 client.channels.cache.get(msg.channel.id).send(attachment);
-                break;
-            case 'praise2':
-                client.channels.cache.get(msg.channel.id).send(nickname + '<:popehead:767494031193407509>\n' + '<:popehand:767494212794843186>' + '<:popeface:767494094616133683>');
                 break;
             case 'kezelhetetlen':
                 files = fs.readdirSync('./slap');
@@ -223,7 +224,7 @@ client.on('message', msg => {
                     '!votenick "nicknév" "tag: nicknév helyére beírod a kívánt nevet, és tageled akinek a nevét meg akarod változtatni, ehhez 6 szavazat kell, hogy sikeres legyen. \n' +
                     '!kivagy + "tag" megmondja hogy te ki is vagy valójában. \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
                     '!kezelhetetlen: ha valaki rosszul viselkedik, helyre teszem egy pofon giffel.\n' +
-                    '!praise1 vagy !praise2 + "emote" vagy "szöveg": isteni magaslatba emelem azt amit megadtál\n' +
+                    '!praise + "emote" vagy "szöveg": isteni magaslatba emelem azt amit megadtál\n' +
                     '!csicskawall: kilistázom a csicska tanárokat\n' +
                     '!aranywall: kilistázom aranyember tanárokat\n' +
                     '!istenwall: meg mondom ki az isten\n' +

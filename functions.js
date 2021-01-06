@@ -87,8 +87,8 @@ module.exports = {
     },
 
     randomKuraiSzoveg: () => {
-        let array = ['A', 'S', 'D', '?', ':', '_', ':', '_', '?', 'D', 'S', 'A'];
-        let random = Math.floor(Math.random() * 30 + 10);
+        let array = ['A', 'S', 'D', '?', ':', '_'];
+        let random = Math.floor(Math.random() * 50 + 10);
         let returnSzoveg = '';
 
         for (let i = 0; i < random; i++) {
