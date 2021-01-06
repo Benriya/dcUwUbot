@@ -420,7 +420,7 @@ client.on('message', msg => {
                     client.channels.cache.get(msg.channel.id).send('nope');
                 }
                 break;
-            case 'info':
+            case 'char':
                 if (msg.channel.id === '796405215279972353') {
                     checkCharacter();
                 } else {
