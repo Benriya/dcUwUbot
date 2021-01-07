@@ -1,12 +1,12 @@
 let MongoClient = require('mongodb').MongoClient;
-let url = "mongodb://localhost:27017/";
+let url = 'mongodb+srv://Kuroko:Madamadadane@uwuniverzum.cegga.mongodb.net/test';
 
 module.exports = {
-    characterCreate: (name, description, id) => {
+    characterCreate: (name, race, description, id, Power, Intellect, Agility, Luck) => {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
-            let myobj = {name: name, description: description, id: id, Power: 1, Intellect: 1, Agility: 1, Luck: 1, experience: 0};
+            let myobj = {name: name, description: description, race: race, id: id, Power: Power, Intellect: Intellect, Agility: Agility, Luck: Luck, experience: 0};
             dbo.collection("Characters").insertOne(myobj, function (err, res) {
                 if (err) throw err;
                 console.log("1 document inserted");

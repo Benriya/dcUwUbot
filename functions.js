@@ -1,53 +1,113 @@
 const database = require('./database/handle_database');
 module.exports = {
     getChannel: (channel) => {
-    switch (channel) {
-        case 'suwuli':
-            return '706776570836156426';
+        switch (channel) {
+            case 'suwuli':
+                return '706776570836156426';
 
-        case 'kuwuka':
-            return '671309309757358123';
+            case 'kuwuka':
+                return '671309309757358123';
 
-        case '18':
-            return '667779656363278367';
+            case '18':
+                return '667779656363278367';
 
-        case 'mowozi':
-            return '699657394506170469';
+            case 'mowozi':
+                return '699657394506170469';
 
-        case 'owoff':
-            return '667783025811259448';
+            case 'owoff':
+                return '667783025811259448';
 
-        case 'altalanowos':
-            return '661569831111491618';
+            case 'altalanowos':
+                return '661569831111491618';
 
-        case 'jatekowos':
-            return '713415837356392508';
+            case 'jatekowos':
+                return '713415837356392508';
 
-        case 'lotto':
-            return '779395227688501298';
+            case 'lotto':
+                return '779395227688501298';
 
-        default:
-            return '667783025811259448';
-    }
-},
+            default:
+                return '667783025811259448';
+        }
+    },
 
- checkIfSame: (array) => {
+     checkIfSame: (array) => {
         if (array[0].author.bot || array[1].author.bot || array[2].author.bot) {
             return false;
         }
         if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
             return true;
         }
-},
+    },
 
- swearListCheck: (message) => {
-    let swearList = ['anyád', 'geci', 'hugy', 'kurva', 'ribanc', 'buzi', 'picsába', 'fasz', 'szar ', 'rühes', 'gedva', 'csicska', 'pina'];
-    for (let i = 0; i < swearList.length; i++) {
-        if(message.toLowerCase().includes(swearList[i])) {
-            return true;
+    raceCheck: (message) => {
+        let raceList = ['human', 'orc', 'goblin', 'dwarf', 'elf', 'troll', 'draenei', 'lizard', 'skeleton ', 'satyr', 'gnome', 'worgen'];
+        for (let i = 0; i < raceList.length; i++) {
+            if(message.toLowerCase().includes(raceList[i])) {
+                return message;
+            }
         }
-    }
-},
+        return false;
+    },
+
+    getRaceList: () => {
+        return [
+            'Human: allstat+1',
+            'Orc: power+3, agility+1',
+            'Goblin: luck+4',
+            'Dwarf: power+2, luck+2',
+            'Elf: intellect+3, agility+1',
+            'Troll: power+2, agility+2',
+            'Draenei: power+2, intellect+2',
+            'Lizard: agility+4',
+            'Skeleton: intellect+4',
+            'Satyr: power+2, intellect+1, agility+1',
+            'Gnome: intellect+1, agility+2, luck+1',
+            'Worgen: power+2, agility+1, luck+1'];
+    },
+
+    getRaceStats: (race) =>{
+        let stats = [];
+        switch (race) {
+            case 'human':
+                stats.push(2, 2, 2, 2);
+                break;
+            case 'orc':
+                stats.push(4, 1, 2, 1);
+                break;
+            case 'goblin':
+                stats.push(1, 1, 1, 5);
+                break;
+            case 'draenei':
+                stats.push(3, 3, 1, 1);
+                break;
+            case 'gnome':
+                stats.push(1, 2, 3, 2);
+                break;
+            case 'dwarf':
+                stats.push(3, 1, 1, 3);
+                break;
+            case 'elf':
+                stats.push(1, 4, 2, 1);
+                break;
+            case 'troll':
+                stats.push(3, 1, 3, 1);
+                break;
+            case 'lizard':
+                stats.push(1, 1, 5, 1);
+                break;
+            case 'skeleton':
+                stats.push(1, 5, 1, 1);
+                break;
+            case 'satyr':
+                stats.push(3, 2, 2, 1);
+                break;
+            case 'worgen':
+                stats.push(3, 1, 2, 2);
+                break;
+        }
+        return stats;
+    },
 
     playerChange: (players, author) => {
         return players.replace('<@' + author + '>', '');
