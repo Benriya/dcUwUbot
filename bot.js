@@ -421,6 +421,10 @@ client.on('message', async msg => {
     if (msg.content.substring(0, 1) === '?') {
         switch (cmd.toLocaleLowerCase()) {
             case 'create':
+                if (args[1] === undefined || args[2] === undefined) {
+                    client.channels.cache.get(msg.channel.id).send('Adj meg nevet és fajt is');
+                    return;
+                }
                 let description = msg.content.slice(10 + args[1].length + args[2].length);
                 let exist = await func.getCharacter(msg.author.id);
                 if (exist !== null) {
@@ -442,7 +446,53 @@ client.on('message', async msg => {
                 let races = func.getRaceList();
                 client.channels.cache.get(msg.channel.id).send(races);
                 break;
+            case 'adventures':
+                let adventures = func.getAdventures();
+                client.channels.cache.get(msg.channel.id).send(adventures);
+                break;
+            case 'adventure':
+                if (args[1] === undefined) {
+                    client.channels.cache.get(msg.channel.id).send('Adj meg nehézséget');
+                    return;
+                }
+                let difficult = args[1];
+                let hero = await checkCharacter();
+                let monster = await checkEnemy(difficult);
+                let wins = [];
+                wins = func.fightMonster(monster, hero);
+                console.log(wins);
+                client.channels.cache.get(msg.channel.id).send(`${hero.name}: ${wins[1]} Vs ${monster.name}: ${wins[2]}.`);
+                if (wins[0] === 'hero') {
+                    client.channels.cache.get(msg.channel.id).send(`Gratulálok ${hero.name} elintézted ${monster.name}-t. Jutalmad ${monster.experience}xp!`);
+                    await database.updateCharacter(hero, monster.experience);
+                } else {
+                    client.channels.cache.get(msg.channel.id).send(`${monster.name} most jól agyonvert. Visszatértél a város gyengélkedőjére.`);
+                }
+                break;
         }
+    }
+
+    async function checkEnemy(difficult) {
+        const enemy = await func.getEnemy(difficult);
+        const enemyChar = new Discord.MessageEmbed()
+            .setColor('#ff0202')
+            .setTitle(`[${enemy.name}]`)
+            .setThumbnail(`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcg2z-7M1BLuu4WbVKYQzv8Ya30gb5-b5n4Q&usqp=CAU`)
+            .setAuthor(`Monster`)
+            .addField('Race: ',
+                `${enemy.race}`)
+            .addField('Description: ',
+                `*${enemy.description}*`)
+            .addField('Stats: ',
+                `Power: ${enemy.Power}\n` +
+                `Intellect: ${enemy.Intellect}\n` +
+                `Agility: ${enemy.Agility}`)
+            .addField('Experience: ',
+                `${enemy.experience}xp`)
+            .addField('Difficult: ',
+                `${enemy.diff}`);
+        client.channels.cache.get(msg.channel.id).send(enemyChar);
+        return enemy;
     }
 
     async function checkCharacter() {
@@ -464,6 +514,7 @@ client.on('message', async msg => {
             .addField('Experience: ',
             `${myChar.experience}xp`);
         client.channels.cache.get(msg.channel.id).send(emberChar);
+        return myChar;
     }
 
     if(msg.attachments.size === 0) {

@@ -1,4 +1,18 @@
 const database = require('./database/handle_database');
+
+function showStr(char) {
+    console.log(char);
+    if (char.Power < char.Agility){
+        char.Power = 0;
+    } else {
+        char.Power -= char.Agility;
+    }
+    let charMax = 10 + char.Power + char.Intellect;
+    let charMin = 1 + char.Power + char.Intellect;
+    console.log(charMax, charMin);
+    return Math.floor(Math.random() * charMax + charMin);
+}
+
 module.exports = {
     getChannel: (channel) => {
         switch (channel) {
@@ -109,12 +123,37 @@ module.exports = {
         return stats;
     },
 
-    playerChange: (players, author) => {
-        return players.replace('<@' + author + '>', '');
+    getEnemy: async (diff) => {
+        let enemies = await database.listEnemy(diff);
+        return enemies[Math.floor(Math.random() * enemies.length)];
     },
 
     getCharacter: async (id) => {
         return await database.listCharacter(id);
+    },
+
+    fightMonster: (monster, hero) => {
+        let heroStr = showStr(hero);
+        let monsterStr =  showStr(monster);
+        console.log(heroStr, monsterStr);
+        let result = [];
+
+        if (monsterStr > heroStr) {
+            result.push('monster', heroStr, monsterStr);
+            return result;
+        } else {
+            result.push('hero', heroStr, monsterStr);
+            return result;
+        }
+    },
+
+    getAdventures: () => {
+        return [
+            'Weak: lvl <10',
+            'Normal: lvl 10-20',
+            'Hard: lvl 20-30',
+            'BOSS: lvl 30-40'
+        ]
     },
 
     getLottoNumbers: (array) => {
