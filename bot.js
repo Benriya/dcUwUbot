@@ -63,10 +63,15 @@ let winners = [];
         }
     },60 * 1000);
 
-client.on('message', msg => {
+client.on('message', async msg => {
+
     if (msg === undefined) return;
-    client.user.setActivity("The truth | !!help");
+    await client.user.setActivity("The truth | !!help");
     if (msg.author.bot) return;
+
+    let args = msg.content.substring(1).split(' ');
+    let cmd = args[0];
+
 
     const istenEmbed = new Discord.MessageEmbed()
         .setColor('#fff200')
@@ -96,13 +101,10 @@ client.on('message', msg => {
     }).catch(console.error);
 
     if (msg.content === 'ping') {
-        msg.reply('Pong!');
+        await msg.reply('Pong!');
     }
 
     if (msg.content.substring(0, 1) === '!') {
-        let args = msg.content.substring(1).split(' ');
-        let cmd = args[0];
-
         let pornChannel = '667779656363278367';
         let sentence = msg.content.slice(5);
         let nickname = args[1];
@@ -145,7 +147,7 @@ client.on('message', msg => {
                 client.channels.cache.get(msg.channel.id).send(nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
                 break;
             case 'kurai':
-                msg.delete();
+                await msg.delete();
                 let szoveg = func.randomKuraiSzoveg();
                 client.channels.cache.get(msg.channel.id).send(szoveg);
                 break;
@@ -327,12 +329,12 @@ client.on('message', msg => {
                 client.channels.cache.get(msg.channel.id).send(istenEmbed);
                 break;
             case 'geci':
-                msg.delete();
+                await msg.delete();
                 client.channels.cache.get(msg.channel.id).send('oh igen' + sentence);
                 client.channels.cache.get(msg.channel.id).send('<a:yourmom:787410945541537842>');
                 break;
             case 'mock':
-                msg.delete();
+                await msg.delete();
                 let retardSentence = func.reardinator(sentence);
                 client.channels.cache.get(msg.channel.id).send('<a:retard:788703547335901184>');
                 client.channels.cache.get(msg.channel.id).send(retardSentence);
@@ -374,7 +376,7 @@ client.on('message', msg => {
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
             case 'votemute':
-                msg.react('👍');
+                await msg.react('👍');
 
                 msg.awaitReactions(voteMuteFilter, { max: 1, time: 10000, errors: ['time']})
                     .then(async () => {
@@ -400,7 +402,7 @@ client.on('message', msg => {
                     console.log('error');
                 }
 
-                msg.react('👍');
+                await msg.react('👍');
 
                 msg.awaitReactions(voteNickFilter, { max: 1, time: 30000, errors: ['time']})
                     .then( () => {
@@ -412,21 +414,35 @@ client.on('message', msg => {
                     console.log(r);
                 });
                 break;
-            case 'create':
-                if (msg.channel.id === '796405215279972353') {
-                    let description = msg.content.slice(9 + args[1].length);
-                    database.characterCreate(args[1], description, msg.author.id);
-                } else {
-                    client.channels.cache.get(msg.channel.id).send('nope');
-                }
-                break;
-            case 'char':
-                if (msg.channel.id === '796405215279972353') {
-                    checkCharacter();
-                } else {
-                    client.channels.cache.get(msg.channel.id).send('nope');
-                }
-                break;
+
+        }
+    }
+    if (msg.channel.id === '796405215279972353') {
+        if (msg.content.substring(0, 1) === '?') {
+            switch (cmd.toLocaleLowerCase()) {
+                case 'create':
+                    let description = msg.content.slice(10 + args[1].length + args[2].length);
+                    let exist = await func.getCharacter(msg.author.id);
+                    if (exist !== null) {
+                        client.channels.cache.get(msg.channel.id).send('Neked már létezik karaktered');
+                    } else {
+                        if (func.raceCheck(args[2]) !== false) {
+                            let stats = func.getRaceStats(args[2].toLowerCase());
+                            database.characterCreate(args[1], args[2], description, msg.author.id, stats[0], stats[1], stats[2], stats[3]);
+                            client.channels.cache.get(msg.channel.id).send('Karakter létrehozva');
+                        } else {
+                            client.channels.cache.get(msg.channel.id).send('Választható fajt adj meg légyszi\n Fajok listáját ezzel találod: ?races');
+                        }
+                    }
+                    break;
+                case 'char':
+                    await checkCharacter();
+                    break;
+                case 'races':
+                    let races = func.getRaceList();
+                    client.channels.cache.get(msg.channel.id).send(races);
+                    break;
+            }
         }
     }
 
@@ -437,7 +453,9 @@ client.on('message', msg => {
             .setTitle(`[${myChar.name}]`)
             .setThumbnail(`${msg.author.avatarURL()}`)
             .setAuthor(`${msg.author.username}`)
-            .addField('Message: ',
+            .addField('Race: ',
+                `${myChar.race}`)
+            .addField('Description: ',
                 `*${myChar.description}*`)
             .addField('Stats: ',
                 `Power: ${myChar.Power}\n` +
@@ -469,7 +487,7 @@ client.on('message', msg => {
         let channel = args[1];
 
         let channelId = func.getChannel(channel);
-        msg.delete();
+        await msg.delete();
         let sentence = msg.content.slice(5);
         switch (cmd.toLocaleLowerCase()) {
             case 'help':
@@ -556,11 +574,11 @@ client.on('message', msg => {
     }
 
     if (msg.content.toLowerCase().includes('maróti') || msg.content.toLowerCase().includes('dimat') || msg.content.toLowerCase().includes('maroti') || msg.content.toLowerCase().includes('aranyember')) {
-        msg.react('759804122139983873');
+        await msg.react('759804122139983873');
     }
 
     if (msg.content.toLowerCase().includes('brc')) {
-        msg.react('767665863649787924');
+        await msg.react('767665863649787924');
     }
 
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
