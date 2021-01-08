@@ -426,6 +426,7 @@ client.on('message', async msg => {
         }
     }
 
+    //RPG-project
     if (msg.channel.id === '796405215279972353') {
         if (msg.content.substring(0, 1) === '?') {
             switch (cmd.toLocaleLowerCase()) {
@@ -492,6 +493,7 @@ client.on('message', async msg => {
                         let newXp = hero.experience + monster.experience;
                         let levelled = func.checkLevels(hero.level, newXp);
                         if (levelled !== 0){
+                            levelled -= monster.experience;
                             await database.levelUpCharacter(hero, levelled);
                             client.channels.cache.get(msg.channel.id).send(`<:pogger:780724037331845151> Juhúú ${hero.name} szintet léptél! Jutalmad 1db Talent pont! ?levelup paranccsal oszd ki a talentedet.`);
                         } else {

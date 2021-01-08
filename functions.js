@@ -13,6 +13,14 @@ function showStr(char, enemy) {
     }
     let charMax = 10 + power + char.Intellect - levelDiff;
     let charMin = 1 + power + char.Intellect - levelDiff;
+
+    if (charMax < 1) {
+        charMax = 0;
+    }
+    if (charMin < 1) {
+        charMin = 0;
+    }
+
     return Math.floor(Math.random() * charMax + charMin);
 }
 

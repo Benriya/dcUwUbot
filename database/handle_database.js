@@ -153,7 +153,7 @@ module.exports = {
             if (err) throw err;
             let dbo = db.db("mydb");
             let myquery = { type: 'lotto' };
-            dbo.collection("customers").deleteMany(myquery, function (err, obj) {
+            dbo.collection("Lotto").deleteMany(myquery, function (err, obj) {
                 if (err) throw err;
                 console.log(obj.result.n + " document(s) deleted");
                 db.close();
