@@ -28,20 +28,20 @@ let files;
 let chosenFile;
 let voters = [];
 let member;
-let lottoArray = new Map();
 let winningNumbers = [];
 let winners = [];
 
 
-    setInterval(() => {
+    setInterval(async () => {
         let nowDate = new Date();
         if (nowDate.getMinutes() === 0 && nowDate.getHours() % 3 === 0) {
             client.channels.cache.get("779395227688501298").send('***Lotto***');
-            let checkNumbers = func.getLottoNumbers(lottoArray);
+            let checkNumbers = await func.setLottoNumbers();
+            let getNumbers = await func.setLottoNumbers('draw');
             client.channels.cache.get('779395227688501298').send(checkNumbers);
             winningNumbers = func.drawNumbers();
             client.channels.cache.get('779395227688501298').send('Nyertes számok: ' + winningNumbers);
-            winners = func.drawWinners(lottoArray, winningNumbers);
+            winners = func.drawWinners(getNumbers, winningNumbers);
 
             const list = client.guilds.cache.get("661569830469632007");
             let nyertes = list.roles.cache.get('779370085487083520');
@@ -58,7 +58,7 @@ let winners = [];
             });
             winners = [];
             winningNumbers = [];
-            lottoArray = new Map();
+            await database.deleteLottoTips();
             client.channels.cache.get("779395227688501298").send('Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
         }
     },60 * 1000);
@@ -353,7 +353,7 @@ client.on('message', async msg => {
                         return;
                     }
                     if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2]))) {
-                        lottoArray = func.addMemberLotto(tips, member, lottoArray);
+                        database.createLottoTip(member, msg.author.id, tips);
                         client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
                     } else {
                         client.channels.cache.get(msg.channel.id).send('2 egész egyjegyű számmal tippelj');
@@ -365,8 +365,8 @@ client.on('message', async msg => {
                 break;
             case 'tippek':
                 if (msg.channel.id === '779395227688501298') {
-                    let checkNumbers = func.getLottoNumbers(lottoArray);
-                    client.channels.cache.get(msg.channel.id).send(checkNumbers);
+                let checkNumbers = await func.setLottoNumbers();
+                client.channels.cache.get(msg.channel.id).send(checkNumbers);
                 } else {
                     client.channels.cache.get(msg.channel.id).send('no');
                 }

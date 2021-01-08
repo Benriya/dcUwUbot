@@ -1,6 +1,6 @@
 let MongoClient = require('mongodb').MongoClient;
 
-const url = process.env.MONGODB_URI;
+const url = 'mongodb+srv://Kuroko:Madamadadane@uwuniverzum.cegga.mongodb.net/test';
 
 module.exports = {
     characterCreate: (name, race, description, id, Power, Intellect, Agility, Luck) => {
@@ -14,7 +14,8 @@ module.exports = {
                 db.close();
             });
         });
-},
+    },
+
     listCharacter: (id) => {
         return new Promise(function (resolve, reject) {
             MongoClient.connect(url, function (err, db) {
@@ -60,5 +61,59 @@ module.exports = {
         });
     },
 
+    createLottoTip: (name, id, tipp) => {
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            let myobj = {name: name, id: id, tipp: tipp, type: 'lotto'};
+            dbo.collection("Lotto").insertOne(myobj, function (err, res) {
+                if (err) throw err;
+                console.log("1 document inserted");
+                db.close();
+            });
+        });
+    },
+
+    updateLottoTip: (name, id, tipp) => {
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            let myquery = { id: id };
+            let newvalues = { $set: {tipp: tipp}};
+            dbo.collection("Lotto").updateOne(myquery, newvalues, function (err, res) {
+                if (err) throw err;
+                console.log("1 document inserted");
+                db.close();
+            });
+        });
+    },
+
+    getLottoTips: () => {
+        return new Promise(function (resolve, reject) {
+            MongoClient.connect(url, function (err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                dbo.collection("Lotto").find({type: 'lotto'}).toArray(function (err, result) {
+                    if (err) throw err;
+                    console.log("1 document inserted");
+                    db.close();
+                    resolve(result);
+                });
+            });
+        });
+    },
+
+    deleteLottoTips: () => {
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            let myquery = { type: 'lotto' };
+            dbo.collection("customers").deleteMany(myquery, function (err, obj) {
+                if (err) throw err;
+                console.log(obj.result.n + " document(s) deleted");
+                db.close();
+            });
+        });
+    },
 
 }

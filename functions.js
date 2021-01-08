@@ -14,6 +14,15 @@ function showStr(char, enemy) {
     return Math.floor(Math.random() * charMax + charMin);
 }
 
+function getLottoNumbers(array) {
+    let returnArray = [];
+    array.forEach((value, key, map) =>{
+        returnArray.push(`[${key}] = ${value}`);
+    });
+
+    return returnArray;
+}
+
 module.exports = {
     getChannel: (channel) => {
         switch (channel) {
@@ -160,20 +169,29 @@ module.exports = {
     adventureCheck: (message) => {
         let adventureList = ['Weak', 'Normal', 'Hard', 'BOSS'];
         for (let i = 0; i < adventureList.length; i++) {
-            if(message.includes(adventureList[i])) {
+            if (message === adventureList[i]) {
                 return false;
             }
         }
         return true;
     },
 
-    getLottoNumbers: (array) => {
-        let returnArray = [];
-        array.forEach((value, key, map) =>{
-            returnArray.push(`[${key}] = ${value}`);
-        });
+    setLottoNumbers: async (type = 'get') => {
+        let returnarray = new Map();
+        let lottok = await database.getLottoTips();
+        if (type === 'get') {
+            for (let i = 0; i < lottok.length; i++) {
+                returnarray.set(lottok[i].name, lottok[i].tipp);
+            }
+            return getLottoNumbers(returnarray);
+        }
+        if (type === 'draw') {
+            for (let i = 0; i < lottok.length; i++) {
+                returnarray.set(lottok[i].name, lottok[i].tipp);
+            }
+            return returnarray;
+        }
 
-        return returnArray;
     },
 
     drawWinners: (array, winningNumbers) => {
