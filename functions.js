@@ -166,6 +166,16 @@ module.exports = {
         ]
     },
 
+    getStats: (message) => {
+        let statList = ['power', 'intellect', 'agility', 'luck'];
+        for (let i = 0; i < statList.length; i++) {
+            if(message.toLowerCase() === statList[i]) {
+                return true;
+            }
+        }
+        return false;
+    },
+
     adventureCheck: (message) => {
         let adventureList = ['Weak', 'Normal', 'Hard', 'BOSS'];
         for (let i = 0; i < adventureList.length; i++) {
@@ -174,6 +184,40 @@ module.exports = {
             }
         }
         return true;
+    },
+
+    checkLevels: (level, experience) => {
+        let xp = 0;
+      let levels = [
+          {level: 1, xp: 50},
+          {level: 2, xp: 100},
+          {level: 3, xp: 150},
+          {level: 4, xp: 200},
+          {level: 5, xp: 250},
+          {level: 6, xp: 300},
+          {level: 7, xp: 400},
+          {level: 8, xp: 500},
+          {level: 9, xp: 600},
+          {level: 10, xp: 700},
+          {level: 11, xp: 850},
+          {level: 12, xp: 1000},
+          {level: 13, xp: 1150},
+          {level: 14, xp: 1300},
+          {level: 15, xp: 1450},
+          {level: 16, xp: 1600},
+          {level: 17, xp: 1750},
+          {level: 18, xp: 1900},
+          {level: 19, xp: 2050},
+          {level: 20, xp: 2200},
+          ];
+        levels.forEach((value) =>{
+            if (value.level === level) {
+                if (value.xp <= experience) {
+                    xp = value.xp
+                }
+            }
+        });
+        return xp;
     },
 
     setLottoNumbers: async (type = 'get') => {

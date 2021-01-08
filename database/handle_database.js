@@ -7,7 +7,7 @@ module.exports = {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
-            let myobj = {name: name, description: description, race: race, id: id, Power: Power, Intellect: Intellect, Agility: Agility, Luck: Luck, experience: 0, level: 1};
+            let myobj = {name: name, description: description, race: race, id: id, Power: Power, Intellect: Intellect, Agility: Agility, Luck: Luck, experience: 0, level: 1, talent: 0};
             dbo.collection("Characters").insertOne(myobj, function (err, res) {
                 if (err) throw err;
                 console.log("1 document inserted");
@@ -45,7 +45,6 @@ module.exports = {
     },
 
     updateCharacter: (char, xp) => {
-        return new Promise(function (resolve, reject) {
             MongoClient.connect(url, function(err, db) {
                 if (err) throw err;
                 let dbo = db.db("mydb");
@@ -58,7 +57,38 @@ module.exports = {
                     db.close();
                 });
             });
-        });
+    },
+
+    levelUpCharacter: (char, xp) => {
+            MongoClient.connect(url, function(err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                let myquery = { id: char.id };
+                let newvalues = { $set: {level: char.level+1, talent: char.talent+1, experience: char.experience-xp } };
+                dbo.collection("Characters").updateOne(myquery, newvalues, function(err, res) {
+                    if (err) throw err;
+                    console.log("1 document updated");
+                    db.close();
+                });
+            });
+    },
+
+    addTalentCharacter: (char, ability) => {
+            MongoClient.connect(url, function(err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                let myquery = { id: char.id };
+                let newvalues;
+                if (ability === 'power') {newvalues = { $set: {Power: char.Power+1, talent: char.talent-1} };}
+                if (ability === 'intellect') {newvalues = { $set: {Intellect: char.Intellect+1, talent: char.talent-1} };}
+                if (ability === 'agility') {newvalues = { $set: {Agility: char.Agility+1, talent: char.talent-1} };}
+                if (ability === 'luck') {newvalues = { $set: {Luck: char.Luck+1, talent: char.talent-1} };}
+                dbo.collection("Characters").updateOne(myquery, newvalues, function(err, res) {
+                    if (err) throw err;
+                    console.log("1 document updated");
+                    db.close();
+                });
+            });
     },
 
     createLottoTip: (name, id, tipp) => {
