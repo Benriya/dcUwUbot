@@ -133,6 +133,21 @@ module.exports = {
         });
     },
 
+    getLotto: (id) => {
+        return new Promise(function (resolve, reject) {
+            MongoClient.connect(url, function (err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                dbo.collection("Lotto").findOne({id: id}, function (err, result) {
+                    if (err) throw err;
+                    console.log("1 document inserted");
+                    db.close();
+                    resolve(result);
+                });
+            });
+        });
+    },
+
     deleteLottoTips: () => {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;

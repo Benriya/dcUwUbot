@@ -342,10 +342,6 @@ client.on('message', async msg => {
                 break;
             case 'lotto':
                 if (msg.channel.id === '779395227688501298') {
-                    if (args.length > 3) {
-                        client.channels.cache.get(msg.channel.id).send('2 egész számot adj meg');
-                        return;
-                    }
                     member = msg.author.username;
                     let tips = `${args[1]} ${args[2]}`;
                     if (`${args[1]} ${args[2]}` === 'kurva anyád') {
@@ -353,8 +349,20 @@ client.on('message', async msg => {
                         return;
                     }
                     if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2]))) {
-                        database.createLottoTip(member, msg.author.id, tips);
-                        client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
+                        if (args[3] === 'change'){
+                            await database.updateLottoTip(member, msg.author.id, tips);
+                            client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
+                        } else if (args[3] === undefined) {
+                            let exist = await database.getLotto(msg.author.id);
+                            if (exist !== null) {
+                                client.channels.cache.get(msg.channel.id).send('Te már tippeltél, tippet a beírt számok után való "change" szöveggel módosíthatsz');
+                            } else {
+                                await database.createLottoTip(member, msg.author.id, tips);
+                                client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
+                            }
+                        } else {
+                            client.channels.cache.get(msg.channel.id).send('2 egész egyjegyű számot adj meg');
+                        }
                     } else {
                         client.channels.cache.get(msg.channel.id).send('2 egész egyjegyű számmal tippelj');
                     }
