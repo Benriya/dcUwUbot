@@ -458,7 +458,7 @@ client.on('message', async msg => {
                     }
                     const myChar = await func.getCharacter(msg.author.id);
                     if (myChar.talent > 0 && func.getStats(args[1])) {
-                        client.channels.cache.get(msg.channel.id).send(`${myChar.name}, egy talent pontot elhasználtál, maradt: ${myChar.talent}`);
+                        client.channels.cache.get(msg.channel.id).send(`${myChar.name}, egy talent pontot elhasználtál, maradt: ${myChar.talent - 1}`);
                         await database.addTalentCharacter(myChar, args[1].toLowerCase());
                     } else {
                         client.channels.cache.get(msg.channel.id).send('Neked nincs talent pontod, elősször szintet kell, hogy lépj');
@@ -486,7 +486,6 @@ client.on('message', async msg => {
                     let monster = await checkEnemy(difficult);
                     let wins = [];
                     wins = func.fightMonster(monster, hero);
-                    console.log(wins);
                     client.channels.cache.get(msg.channel.id).send(`${hero.name}: ${wins[1]} Vs ${monster.name}: ${wins[2]}.`);
                     if (wins[0] === 'hero') {
                         client.channels.cache.get(msg.channel.id).send(`Gratulálok ${hero.name} elintézted ${monster.name}-t. Jutalmad ${monster.experience}xp!`);

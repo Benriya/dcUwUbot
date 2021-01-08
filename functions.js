@@ -1,16 +1,18 @@
 const database = require('./database/handle_database');
 
 function showStr(char, enemy) {
-    console.log(char);
     let power;
+    let levelDiff = 0;
+    if (enemy.level > char.level) {
+        levelDiff = enemy.level - char.level;
+    }
     if (2*char.Power < 2*enemy.Agility){
         power = 0;
     } else {
         power = 2*char.Power - 2*enemy.Agility;
     }
-    let charMax = 10 + power + char.Intellect;
-    let charMin = 1 + power + char.Intellect;
-    console.log(charMax, charMin);
+    let charMax = 10 + power + char.Intellect - levelDiff;
+    let charMin = 1 + power + char.Intellect - levelDiff;
     return Math.floor(Math.random() * charMax + charMin);
 }
 
@@ -145,7 +147,6 @@ module.exports = {
     fightMonster: (monster, hero) => {
         let heroStr = showStr(hero, monster);
         let monsterStr =  showStr(monster, hero);
-        console.log(heroStr, monsterStr);
         let result = [];
 
         if (monsterStr > heroStr) {
