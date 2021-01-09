@@ -193,6 +193,16 @@ module.exports = {
                 `${myChar.experience}xp, Elérhető talent: ${myChar.talent}`);
     },
 
+    getChestEmbed:(hero) => {
+        return new Discord.MessageEmbed()
+            .setColor('#ffd500')
+            .setTitle('Jelentéktelen Láda')
+            .setThumbnail('https://files.cults3d.com/uploaders/14771211/illustration-file/7c699387-0726-4a5e-9ce1-f58ba2c08c64/1.jpg')
+            .setAuthor(`Kinyitotta: ${hero.name}`)
+            .addField('Description: ',
+                `Ki tudja előre egy rejtélyes láda mit rejthet?`);
+    },
+
     fightMonster: (monster, hero) => {
         let heroStr = showStr(hero, monster);
         let monsterStr =  showStr(monster, hero);
@@ -292,6 +302,27 @@ module.exports = {
             }
         });
         return xp;
+    },
+
+    rollChest: (hero) => {
+        let chestRoll = Math.round(Math.random() * 100 + 1);
+        let good = 71 - hero.Luck;
+        let bad = (31 - hero.Luck) <= 0 ? 0 : (30 - hero.Luck);
+        let randomBonus = Math.floor(Math.random() * 6);
+        let bonuses = ['experience', 'Luck', 'Power', 'Intellect', 'Agility', 'experience'];
+        let bonus = bonuses[randomBonus];
+        let status;
+
+        console.log(good, bad, bonus, chestRoll);
+
+        if(chestRoll > good) {
+            status = 'good';
+        } else if (chestRoll < bad) {
+            status = 'bad';
+        } else {
+            status = 'neutral';
+        }
+        return [bonus, status];
     },
 
     setLottoNumbers: async (type = 'get') => {

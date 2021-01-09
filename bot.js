@@ -457,7 +457,25 @@ client.on('message', async msg => {
                     hero = await func.getCharacter(msg.author.id);
                     heroEmbed = await func.getHeroEmbed(hero, msg);
                     client.channels.cache.get(msg.channel.id).send(heroEmbed);
-
+                    break;
+                case 'chest':
+                    hero = await func.getCharacter(msg.author.id);
+                    let chest = func.getChestEmbed(hero);
+                    client.channels.cache.get(msg.channel.id).send(chest);
+                    let reward = func.rollChest(hero);
+                    if (reward[1] === 'neutral') {
+                        client.channels.cache.get(msg.channel.id).send('A fenébe, egy újabb üres ládát találtál. Biztos fosztogatók jártak itt előtted!');
+                        return;
+                    } else if (reward[1] === 'good'){
+                        client.channels.cache.get(msg.channel.id).send('Ládát kinyitottad, és egy üveget találtál benne, valami kékes folyadékkal, amit azonnal meg is ittál.\n' +
+                            `Érzed hogy megerősödtél, kaptál ${reward[0]}-t `);
+                        await database.updateCharacterStat(hero, reward);
+                    } else {
+                        client.channels.cache.get(msg.channel.id).send('Ládát kinyitottad, és egy üveget találtál benne, valami feketés folyadékkal, amit azonnal meg is ittál.\n' +
+                            'Úgy érzed mintha a lelked kiakarna jutni belőled, így összeestél a földön.\n' +
+                            `Vesztettél ${reward[0]}-t`);
+                        await database.updateCharacterStat(hero, reward);
+                    }
                     break;
                 case 'levelup':
                     if (args[1] === undefined) {
@@ -518,7 +536,7 @@ client.on('message', async msg => {
                                 return;
                             } else {
                                 client.channels.cache.get(msg.channel.id).send(`Gratulálok ${hero.name} elintézted ${monster.name}-t. Jutalmad ${monster.experience}xp!`);
-                                await database.updateCharacter(hero, monster.experience);
+                                await database.updateCharacterXp(hero, monster.experience);
                             }
                         }
                     } else {

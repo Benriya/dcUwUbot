@@ -46,7 +46,7 @@ module.exports = {
         });
     },
 
-    updateCharacter: (char, xp) => {
+    updateCharacterXp: (char, xp) => {
             MongoClient.connect(url, function(err, db) {
                 if (err) throw err;
                 let dbo = db.db("mydb");
@@ -59,6 +59,53 @@ module.exports = {
                     db.close();
                 });
             });
+    },
+
+    updateCharacterStat: (char, ability) => {
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            let myquery = { id: char.id };
+            let newvalues;
+            if (ability[1] === 'good') {
+                if (ability[0] === 'Power') {
+                    newvalues = {$set: {Power: char.Power + 1}};
+                }
+                if (ability[0] === 'Intellect') {
+                    newvalues = {$set: {Intellect: char.Intellect + 1}};
+                }
+                if (ability[0] === 'Agility') {
+                    newvalues = {$set: {Agility: char.Agility + 1}};
+                }
+                if (ability[0] === 'Luck') {
+                    newvalues = {$set: {Luck: char.Luck + 1}};
+                }
+                if (ability[0] === 'experience') {
+                    newvalues = {$set: {experience: (char.experience + char.level * 10)}};
+                }
+            } else {
+                if (ability[0] === 'Power') {
+                    newvalues = {$set: {Power: char.Power - 1}};
+                }
+                if (ability[0] === 'Intellect') {
+                    newvalues = {$set: {Intellect: char.Intellect - 1}};
+                }
+                if (ability[0] === 'Agility') {
+                    newvalues = {$set: {Agility: char.Agility - 1}};
+                }
+                if (ability[0] === 'Luck') {
+                    newvalues = {$set: {Luck: char.Luck - 1}};
+                }
+                if (ability[0] === 'experience') {
+                    newvalues = {$set: {experience: (char.experience - char.level * 10)}};
+                }
+            }
+            dbo.collection("Characters").updateOne(myquery, newvalues, function(err, res) {
+                if (err) throw err;
+                console.log("1 document updated");
+                db.close();
+            });
+        });
     },
 
     levelUpCharacter: (char, xp) => {
