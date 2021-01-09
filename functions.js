@@ -209,10 +209,14 @@ module.exports = {
 
     getAdventures: () => {
         return [
-            'Weak: lvl <10',
-            'Normal: lvl 10-20',
-            'Hard: lvl 20-30',
-            'BOSS: lvl 30-40'
+            'Weak: lvl <5',
+            'Easy: lvl 5-10',
+            'Normal: lvl 10-15',
+            'Hard: lvl 15-20',
+            'Expert: lvl 20-25',
+            'BOSS: lvl 25-30',
+            'Usuper: lvl 30-35',
+            'Godlike: lvl 35-40'
         ]
     },
 
@@ -227,7 +231,7 @@ module.exports = {
     },
 
     adventureCheck: (message) => {
-        let adventureList = ['Weak', 'Normal', 'Hard', 'BOSS'];
+        let adventureList = ['Weak', 'Easy', 'Normal', 'Hard', 'Expert', 'BOSS', 'Usuper', 'Godlike'];
         for (let i = 0; i < adventureList.length; i++) {
             if (message === adventureList[i]) {
                 return false;
@@ -265,6 +269,20 @@ module.exports = {
           {level: 24, xp: 3450},
           {level: 25, xp: 3700},
           {level: 26, xp: 4000},
+          {level: 27, xp: 4300},
+          {level: 28, xp: 4600},
+          {level: 29, xp: 4900},
+          {level: 30, xp: 5200},
+          {level: 31, xp: 5550},
+          {level: 32, xp: 5900},
+          {level: 33, xp: 6250},
+          {level: 34, xp: 6600},
+          {level: 35, xp: 6950},
+          {level: 36, xp: 7350},
+          {level: 37, xp: 7750},
+          {level: 38, xp: 8150},
+          {level: 39, xp: 8550},
+          {level: 40, xp: 8950},
           ];
         levels.forEach((value) =>{
             if (value.level === level) {
