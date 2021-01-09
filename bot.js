@@ -432,6 +432,9 @@ client.on('message', async msg => {
         let heroEmbed;
         let monster;
         let monsterEmbed;
+        let wins = [];
+        const webhooks = await client.channels.cache.get(msg.channel.id).fetchWebhooks();
+        const webhook = webhooks.first();
         if (msg.content.substring(0, 1) === '?') {
             switch (cmd.toLocaleLowerCase()) {
                 case 'create':
@@ -455,7 +458,7 @@ client.on('message', async msg => {
                     break;
                 case 'char':
                     hero = await func.getCharacter(msg.author.id);
-                    heroEmbed = await func.getHeroEmbed(hero, msg);
+                    heroEmbed = await func.getHeroEmbed(hero, msg.author.username, msg.author.avatarURL());
                     client.channels.cache.get(msg.channel.id).send(heroEmbed);
                     break;
                 case 'chest':
@@ -490,9 +493,35 @@ client.on('message', async msg => {
                         client.channels.cache.get(msg.channel.id).send('Neked nincs talent pontod, elősször szintet kell, hogy lépj');
                     }
                     break;
+
                 case 'races':
                     let races = func.getRaceList();
                     client.channels.cache.get(msg.channel.id).send(races);
+                    break;
+                case 'pvp':
+                    let member = msg.mentions.members.first();
+                    let avatarUrl = member.user.avatarURL();
+                    hero = await func.getCharacter(msg.author.id);
+                    monster = await func.getCharacter(member.id);
+                    if (monster === null) {
+                        client.channels.cache.get(msg.channel.id).send('Sajnálom, ő neki még nincs karaktere');
+                        return;
+                    }
+                    heroEmbed = await func.getHeroEmbed(hero, msg.author.username, msg.author.avatarURL());
+                    monsterEmbed = await func.getHeroEmbed(monster, member.user.username, avatarUrl);
+                    await webhook.send('Harc a végsőkig két UwU között', {
+                        embeds: [heroEmbed, monsterEmbed],
+                    });
+
+                    wins = func.fightMonster(monster, hero);
+                    client.channels.cache.get(msg.channel.id).send(`${hero.name}: ${wins[1]} Vs ${monster.name}: ${wins[2]}.`);
+                    if (wins[0] === 'hero') {
+                        client.channels.cache.get(msg.channel.id).send(`${hero.name} Kiélezett csatában sikeresen elintézte ${monster.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
+                        await database.updateCharacterXp(hero, 5);
+                    } else {
+                        client.channels.cache.get(msg.channel.id).send(`${monster.name} Kiélezett csatában sikeresen elintézte ${hero.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
+                        await database.updateCharacterXp(monster, 5);
+                    }
                     break;
                 case 'adventures':
                     let adventures = func.getAdventures();
@@ -508,15 +537,11 @@ client.on('message', async msg => {
                         return;
                     }
                     let difficult = args[1];
-                    let wins = [];
-
                     hero = await func.getCharacter(msg.author.id);
                     monster = await func.getEnemy(difficult);
-                    heroEmbed = await func.getHeroEmbed(hero, msg);
+                    heroEmbed = await func.getHeroEmbed(hero, msg.author.username, msg.author.avatarURL());
                     monsterEmbed = await func.getMonsterEmbed(monster);
 
-                    const webhooks = await client.channels.cache.get(msg.channel.id).fetchWebhooks();
-                    const webhook = webhooks.first();
                     await webhook.send(difficult, {
                         embeds: [heroEmbed, monsterEmbed],
                     });

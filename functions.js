@@ -173,13 +173,13 @@ module.exports = {
                 `${enemy.diff}`);
     },
 
-    getHeroEmbed(myChar, msg) {
-        let thumbnail = myChar.name === 'SkeleTram' ? 'https://media.discordapp.net/attachments/713415837356392508/797236204801228840/d41d95204242b85336ee6900acfb69e3.jpg' : `${msg.author.avatarURL()}`;
+    getHeroEmbed(myChar, username, avatar) {
+        let thumbnail = myChar.name === 'SkeleTram' ? 'https://media.discordapp.net/attachments/713415837356392508/797236204801228840/d41d95204242b85336ee6900acfb69e3.jpg' : `${avatar}`;
         return new Discord.MessageEmbed()
             .setColor('#36ff00')
             .setTitle(`[${myChar.name}] LvL: ${myChar.level}`)
             .setThumbnail(thumbnail)
-            .setAuthor(`${msg.author.username}`)
+            .setAuthor(`${username}`)
             .addField('Race: ',
                 `${myChar.race}`)
             .addField('Description: ',
@@ -307,7 +307,7 @@ module.exports = {
     rollChest: (hero) => {
         let chestRoll = Math.round(Math.random() * 100 + 1);
         let good = 71 - hero.Luck;
-        let bad = (31 - hero.Luck) <= 0 ? 0 : (30 - hero.Luck);
+        let bad = (21 - hero.Luck) <= 0 ? 0 : (21 - hero.Luck);
         let randomBonus = Math.floor(Math.random() * 6);
         let bonuses = ['experience', 'Luck', 'Power', 'Intellect', 'Agility', 'experience'];
         let bonus = bonuses[randomBonus];
