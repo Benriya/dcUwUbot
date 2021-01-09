@@ -30,6 +30,7 @@ let voters = [];
 let member;
 let winningNumbers = [];
 let winners = [];
+let cheater;
 
 
     setInterval(async () => {
@@ -68,6 +69,11 @@ client.on('message', async msg => {
     if (msg === undefined) return;
     await client.user.setActivity("The truth | !!help");
     if (msg.author.bot) return;
+
+    if (msg.content === '+farm') {
+        client.channels.cache.get(msg.channel.id).send('nem használunk automatikus botokat, ejnye');
+        cheater = msg.author.id;
+    }
 
     let args = msg.content.substring(1).split(' ');
     let cmd = args[0];
@@ -427,7 +433,7 @@ client.on('message', async msg => {
     }
 
     //RPG-project
-    if (msg.channel.id === '796405215279972353') {
+    if (msg.channel.id === '796405215279972353' && msg.author.id !== cheater) {
         let hero;
         let heroEmbed;
         let monster;
