@@ -428,6 +428,10 @@ client.on('message', async msg => {
 
     //RPG-project
     if (msg.channel.id === '796405215279972353') {
+        let hero;
+        let heroEmbed;
+        let monster;
+        let monsterEmbed;
         if (msg.content.substring(0, 1) === '?') {
             switch (cmd.toLocaleLowerCase()) {
                 case 'create':
@@ -450,7 +454,10 @@ client.on('message', async msg => {
                     }
                     break;
                 case 'char':
-                    await checkCharacter();
+                    hero = await func.getCharacter(msg.author.id);
+                    heroEmbed = await func.getHeroEmbed(hero, msg);
+                    client.channels.cache.get(msg.channel.id).send(heroEmbed);
+
                     break;
                 case 'levelup':
                     if (args[1] === undefined) {
@@ -483,13 +490,22 @@ client.on('message', async msg => {
                         return;
                     }
                     let difficult = args[1];
-                    let hero = await checkCharacter();
-                    let monster = await checkEnemy(difficult);
                     let wins = [];
+
+                    hero = await func.getCharacter(msg.author.id);
+                    monster = await func.getEnemy(difficult);
+                    heroEmbed = await func.getHeroEmbed(hero, msg);
+                    monsterEmbed = await func.getMonsterEmbed(monster);
+
+                    const webhooks = await client.channels.cache.get(msg.channel.id).fetchWebhooks();
+                    const webhook = webhooks.first();
+                    await webhook.send(difficult, {
+                        embeds: [heroEmbed, monsterEmbed],
+                    });
+
                     wins = func.fightMonster(monster, hero);
                     client.channels.cache.get(msg.channel.id).send(`${hero.name}: ${wins[1]} Vs ${monster.name}: ${wins[2]}.`);
                     if (wins[0] === 'hero') {
-                        client.channels.cache.get(msg.channel.id).send(`Gratulálok ${hero.name} elintézted ${monster.name}-t. Jutalmad ${monster.experience}xp!`);
                         let newXp = hero.experience + monster.experience;
                         let levelled = func.checkLevels(hero.level, newXp);
                         if (levelled !== 0){
@@ -497,7 +513,13 @@ client.on('message', async msg => {
                             await database.levelUpCharacter(hero, levelled);
                             client.channels.cache.get(msg.channel.id).send(`<:pogger:780724037331845151> Juhúú ${hero.name} szintet léptél! Jutalmad 1db Talent pont! ?levelup paranccsal oszd ki a talentedet.`);
                         } else {
-                            await database.updateCharacter(hero, monster.experience);
+                            if ((hero.level - monster.level) > 4){
+                                client.channels.cache.get(msg.channel.id).send(`Gratulálok ${hero.name} elintézted ${monster.name}-t. Szinted meghaladja 4-gyel az ellenfeledét így nem jár jutalom <:sadge:783272338975621160>`);
+                                return;
+                            } else {
+                                client.channels.cache.get(msg.channel.id).send(`Gratulálok ${hero.name} elintézted ${monster.name}-t. Jutalmad ${monster.experience}xp!`);
+                                await database.updateCharacter(hero, monster.experience);
+                            }
                         }
                     } else {
                         client.channels.cache.get(msg.channel.id).send(`${monster.name} most jól agyonvert <a:bonkgif:780722290945294356>. Visszatértél a város gyengélkedőjére.`);
@@ -505,51 +527,6 @@ client.on('message', async msg => {
                     break;
             }
         }
-    }
-
-    async function checkEnemy(difficult) {
-        const enemy = await func.getEnemy(difficult);
-        const enemyChar = new Discord.MessageEmbed()
-            .setColor('#ff0202')
-            .setTitle(`[${enemy.name}] lvl: ${enemy.level}`)
-            .setThumbnail(`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcg2z-7M1BLuu4WbVKYQzv8Ya30gb5-b5n4Q&usqp=CAU`)
-            .setAuthor(`Monster`)
-            .addField('Race: ',
-                `${enemy.race}`)
-            .addField('Description: ',
-                `*${enemy.description}*`)
-            .addField('Stats: ',
-                `Power: ${enemy.Power}\n` +
-                `Intellect: ${enemy.Intellect}\n` +
-                `Agility: ${enemy.Agility}`)
-            .addField('Experience: ',
-                `${enemy.experience}xp`)
-            .addField('Difficult: ',
-                `${enemy.diff}`);
-        client.channels.cache.get(msg.channel.id).send(enemyChar);
-        return enemy;
-    }
-
-    async function checkCharacter() {
-        const myChar = await func.getCharacter(msg.author.id);
-        const emberChar = new Discord.MessageEmbed()
-            .setColor('#36ff00')
-            .setTitle(`[${myChar.name}] LvL: ${myChar.level}`)
-            .setThumbnail(`${msg.author.avatarURL()}`)
-            .setAuthor(`${msg.author.username}`)
-            .addField('Race: ',
-                `${myChar.race}`)
-            .addField('Description: ',
-                `*${myChar.description}*`)
-            .addField('Stats: ',
-                `Power: ${myChar.Power}\n` +
-                `Intellect: ${myChar.Intellect}\n` +
-                `Agility: ${myChar.Agility}\n` +
-                `Luck: ${myChar.Luck}`)
-            .addField('Experience: ',
-            `${myChar.experience}xp, Elérhető talent: ${myChar.talent}`);
-        client.channels.cache.get(msg.channel.id).send(emberChar);
-        return myChar;
     }
 
     if(msg.attachments.size === 0) {

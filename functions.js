@@ -1,4 +1,5 @@
 const database = require('./database/handle_database');
+const Discord = require('discord.js');
 
 function showStr(char, enemy) {
     let power;
@@ -152,6 +153,46 @@ module.exports = {
         return await database.listCharacter(id);
     },
 
+    getMonsterEmbed(enemy) {
+        return new Discord.MessageEmbed()
+            .setColor('#ff0202')
+            .setTitle(`[${enemy.name}] LvL: ${enemy.level}`)
+            .setThumbnail(`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcg2z-7M1BLuu4WbVKYQzv8Ya30gb5-b5n4Q&usqp=CAU`)
+            .setAuthor(`Monster`)
+            .addField('Race: ',
+                `${enemy.race}`)
+            .addField('Description: ',
+                `*${enemy.description}*`)
+            .addField('Stats: ',
+                `Power: ${enemy.Power}\n` +
+                `Intellect: ${enemy.Intellect}\n` +
+                `Agility: ${enemy.Agility}`)
+            .addField('Experience: ',
+                `${enemy.experience}xp`)
+            .addField('Difficult: ',
+                `${enemy.diff}`);
+    },
+
+    getHeroEmbed(myChar, msg) {
+        let thumbnail = myChar.name === 'SkeleTram' ? 'https://media.discordapp.net/attachments/713415837356392508/797236204801228840/d41d95204242b85336ee6900acfb69e3.jpg' : `${msg.author.avatarURL()}`;
+        return new Discord.MessageEmbed()
+            .setColor('#36ff00')
+            .setTitle(`[${myChar.name}] LvL: ${myChar.level}`)
+            .setThumbnail(thumbnail)
+            .setAuthor(`${msg.author.username}`)
+            .addField('Race: ',
+                `${myChar.race}`)
+            .addField('Description: ',
+                `*${myChar.description}*`)
+            .addField('Stats: ',
+                `Power: ${myChar.Power}\n` +
+                `Intellect: ${myChar.Intellect}\n` +
+                `Agility: ${myChar.Agility}\n` +
+                `Luck: ${myChar.Luck}`)
+            .addField('Experience: ',
+                `${myChar.experience}xp, Elérhető talent: ${myChar.talent}`);
+    },
+
     fightMonster: (monster, hero) => {
         let heroStr = showStr(hero, monster);
         let monsterStr =  showStr(monster, hero);
@@ -213,11 +254,17 @@ module.exports = {
           {level: 13, xp: 1150},
           {level: 14, xp: 1300},
           {level: 15, xp: 1450},
-          {level: 16, xp: 1600},
-          {level: 17, xp: 1750},
-          {level: 18, xp: 1900},
-          {level: 19, xp: 2050},
-          {level: 20, xp: 2200},
+          {level: 16, xp: 1650},
+          {level: 17, xp: 1850},
+          {level: 18, xp: 2050},
+          {level: 19, xp: 2250},
+          {level: 20, xp: 2450},
+          {level: 21, xp: 2700},
+          {level: 22, xp: 2950},
+          {level: 23, xp: 3200},
+          {level: 24, xp: 3450},
+          {level: 25, xp: 3700},
+          {level: 26, xp: 4000},
           ];
         levels.forEach((value) =>{
             if (value.level === level) {
