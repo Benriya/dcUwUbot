@@ -7,11 +7,13 @@ function showStr(char, enemy) {
     if (enemy.level > char.level) {
         levelDiff = enemy.level - char.level;
     }
-    if (2*char.Power < 2*enemy.Agility){
+
+    if (2*char.Power < 3*enemy.Agility){
         power = 0;
     } else {
-        power = 2*char.Power - 2*enemy.Agility;
+        power = 2*char.Power - 3*enemy.Agility;
     }
+
     let charMax = 10 + power + char.Intellect - levelDiff;
     let charMin = 1 + power + char.Intellect - levelDiff;
 
@@ -22,7 +24,7 @@ function showStr(char, enemy) {
         charMin = 0;
     }
 
-    return Math.floor(Math.random() * charMax + charMin);
+    return [Math.floor(Math.random() * charMax) + charMin, charMin, charMax];
 }
 
 function getLottoNumbers(array) {
@@ -208,11 +210,11 @@ module.exports = {
         let monsterStr =  showStr(monster, hero);
         let result = [];
 
-        if (monsterStr > heroStr) {
-            result.push('monster', heroStr, monsterStr);
+        if (monsterStr[0] > heroStr[0]) {
+            result.push('monster', heroStr[0], monsterStr[0], heroStr[1], monsterStr[1], heroStr[2], monsterStr[2]);
             return result;
         } else {
-            result.push('hero', heroStr, monsterStr);
+            result.push('hero', heroStr[0], monsterStr[0], heroStr[1], monsterStr[1], heroStr[2], monsterStr[2]);
             return result;
         }
     },
