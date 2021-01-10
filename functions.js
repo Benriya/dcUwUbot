@@ -309,9 +309,9 @@ module.exports = {
     rollChest: (hero) => {
         let chestRoll = Math.round(Math.random() * 100 + 1);
         let good = 71 - hero.Luck;
-        let bad = (21 - hero.Luck) <= 0 ? 0 : (21 - hero.Luck);
-        let randomBonus = Math.floor(Math.random() * 6);
-        let bonuses = ['experience', 'Luck', 'Power', 'Intellect', 'Agility', 'experience'];
+        let bad = (26 - hero.Luck) <= 0 ? 0 : (26 - hero.Luck);
+        let randomBonus = Math.floor(Math.random() * 8);
+        let bonuses = ['experience', 'Luck', 'experience', 'Power', 'Intellect', 'experience', 'Agility', 'experience'];
         let bonus = bonuses[randomBonus];
         let status;
 
