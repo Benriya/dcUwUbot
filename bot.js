@@ -520,7 +520,7 @@ client.on('message', async msg => {
                     });
 
                     wins = func.fightMonster(monster, hero);
-                    client.channels.cache.get(msg.channel.id).send(`${hero.name}: ${wins[1]} Vs ${monster.name}: ${wins[2]}.`);
+                    client.channels.cache.get(msg.channel.id).send(`${hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${monster.name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
                     if (wins[0] === 'hero') {
                         client.channels.cache.get(msg.channel.id).send(`${hero.name} Kiélezett csatában sikeresen elintézte ${monster.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
                         await database.updateCharacterXp(hero, 5);

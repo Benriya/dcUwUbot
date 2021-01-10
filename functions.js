@@ -376,7 +376,7 @@ module.exports = {
         let returnSzoveg = '';
 
         for (let i = 0; i < random; i++) {
-            returnSzoveg += array[Math.floor(Math.random() * 12)];
+            returnSzoveg += array[Math.floor(Math.random() * 6)];
         }
         return returnSzoveg;
     },
