@@ -24,7 +24,7 @@ function showStr(char, enemy) {
         charMin = 0;
     }
 
-    return [Math.floor(Math.random() * charMax) + charMin, charMin, charMax];
+    return [Math.floor(Math.random() * charMax) + charMin, charMin, charMax+charMin];
 }
 
 function getLottoNumbers(array) {
