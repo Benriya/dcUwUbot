@@ -300,6 +300,9 @@ module.exports = {
             if (value.level === level) {
                 if (value.xp <= experience) {
                     xp = value.xp
+                    if (value.level === 40){
+                        return 'Ascend';
+                    }
                 }
             }
         });
@@ -308,12 +311,16 @@ module.exports = {
 
     rollChest: (hero) => {
         let chestRoll = Math.round(Math.random() * 100 + 1);
-        let good = 71 - hero.Luck;
-        let bad = (26 - hero.Luck) <= 0 ? 0 : (26 - hero.Luck);
-        let randomBonus = Math.floor(Math.random() * 8);
-        let bonuses = ['experience', 'Luck', 'experience', 'Power', 'Intellect', 'experience', 'Agility', 'experience'];
+        let good = 86 - hero.Luck;
+        let bad = (31 - hero.Luck) <= 0 ? 0 : (31 - hero.Luck);
+        let randomBonus = Math.floor(Math.random() * 17);
+        let bonuses = ['experience', 'experience', 'Luck', 'experience', 'experience', 'experience', 'Power', 'experience', 'experience', 'experience', 'Intellect', 'experience', 'experience', 'experience', 'Agility', 'experience', 'experience'];
         let bonus = bonuses[randomBonus];
         let status;
+
+        if (good < 60) {
+            good = 60
+        }
 
         console.log(good, bad, bonus, chestRoll);
 
