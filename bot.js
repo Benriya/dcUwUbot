@@ -165,6 +165,10 @@ client.on('message', async msg => {
                 attachment = new Discord.MessageAttachment('./szerb/vicci.jpg');
                 client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
+            case 'gay':
+                attachment = new Discord.MessageAttachment('./szerb/gay.png');
+                client.channels.cache.get(msg.channel.id).send(attachment);
+                break;
             case 'uwu':
                 attachment = new Discord.MessageAttachment('./szerb/uwu.gif');
                 client.channels.cache.get(msg.channel.id).send(attachment);
