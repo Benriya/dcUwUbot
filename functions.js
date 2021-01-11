@@ -311,16 +311,13 @@ module.exports = {
 
     rollChest: (hero) => {
         let chestRoll = Math.round(Math.random() * 100 + 1);
-        let good = 86 - hero.Luck;
-        let bad = (31 - hero.Luck) <= 0 ? 0 : (31 - hero.Luck);
+        let good = (86 - hero.Luck) <= 60 ? 60 : (86 - hero.Luck);
+        let bad = (31 - hero.Luck) <= 5 ? 5 : (31 - hero.Luck);
         let randomBonus = Math.floor(Math.random() * 17);
         let bonuses = ['experience', 'experience', 'Luck', 'experience', 'experience', 'experience', 'Power', 'experience', 'experience', 'experience', 'Intellect', 'experience', 'experience', 'experience', 'Agility', 'experience', 'experience'];
         let bonus = bonuses[randomBonus];
         let status;
 
-        if (good < 60) {
-            good = 60
-        }
 
         console.log(good, bad, bonus, chestRoll);
 
@@ -395,5 +392,10 @@ module.exports = {
         }
         splittedSentence = splittedSentence.join("");
         return splittedSentence;
+    },
+
+    sendAttachment: (image, client, msg) => {
+        let attachment = new Discord.MessageAttachment(image);
+        return client.channels.cache.get(msg.channel.id).send(attachment);
     }
 }

@@ -130,25 +130,6 @@ client.on('message', async msg => {
             }
         }
         switch (cmd.toLocaleLowerCase()) {
-            case 'rule':
-                attachment = new Discord.MessageAttachment('./rule.png');
-                client.channels.cache.get(msg.channel.id).send(attachment);
-                break;
-            case 'hirling':
-                attachment = new Discord.MessageAttachment('./szerb/hirling.png');
-                client.channels.cache.get(msg.channel.id).send(attachment);
-                break;
-            case 'csokas':
-                attachment = new Discord.MessageAttachment('./szerb/csokas.png');
-                client.channels.cache.get(msg.channel.id).send('Csókás csókás');
-                client.channels.cache.get(msg.channel.id).send(attachment);
-                attachment = new Discord.MessageAttachment('./szerb/fasszopokas.png');
-                client.channels.cache.get(msg.channel.id).send(attachment);
-                break;
-            case 'faszom':
-                attachment = new Discord.MessageAttachment('./szerb/picsaba.png');
-                client.channels.cache.get(msg.channel.id).send(attachment);
-                break;
             case 'praise':
                 client.channels.cache.get(msg.channel.id).send(nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
                 break;
@@ -157,31 +138,41 @@ client.on('message', async msg => {
                 let szoveg = func.randomKuraiSzoveg();
                 client.channels.cache.get(msg.channel.id).send(szoveg);
                 break;
+            case 'hess':
+                func.sendAttachment('./szerb/hess.gif', client, msg);
+                break;
+            case 'rule':
+                func.sendAttachment('./rule.png', client, msg);
+                break;
+            case 'hirling':
+                func.sendAttachment('./szerb/hirling.png', client, msg);
+                break;
+            case 'faszom':
+                func.sendAttachment('./szerb/picsaba.png', client, msg);
+                break;
+            case 'csokas':
+                func.sendAttachment('./szerb/csokas.png', client, msg);
+                func.sendAttachment('./szerb/fasszopokas.png', client, msg);
+                break;
             case 'monke':
-                attachment = new Discord.MessageAttachment('./szerb/monke.png');
-                client.channels.cache.get(msg.channel.id).send(attachment);
+                func.sendAttachment('./szerb/monke.png', client, msg);
                 break;
             case 'vicci':
-                attachment = new Discord.MessageAttachment('./szerb/vicci.jpg');
-                client.channels.cache.get(msg.channel.id).send(attachment);
+                func.sendAttachment('./szerb/vicci.jpg', client, msg);
                 break;
-            case 'gay':
-                attachment = new Discord.MessageAttachment('./szerb/gay.png');
-                client.channels.cache.get(msg.channel.id).send(attachment);
+            case 'gay2':
+                func.sendAttachment('./szerb/gay.png', client, msg);
                 break;
             case 'uwu':
-                attachment = new Discord.MessageAttachment('./szerb/uwu.gif');
-                client.channels.cache.get(msg.channel.id).send(attachment);
+                func.sendAttachment('./szerb/uwu.gif', client, msg);
                 break;
             case 'assemble':
-                attachment = new Discord.MessageAttachment('./szerb/assemble.gif');
-                client.channels.cache.get(msg.channel.id).send(attachment);
+                func.sendAttachment('./szerb/assemble.gif', client, msg);
                 break;
             case 'kezelhetetlen':
                 files = fs.readdirSync('./slap');
                 chosenFile = files[Math.floor(Math.random() * files.length)];
-                attachment = new Discord.MessageAttachment('./slap/' + chosenFile);
-                client.channels.cache.get(msg.channel.id).send(attachment);
+                func.sendAttachment('./slap/' + chosenFile, client, msg);
                 break;
             case 'pornpics':
                 if (msg.channel.id === pornChannel) {
@@ -231,7 +222,7 @@ client.on('message', async msg => {
                 }
                 break;
             case '!help':
-                msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n' +
+                await msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n' +
                     '!porn + "tematika": Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n' +
                     '!votemute "tag": (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n' +
                     '!votenick "nicknév" "tag: nicknév helyére beírod a kívánt nevet, és tageled akinek a nevét meg akarod változtatni, ehhez 6 szavazat kell, hogy sikeres legyen. \n' +
@@ -252,17 +243,17 @@ client.on('message', async msg => {
                 break;
             case 'kivagy':
                 member = msg.mentions.users.first();
+                let image;
 
                 if (member.id === '518823389008232460' || member.id === '602525564217327637' || member.id === '623899095224025088' || member.id ==='491660100990140436') {
-                    attachment = new Discord.MessageAttachment('./szerb/szerb_1.jpg');
+                    image = './szerb/szerb_1.jpg';
                 }
                 else if (member.id === '376439826549047296'){
-                    attachment = new Discord.MessageAttachment('./szerb/TAP.png');
+                    image = './szerb/TAP.png';
                 }else {
-                    attachment = new Discord.MessageAttachment('./szerb/szerb_0.jpg');
+                    image = './szerb/szerb_0.jpg';
                 }
-
-                client.channels.cache.get(msg.channel.id).send(attachment);
+                func.sendAttachment(image, client, msg);
                 break;
             case 'csicskawall':
                 client.channels.cache.get(msg.channel.id).send(
@@ -302,38 +293,6 @@ client.on('message', async msg => {
                     '      Szabó Tamás\n' +
                     '      Szabolcs Iván\n' +
                     '└───── •✧✧✧✧✧✧✧✧✧• ─────┘');
-                break;
-            case 'aranyember':
-                let asciiEnd = '```';
-                client.channels.cache.get(msg.channel.id).send(asciiEnd +
-                    '               )\\         O_._._._A_._._._O         /(\n' +
-                    '                \\`--.___,\'=================`.___,--\'/\n' +
-                    '                 \\`--._.__                 __._,--\'/\n' +
-                    '                   \\  ,. l`~~~~~~~~~~~~~~~\'l ,.  /\n' +
-                    '       __            \\||(_)!_!_!_.-._!_!_!(_)||/            __\n' +
-                    '       \\\\`-.__        ||_|____!!_|;|_!!____|_||        __,-\'//\n' +
-                    '        \\\\    `==---=\'-----------\'=\'-----------`=---==\'    //\n' +
-                    '        | `--.               Maróti Miklós             ,--\' |\n' +
-                    '         \\  ,.`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\',.  /\n' +
-                    '           \\||  ____,-------._,-------._,-------.____  ||/\n' +
-                    '            ||\\|___!`======="!`======="!`======="!___|/||\n' +
-                    '            || |---||--------||-| | |-!!--------||---| ||\n' +
-                    '  __O_____O_ll_lO_____O_____O|| |\'|\'| ||O_____O_____Ol_ll_O_____O__\n' +
-                    '  o H o o H o o H o o H o o |-----------| o o H o o H o o H o o H o\n' +
-                    ' ___H_____H_____H_____H____O =========== O____H_____H_____H_____H___\n' +
-                    '                          /|=============|\\\n' +
-                    '()______()______()______() \'==== +-+ ====\' ()______()______()______()\n' +
-                    '||{_}{_}||{_}{_}||{_}{_}/| ===== |_| ===== |\\{_}{_}||{_}{_}||{_}{_}||\n' +
-                    '||      ||      ||     / |==== s(   )s ====| \\     ||      ||      ||\n' +
-                    '======================()  =================  ()======================\n' +
-                    '----------------------/| ------------------- |\\----------------------\n' +
-                    '                     / |---------------------| \\\n' +
-                    '-\'--\'--\'           ()  \'---------------------\'  ()\n' +
-                    '                   /| ------------------------- |\\    --\'--\'--\'\n' +
-                    '       --\'--\'     / |---------------------------| \\    \'--\'\n' +
-                    '                ()  |___________________________|  ()           \'--\'-\n' +
-                    '  --\'-          /| _______________________________  |\\\n' +
-                    ' --\' gpyy      / |__________________________________| \\      \n' + asciiEnd);
                 break;
             case 'istenwall':
                 client.channels.cache.get(msg.channel.id).send(istenEmbed);
@@ -388,10 +347,6 @@ client.on('message', async msg => {
                 } else {
                     client.channels.cache.get(msg.channel.id).send('no');
                 }
-                break;
-            case 'hess':
-                attachment = new Discord.MessageAttachment('./szerb/hess.gif');
-                client.channels.cache.get(msg.channel.id).send(attachment);
                 break;
             case 'votemute':
                 await msg.react('👍');
