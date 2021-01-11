@@ -160,7 +160,7 @@ client.on('message', async msg => {
             case 'vicci':
                 func.sendAttachment('./szerb/vicci.jpg', client, msg);
                 break;
-            case 'gay2':
+            case 'gay':
                 func.sendAttachment('./szerb/gay.jpg', client, msg);
                 break;
             case 'uwu':
