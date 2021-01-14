@@ -316,7 +316,7 @@ client.on('message', async msg => {
                         client.channels.cache.get(msg.channel.id).send('Flote egy barom');
                         return;
                     }
-                    if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2])) &&  0 < parseInt(args[2]) < 8 && 0 < parseInt(args[2]) < 8) {
+                    if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2])) &&  (0 < parseInt(args[1]) < 8) && (0 < parseInt(args[2]) < 8)) {
                         if (args[3] === 'change'){
                             await database.updateLottoTip(member, msg.author.id, tips);
                             client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
