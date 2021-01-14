@@ -2,17 +2,8 @@ const database = require('./database/handle_database');
 const Discord = require('discord.js');
 
 function showStr(char, enemy) {
-    let power;
-    let levelDiff = 0;
-    if (enemy.level > char.level) {
-        levelDiff = enemy.level - char.level;
-    }
-
-    if (2*char.Power < 3*enemy.Agility){
-        power = 0;
-    } else {
-        power = 2*char.Power - 3*enemy.Agility;
-    }
+    let power = (2*char.Power < 3*enemy.Agility) ? 0 : (2*char.Power - 3*enemy.Agility);
+    let levelDiff = (enemy.level > char.level) ? (enemy.level - char.level) : 0;
 
     let charMax = 10 + power + char.Intellect - levelDiff;
     let charMin = 1 + power + char.Intellect - levelDiff;
@@ -300,9 +291,9 @@ module.exports = {
             if (value.level === level) {
                 if (value.xp <= experience) {
                     xp = value.xp
-                    if (value.level === 40){
+                    /*if (value.level === 40){
                         return 'Ascend';
-                    }
+                    }*/
                 }
             }
         });
