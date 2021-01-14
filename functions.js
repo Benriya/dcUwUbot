@@ -1,22 +1,6 @@
 const database = require('./database/handle_database');
 const Discord = require('discord.js');
 
-function showStr(char, enemy) {
-    let power = (2*char.Power < 3*enemy.Agility) ? 0 : (2*char.Power - 3*enemy.Agility);
-    let levelDiff = (enemy.level > char.level) ? (enemy.level - char.level) : 0;
-
-    let charMax = 10 + power + char.Intellect - levelDiff;
-    let charMin = 1 + power + char.Intellect - levelDiff;
-
-    if (charMax < 1) {
-        charMax = 0;
-    }
-    if (charMin < 1) {
-        charMin = 0;
-    }
-
-    return [Math.floor(Math.random() * charMax) + charMin, charMin, charMax+charMin];
-}
 
 function getLottoNumbers(array) {
     let returnArray = [];
@@ -138,76 +122,37 @@ module.exports = {
     },
 
     getEnemy: async (diff) => {
-        let enemies = await database.listEnemy(diff);
+        let enemies = await database.getMiscellaneous({diff: diff});
         return enemies[Math.floor(Math.random() * enemies.length)];
     },
-
     getCharacter: async (id) => {
         return await database.listCharacter(id);
     },
 
-    getMonsterEmbed(enemy) {
-        return new Discord.MessageEmbed()
-            .setColor('#ff0202')
-            .setTitle(`[${enemy.name}] LvL: ${enemy.level}`)
-            .setThumbnail(`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcg2z-7M1BLuu4WbVKYQzv8Ya30gb5-b5n4Q&usqp=CAU`)
-            .setAuthor(`Monster`)
-            .addField('Race: ',
-                `${enemy.race}`)
-            .addField('Description: ',
-                `*${enemy.description}*`)
-            .addField('Stats: ',
-                `Power: ${enemy.Power}\n` +
-                `Intellect: ${enemy.Intellect}\n` +
-                `Agility: ${enemy.Agility}`)
-            .addField('Experience: ',
-                `${enemy.experience}xp`)
-            .addField('Difficult: ',
-                `${enemy.diff}`);
-    },
-
-    getHeroEmbed(myChar, username, avatar) {
-        let thumbnail = myChar.name === 'SkeleTram' ? 'https://media.discordapp.net/attachments/713415837356392508/797236204801228840/d41d95204242b85336ee6900acfb69e3.jpg' : `${avatar}`;
-        return new Discord.MessageEmbed()
-            .setColor('#36ff00')
-            .setTitle(`[${myChar.name}] LvL: ${myChar.level}`)
-            .setThumbnail(thumbnail)
-            .setAuthor(`${username}`)
-            .addField('Race: ',
-                `${myChar.race}`)
-            .addField('Description: ',
-                `*${myChar.description}*`)
-            .addField('Stats: ',
-                `Power: ${myChar.Power}\n` +
-                `Intellect: ${myChar.Intellect}\n` +
-                `Agility: ${myChar.Agility}\n` +
-                `Luck: ${myChar.Luck}`)
-            .addField('Experience: ',
-                `${myChar.experience}xp, Elérhető talent: ${myChar.talent}`);
-    },
-
-    getChestEmbed:(hero) => {
-        return new Discord.MessageEmbed()
-            .setColor('#ffd500')
-            .setTitle('Jelentéktelen Láda')
-            .setThumbnail('https://files.cults3d.com/uploaders/14771211/illustration-file/7c699387-0726-4a5e-9ce1-f58ba2c08c64/1.jpg')
-            .setAuthor(`Kinyitotta: ${hero.name}`)
-            .addField('Description: ',
-                `Ki tudja előre egy rejtélyes láda mit rejthet?`);
-    },
-
-    fightMonster: (monster, hero) => {
-        let heroStr = showStr(hero, monster);
-        let monsterStr =  showStr(monster, hero);
-        let result = [];
-
-        if (monsterStr[0] > heroStr[0]) {
-            result.push('monster', heroStr[0], monsterStr[0], heroStr[1], monsterStr[1], heroStr[2], monsterStr[2]);
-            return result;
-        } else {
-            result.push('hero', heroStr[0], monsterStr[0], heroStr[1], monsterStr[1], heroStr[2], monsterStr[2]);
-            return result;
+    getAllHero: async () => {
+        let returnArray = [];
+        let heroes = await database.listCharacters({type: 'Player'});
+        for (let i = 0; i < heroes.length; i++) {
+            returnArray.push(heroes[i].name, `LvL: ${heroes[i].level}`, `*${heroes[i].description}*`);
         }
+        return returnArray;
+    },
+
+    showStr:(char, enemy) => {
+    let power = (2*char.Power < 3*enemy.Agility) ? 0 : (2*char.Power - 3*enemy.Agility);
+    let levelDiff = (enemy.level > char.level) ? 2*(enemy.level - char.level) : 0;
+
+    let charMax = 10 + power + char.Intellect - levelDiff;
+    let charMin = 1 + power + char.Intellect - levelDiff;
+
+    if (charMax < 1) {
+        charMax = 0;
+    }
+    if (charMin < 1) {
+        charMin = 0;
+    }
+
+    return [Math.floor(Math.random() * charMax) + charMin, charMin, charMax+charMin];
     },
 
     getAdventures: () => {
@@ -218,7 +163,7 @@ module.exports = {
             'Hard: lvl 15-20',
             'Expert: lvl 20-25',
             'BOSS: lvl 25-30',
-            'Usuper: lvl 30-35',
+            'Usurper: lvl 30-35',
             'Godlike: lvl 35-40'
         ]
     },
@@ -300,27 +245,7 @@ module.exports = {
         return xp;
     },
 
-    rollChest: (hero) => {
-        let chestRoll = Math.round(Math.random() * 100 + 1);
-        let good = (86 - hero.Luck) <= 60 ? 60 : (86 - hero.Luck);
-        let bad = (31 - hero.Luck) <= 5 ? 5 : (31 - hero.Luck);
-        let randomBonus = Math.floor(Math.random() * 17);
-        let bonuses = ['experience', 'experience', 'Luck', 'experience', 'experience', 'experience', 'Power', 'experience', 'experience', 'experience', 'Intellect', 'experience', 'experience', 'experience', 'Agility', 'experience', 'experience'];
-        let bonus = bonuses[randomBonus];
-        let status;
 
-
-        console.log(good, bad, bonus, chestRoll);
-
-        if(chestRoll > good) {
-            status = 'good';
-        } else if (chestRoll < bad) {
-            status = 'bad';
-        } else {
-            status = 'neutral';
-        }
-        return [bonus, status];
-    },
 
     setLottoNumbers: async (type = 'get') => {
         let returnarray = new Map();
@@ -388,5 +313,13 @@ module.exports = {
     sendAttachment: (image, client, msg) => {
         let attachment = new Discord.MessageAttachment(image);
         return client.channels.cache.get(msg.channel.id).send(attachment);
-    }
+    },
+
+    toDiscordMessage(client, msg, message) {
+        client.channels.cache.get(msg.channel.id).send(message);
+    },
+
+    toDiscordMessageChannel(client, channelId, message) {
+        client.channels.cache.get(channelId).send(message);
+    },
 }

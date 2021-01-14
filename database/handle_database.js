@@ -1,13 +1,13 @@
 let MongoClient = require('mongodb').MongoClient;
 
-const url = process.env.MONGODB_URI;
+const url = 'mongodb+srv://Kuroko:Madamadadane@uwuniverzum.cegga.mongodb.net/test';
 
 module.exports = {
     characterCreate: (name, race, description, id, Power, Intellect, Agility, Luck) => {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
-            let myobj = {name: name, description: description, race: race, id: id, Power: Power, Intellect: Intellect, Agility: Agility, Luck: Luck, experience: 0, level: 1, talent: 0};
+            let myobj = {name: name, description: description, race: race, id: id, Power: Power, Intellect: Intellect, Agility: Agility, Luck: Luck, experience: 0, level: 1, talent: 0, type: 'Player'};
             dbo.collection("Characters").insertOne(myobj, function (err, res) {
                 if (err) throw err;
                 console.log("1 document inserted");
@@ -30,12 +30,26 @@ module.exports = {
         });
     },
 
-    listEnemy: (diff) => {
+    listCharacters: (type) => {
         return new Promise(function (resolve, reject) {
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
                 let dbo = db.db("mydb");
-                dbo.collection("Characters").find({diff: diff}).toArray(function (err, result) {
+                dbo.collection("Characters").find({type: type}, function (err, result) {
+                    if (err) throw err;
+                    db.close();
+                    resolve(result);
+                });
+            });
+        });
+    },
+
+    getMiscellaneous: (query) => {
+        return new Promise(function (resolve, reject) {
+            MongoClient.connect(url, function (err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                dbo.collection("Characters").find(query).toArray(function (err, result) {
                     if (err) throw err;
                     db.close();
                     resolve(result);

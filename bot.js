@@ -24,23 +24,27 @@ client.on('ready', () => {
 });
 
 let fs = require('fs');
+const {Monster} = require("./dungenowos/Monster");
+const {Hero} = require("./dungenowos/Hero");
+const {Chest} = require("./dungenowos/chest");
 let files;
 let chosenFile;
 let voters = [];
-let member;
 let winningNumbers = [];
 let winners = [];
 let cheater;
+let lottoChannelId = '779395227688501298';
+let deleteChannelId = '740536932303634473';
 
     setInterval(async () => {
         let nowDate = new Date();
         if (nowDate.getMinutes() === 0 && nowDate.getHours() % 3 === 0) {
-            client.channels.cache.get("779395227688501298").send('***Lotto***');
+            func.toDiscordMessageChannel(client, lottoChannelId, '***Lotto***');
             let checkNumbers = await func.setLottoNumbers();
             let getNumbers = await func.setLottoNumbers('draw');
-            client.channels.cache.get('779395227688501298').send(checkNumbers);
+            func.toDiscordMessageChannel(client, lottoChannelId, checkNumbers);
             winningNumbers = func.drawNumbers();
-            client.channels.cache.get('779395227688501298').send('Nyertes számok: ' + winningNumbers);
+            func.toDiscordMessageChannel(client, lottoChannelId, 'Nyertes számok: ' + winningNumbers);
             winners = func.drawWinners(getNumbers, winningNumbers);
 
             const list = client.guilds.cache.get("661569830469632007");
@@ -52,46 +56,36 @@ let cheater;
                 for (let i = 0; i < client.users.cache.array().length; i++) {
                     if (member.user.username === winners[i]) {
                         member.roles.add(nyertes);
-                        client.channels.cache.get("779395227688501298").send('Nyertes: ' + '<@' + member.user.id + '>');
+                        func.toDiscordMessageChannel(client, lottoChannelId, 'Nyertes: ' + '<@' + member.user.id + '>');
                     }
                 }
             });
             winners = [];
             winningNumbers = [];
             await database.deleteLottoTips();
-            client.channels.cache.get("779395227688501298").send('Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
+            func.toDiscordMessageChannel(client, lottoChannelId, 'Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
         }
     },60 * 1000);
 
 client.on('message', async msg => {
-
     if (msg === undefined) return;
     await client.user.setActivity("The truth | !!help");
     if (msg.author.bot) return;
 
+    let author = msg.author.id;
+    let messageChannel = msg.channel.id;
+    let firstMention = msg.mentions.members.first();
+
     if (msg.content === '+farm') {
-        client.channels.cache.get(msg.channel.id).send('nem használunk automatikus botokat, ejnye');
-        cheater = msg.author.id;
+        func.toDiscordMessage(client, msg,'nem használunk automatikus botokat, ejnye');
+        cheater = author;
     }
 
     let args = msg.content.substring(1).split(' ');
     let cmd = args[0];
-
-
-    const istenEmbed = new Discord.MessageEmbed()
-        .setColor('#fff200')
-        .setTitle('Az Isten')
-        .setThumbnail(`${msg.author.avatarURL()}`)
-        .setAuthor(`${msg.author.username}`)
-        .addField('Message: ',
-            '┌─ •✧Wall Of Isten✧• ─┐\n' +
-            `           (っ◔◡◔)っ-${msg.author.username}\n` +
-            '└── •✧✧✧✧✧✧✧• ──┘', true)
-        .setTimestamp();
-
     let attachment = (msg.attachments).array();
     if (msg.attachments.size > 0) {
-        client.channels.cache.get("745317754256490567").send(`${attachment[0].proxyURL} id: ${attachment[0].id}`);
+        func.toDiscordMessageChannel(client, '745317754256490567', `${attachment[0].proxyURL} id: ${attachment[0].id}`);
     }
 
     msg.channel.messages.fetch({limit: 3}).then(messages => {
@@ -100,7 +94,7 @@ client.on('message', async msg => {
 
         if (!lastMessage.author.bot) {
             if (func.checkIfSame(lastMessages)){
-                client.channels.cache.get(msg.channel.id).send(lastMessage.content);
+                func.toDiscordMessage(client, msg, lastMessage.content);
             }
         }
     }).catch(console.error);
@@ -130,12 +124,11 @@ client.on('message', async msg => {
         }
         switch (cmd.toLocaleLowerCase()) {
             case 'praise':
-                client.channels.cache.get(msg.channel.id).send(nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
+                func.toDiscordMessage(client, msg, nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
                 break;
             case 'kurai':
                 await msg.delete();
-                let szoveg = func.randomKuraiSzoveg();
-                client.channels.cache.get(msg.channel.id).send(szoveg);
+                func.toDiscordMessage(client, msg, func.randomKuraiSzoveg());
                 break;
             case 'hess':
                 func.sendAttachment('./szerb/hess.gif', client, msg);
@@ -173,51 +166,21 @@ client.on('message', async msg => {
                 chosenFile = files[Math.floor(Math.random() * files.length)];
                 func.sendAttachment('./slap/' + chosenFile, client, msg);
                 break;
-            case 'pornpics':
-                if (msg.channel.id === pornChannel) {
-                    const picsSource = `https://www.pornpics.com/?q=${args[1]}+${args[2] === undefined ? ' ' : args[2]}`;
-                    client.channels.cache.get(msg.channel.id).send(picsSource)
-                } else {
-                    client.channels.cache.get(msg.channel.id).send('Ne ebbe a channelbe írd');
-                }
-                break;
             case 'porn':
-                let pornChoice = msg.content.slice(7 + args[1].length);
                 let Searcher;
-                if (msg.channel.id === pornChannel) {
-                    switch (nickname.toLowerCase()) {
-                        case 'xvideos':
-                            Searcher = new PornSearch(pornChoice, nickname);
-                            Searcher.videos()
-                                .then(videos => {
-                                    let random = Math.floor(Math.random() * videos.length);
-                                    client.channels.cache.get(msg.channel.id).send(videos[random].url);
-                                }).catch(err => {
-                                client.channels.cache.get(msg.channel.id).send('Nincs találat');
-                                console.log('nothing found');
-                            });
-                            return;
-                        case 'sex':
-                            Searcher = new PornSearch(pornChoice, nickname);
-                            break;
-                        case 'pornhub':
-                            Searcher = new PornSearch(pornChoice, nickname);
-                            break;
-                        default:
-                            Searcher = new PornSearch(pornChoice, nickname = 'pornhub');
-                            break;
-                    }
+                if (messageChannel === pornChannel) {
+                    Searcher = new PornSearch(sentence);
                     Searcher.gifs()
                         .then(gifs => {
                             let random = Math.floor(Math.random() * gifs.length);
-                            nickname === 'sex' ? client.channels.cache.get(msg.channel.id).send(gifs[random].url) : client.channels.cache.get(msg.channel.id).send(gifs[random].webm);
-                            client.channels.cache.get(msg.channel.id).send(gifs[random].title);
+                            func.toDiscordMessage(client, msg, gifs[random].webm);
+                            func.toDiscordMessage(client, msg, gifs[random].title);
                         }).catch(err => {
-                        client.channels.cache.get(msg.channel.id).send('Nincs találat');
+                        func.toDiscordMessage(client, msg, 'Nincs találat');
                         console.log('nothing found');
                     });
-              }else{
-                    client.channels.cache.get(msg.channel.id).send('Ne ebbe a channelbe írd');
+                } else {
+                    func.toDiscordMessage(client, msg, 'Ne ebbe a channelbe írd');
                 }
                 break;
             case '!help':
@@ -230,24 +193,20 @@ client.on('message', async msg => {
                     '!praise + "emote" vagy "szöveg": isteni magaslatba emelem azt amit megadtál\n' +
                     '!csicskawall: kilistázom a csicska tanárokat\n' +
                     '!aranywall: kilistázom aranyember tanárokat\n' +
-                    '!istenwall: meg mondom ki az isten\n' +
                     '!geci + "valami": meg dingi-dongizom\n' +
                     '!mock + "valami": retard spongyabobként beszélek\n' +
                     '!lotto "szám" "szám": a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n' +
                     '!tippek: kilistázza milyen tippek voltak eddig\n' +
-                    'Ha elkezded a bohen rapsody vagy a never gonna give you up egy részletét, akkor folytatom azt, így együtt tudunk dalolászni (fontos, hogy pontos legyen aposztróf szükséges, hogy jó helyen legyen)\n' +
                     '"no bully" a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére. \n' +
-                    'Furrykról szóló tartalomhoz szívesen becsatlakozok én is beszélgetni. \nIlletve "megcsap" vagy "paskol" szövegrészekre is reagálok ha a mondandódban van. \nVégül ha ' +
-                    'valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
+                    'Végül ha valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
                 break;
             case 'kivagy':
-                member = msg.mentions.users.first();
                 let image;
 
-                if (member.id === '518823389008232460' || member.id === '602525564217327637' || member.id === '623899095224025088' || member.id ==='491660100990140436') {
+                if (firstMention.id === '518823389008232460' || firstMention.id === '602525564217327637' || firstMention.id === '623899095224025088' || firstMention.id ==='491660100990140436') {
                     image = './szerb/szerb_1.jpg';
                 }
-                else if (member.id === '376439826549047296'){
+                else if (firstMention.id === '376439826549047296'){
                     image = './szerb/TAP.png';
                 }else {
                     image = './szerb/szerb_0.jpg';
@@ -255,7 +214,7 @@ client.on('message', async msg => {
                 func.sendAttachment(image, client, msg);
                 break;
             case 'csicskawall':
-                client.channels.cache.get(msg.channel.id).send(
+                func.toDiscordMessage(client, msg,
                     '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
                     '      Bánhelyi Balázs\n' +
                     '      ***C*** ***s*** ***e*** ***n*** ***d*** ***e*** ***s*** ***T*** ***i*** ***b*** ***o*** ***r***\n' +
@@ -272,7 +231,7 @@ client.on('message', async msg => {
                     '└───── •✧✧✧✧✧✧✧✧✧✧• ─────┘');
                 break;
             case 'aranywall':
-                client.channels.cache.get(msg.channel.id).send(
+                func.toDiscordMessage(client, msg,
                     '┌──── •✧Wall Of Aranyember✧• ────┐\n' +
                     '      Antal Gábor\n' +
                     '      Balogh András\n' +
@@ -293,58 +252,48 @@ client.on('message', async msg => {
                     '      Szabolcs Iván\n' +
                     '└───── •✧✧✧✧✧✧✧✧✧• ─────┘');
                 break;
-            case 'istenwall':
-                client.channels.cache.get(msg.channel.id).send(istenEmbed);
-                break;
             case 'geci':
                 await msg.delete();
-                client.channels.cache.get(msg.channel.id).send('oh igen' + sentence);
-                client.channels.cache.get(msg.channel.id).send('<a:yourmom:787410945541537842>');
+                func.toDiscordMessage(client, msg, 'oh igen' + sentence);
+                func.toDiscordMessage(client, msg, '<a:yourmom:787410945541537842>');
                 break;
             case 'mock':
                 await msg.delete();
-                let retardSentence = func.reardinator(sentence);
-                client.channels.cache.get(msg.channel.id).send('<a:retard:788703547335901184>');
-                client.channels.cache.get(msg.channel.id).send(retardSentence);
-                client.channels.cache.get(msg.channel.id).send('<a:retard:788703547335901184>');
+                func.toDiscordMessage(client, msg, '<a:retard:788703547335901184>');
+                func.toDiscordMessage(client, msg, func.reardinator(sentence));
+                func.toDiscordMessage(client, msg, '<a:retard:788703547335901184>');
                 break;
             case 'lotto':
-                if (msg.channel.id === '779395227688501298') {
-                    member = msg.author.username;
+                if (messageChannel === '779395227688501298') {
                     let tips = `${args[1]} ${args[2]}`;
-                    if (`${args[1]} ${args[2]}` === 'kurva anyád') {
-                        client.channels.cache.get(msg.channel.id).send('Flote egy barom');
-                        return;
-                    }
-                    if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2])) &&  (0 < parseInt(args[1]) < 8) && (0 < parseInt(args[2]) < 8)) {
+
+                    if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2])) && (0 < parseInt(args[1])) && (parseInt(args[1]) < 8) && (0 < parseInt(args[2])) && (0 < parseInt(args[2]) < 8)) {
                         if (args[3] === 'change'){
-                            await database.updateLottoTip(member, msg.author.id, tips);
-                            client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
+                            await database.updateLottoTip(msg.author.username, author, tips);
+                            func.toDiscordMessage(client, msg,`Tipped mentve: ${args[1]} ${args[2]}`);
                         } else if (args[3] === undefined) {
-                            let exist = await database.getLotto(msg.author.id);
+                            let exist = await database.getLotto(author);
                             if (exist !== null) {
-                                client.channels.cache.get(msg.channel.id).send('Te már tippeltél, tippet a beírt számok után való "change" szöveggel módosíthatsz');
+                                func.toDiscordMessage(client, msg,'Te már tippeltél, tippet a beírt számok után való "change" szöveggel módosíthatsz');
                             } else {
-                                await database.createLottoTip(member, msg.author.id, tips);
-                                client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
+                                await database.createLottoTip(msg.author.username, author, tips);
+                                func.toDiscordMessage(client, msg,`Tipped mentve: ${args[1]} ${args[2]}`);
                             }
                         } else {
-                            client.channels.cache.get(msg.channel.id).send('2 egész egyjegyű számot adj meg 1 és 7 között');
+                            func.toDiscordMessage(client, msg,'2 egész egyjegyű számot adj meg 1 és 7 között');
                         }
                     } else {
-                        client.channels.cache.get(msg.channel.id).send('2 egész egyjegyű számmal tippelj 1 és 7 között');
+                        func.toDiscordMessage(client, msg,'2 egész egyjegyű számmal tippelj 1 és 7 között');
                     }
-
                 } else {
-                    client.channels.cache.get(msg.channel.id).send('Itt nem tippelhetsz');
+                    func.toDiscordMessage(client, msg,'Itt nem tippelhetsz');
                 }
                 break;
             case 'tippek':
-                if (msg.channel.id === '779395227688501298') {
-                let checkNumbers = await func.setLottoNumbers();
-                client.channels.cache.get(msg.channel.id).send(checkNumbers);
+                if (messageChannel === '779395227688501298') {
+                    func.toDiscordMessage(client, msg, await func.setLottoNumbers());
                 } else {
-                    client.channels.cache.get(msg.channel.id).send('no');
+                    func.toDiscordMessage(client, msg,'no');
                 }
                 break;
             case 'votemute':
@@ -353,36 +302,33 @@ client.on('message', async msg => {
                 msg.awaitReactions(voteMuteFilter, { max: 1, time: 10000, errors: ['time']})
                     .then(async () => {
                         let mute_role = msg.guild.roles.cache.get("686288799109480523");
-                        let member = msg.mentions.members.first();
-                        await member.roles.add(mute_role);
-                        await client.channels.cache.get(msg.channel.id).send('Muteolva');
-                        setTimeout(() => {member.roles.remove(mute_role);
+                        await firstMention.roles.add(mute_role);
+                        await func.toDiscordMessage(client, msg, 'Muteolva');
+                        setTimeout(() => {firstMention.roles.remove(mute_role);
                         }, 30 * 1000);
                     }).catch(r => {
-                    client.channels.cache.get(msg.channel.id).send('Elutasítva');
+                    func.toDiscordMessage(client, msg, 'Elutasítva');
                             console.log(r);
                         });
                 break;
             case 'votenick':
-                let uwuMember = msg.mentions.members.first();
+
                 try{
-                    if (uwuMember.roles.cache.has('671107459858956299')) {
-                        client.channels.cache.get(msg.channel.id).send('Botot nem nevezhetsz át');
+                    if (firstMention.roles.cache.has('671107459858956299')) {
+                        func.toDiscordMessage(client, msg,'Botot nem nevezhetsz át');
                         break;
                     }
                 } catch (err){
                     console.log('error');
                 }
-
                 await msg.react('👍');
 
                 msg.awaitReactions(voteNickFilter, { max: 1, time: 30000, errors: ['time']})
                     .then( () => {
-
-                        uwuMember.setNickname(nickname, 'Sikeres Szavazás');
-                        client.channels.cache.get(msg.channel.id).send('Sikeres átnevezés: ' + uwuMember.user.username);
+                        firstMention.setNickname(nickname, 'Sikeres Szavazás');
+                        func.toDiscordMessage(client, msg,'Sikeres átnevezés: ' + firstMention.user.username);
                     }).catch(r => {
-                    client.channels.cache.get(msg.channel.id).send('Elutasítva');
+                    func.toDiscordMessage(client, msg,'Elutasítva');
                     console.log(r);
                 });
                 break;
@@ -391,146 +337,131 @@ client.on('message', async msg => {
     }
 
     //RPG-project
-    if (msg.channel.id === '796405215279972353' && msg.author.id !== cheater) {
-        let hero;
+    if (messageChannel === '796405215279972353' && author !== cheater) {
+        let hero = new Hero(await func.getCharacter(author));
+        let username = msg.author.username;
         let heroEmbed;
-        let monster;
-        let monsterEmbed;
+        let enemy;
+        let enemyEmbed;
         let wins = [];
-        const webhooks = await client.channels.cache.get(msg.channel.id).fetchWebhooks();
+        let chest;
+        const webhooks = await client.channels.cache.get(messageChannel).fetchWebhooks();
         const webhook = webhooks.first();
         if (msg.content.substring(0, 1) === '?') {
             switch (cmd.toLocaleLowerCase()) {
                 case 'create':
                     if (args[1] === undefined || args[2] === undefined) {
-                        client.channels.cache.get(msg.channel.id).send('Adj meg nevet és fajt is');
+                        client.channels.cache.get(messageChannel).send('Adj meg nevet és fajt is');
                         return;
                     }
                     let description = msg.content.slice(10 + args[1].length + args[2].length);
-                    let exist = await func.getCharacter(msg.author.id);
+                    let exist = await func.getCharacter(author);
                     if (exist !== null) {
-                        client.channels.cache.get(msg.channel.id).send('Neked már létezik karaktered');
+                        client.channels.cache.get(messageChannel).send('Neked már létezik karaktered');
                     } else {
                         if (func.raceCheck(args[2]) !== false) {
                             let stats = func.getRaceStats(args[2].toLowerCase());
-                            database.characterCreate(args[1], args[2], description, msg.author.id, stats[0], stats[1], stats[2], stats[3]);
-                            client.channels.cache.get(msg.channel.id).send('Karakter létrehozva');
+                            database.characterCreate(args[1], args[2], description, author, stats[0], stats[1], stats[2], stats[3]);
+                            client.channels.cache.get(messageChannel).send('Karakter létrehozva');
                         } else {
-                            client.channels.cache.get(msg.channel.id).send('Választható fajt adj meg légyszi\n Fajok listáját ezzel találod: ?races');
+                            client.channels.cache.get(messageChannel).send('Választható fajt adj meg légyszi\n Fajok listáját ezzel találod: ?races');
                         }
                     }
                     break;
-                case 'char':
-                    hero = await func.getCharacter(msg.author.id);
-                    heroEmbed = await func.getHeroEmbed(hero, msg.author.username, msg.author.avatarURL());
-                    client.channels.cache.get(msg.channel.id).send(heroEmbed);
-                    break;
-                case 'chest':
-                    hero = await func.getCharacter(msg.author.id);
-                    let chest = func.getChestEmbed(hero);
-                    client.channels.cache.get(msg.channel.id).send(chest);
-                    let reward = func.rollChest(hero);
-                    if (reward[1] === 'neutral') {
-                        client.channels.cache.get(msg.channel.id).send('A fenébe, egy újabb üres ládát találtál. Biztos fosztogatók jártak itt előtted!');
-                        return;
-                    } else if (reward[1] === 'good'){
-                        client.channels.cache.get(msg.channel.id).send('Ládát kinyitottad, és egy üveget találtál benne, valami kékes folyadékkal, amit azonnal meg is ittál.\n' +
-                            `Érzed hogy megerősödtél, kaptál ${reward[0]}-t `);
-                        await database.updateCharacterStat(hero, reward);
-                    } else {
-                        client.channels.cache.get(msg.channel.id).send('Ládát kinyitottad, és egy üveget találtál benne, valami feketés folyadékkal, amit azonnal meg is ittál.\n' +
-                            'Úgy érzed mintha a lelked kiakarna jutni belőled, így összeestél a földön.\n' +
-                            `Vesztettél ${reward[0]}-t`);
-                        await database.updateCharacterStat(hero, reward);
-                    }
-                    break;
-                case 'levelup':
-                    if (args[1] === undefined) {
-                        client.channels.cache.get(msg.channel.id).send('Add meg mire akarsz talentolni');
-                        return;
-                    }
-                    const myChar = await func.getCharacter(msg.author.id);
-                    if (myChar.talent > 0 && func.getStats(args[1])) {
-                        client.channels.cache.get(msg.channel.id).send(`${myChar.name}, egy talent pontot elhasználtál, maradt: ${myChar.talent - 1}`);
-                        await database.addTalentCharacter(myChar, args[1].toLowerCase());
-                    } else {
-                        client.channels.cache.get(msg.channel.id).send('Neked nincs talent pontod, elősször szintet kell, hogy lépj');
-                    }
-                    break;
-
-                case 'races':
-                    let races = func.getRaceList();
-                    client.channels.cache.get(msg.channel.id).send(races);
-                    break;
                 case 'pvp':
-                    let member = msg.mentions.members.first();
-                    let avatarUrl = member.user.avatarURL();
-                    hero = await func.getCharacter(msg.author.id);
-                    monster = await func.getCharacter(member.id);
-                    if (monster === null) {
-                        client.channels.cache.get(msg.channel.id).send('Sajnálom, ő neki még nincs karaktere');
+                    enemy = new Hero(await func.getCharacter(firstMention.id));
+                    if (enemy === null) {
+                        func.toDiscordMessage(client, msg, 'Sajnálom, ő neki még nincs karaktere');
                         return;
                     }
-                    heroEmbed = await func.getHeroEmbed(hero, msg.author.username, msg.author.avatarURL());
-                    monsterEmbed = await func.getHeroEmbed(monster, member.user.username, avatarUrl);
+
+                    heroEmbed = hero.getHeroEmbed(username);
+                    enemyEmbed = enemy.getHeroEmbed(firstMention.user.username);
                     await webhook.send('Harc a végsőkig két UwU között', {
-                        embeds: [heroEmbed, monsterEmbed],
+                        embeds: [heroEmbed, enemyEmbed],
                     });
 
-                    wins = func.fightMonster(monster, hero);
-                    client.channels.cache.get(msg.channel.id).send(`${hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${monster.name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
+                    wins = hero.fightMonster(hero.getHero(), enemy.getHero());
+                    client.channels.cache.get(messageChannel).send(`${hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${enemy.name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
                     if (wins[0] === 'hero') {
-                        client.channels.cache.get(msg.channel.id).send(`${hero.name} Kiélezett csatában sikeresen elintézte ${monster.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
+                        client.channels.cache.get(messageChannel).send(`${hero.name} Kiélezett csatában sikeresen elintézte ${enemy.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
                         await database.updateCharacterXp(hero, 5);
                     } else {
-                        client.channels.cache.get(msg.channel.id).send(`${monster.name} Kiélezett csatában sikeresen elintézte ${hero.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
-                        await database.updateCharacterXp(monster, 5);
+                        client.channels.cache.get(messageChannel).send(`${enemy.name} Kiélezett csatában sikeresen elintézte ${hero.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
+                        await database.updateCharacterXp(enemy, 5);
                     }
-                    break;
-                case 'adventures':
-                    let adventures = func.getAdventures();
-                    client.channels.cache.get(msg.channel.id).send(adventures);
                     break;
                 case 'adventure':
                     if (args[1] === undefined) {
-                        client.channels.cache.get(msg.channel.id).send('Adj meg nehézséget');
+                        func.toDiscordMessage(client, msg, 'Adj meg nehézséget');
                         return;
                     }
                     if (func.adventureCheck(args[1])) {
-                        client.channels.cache.get(msg.channel.id).send('Adj meg nehézséget');
+                        func.toDiscordMessage(client, msg, 'Adj meg nehézséget');
                         return;
                     }
                     let difficult = args[1];
-                    hero = await func.getCharacter(msg.author.id);
-                    monster = await func.getEnemy(difficult);
-                    heroEmbed = await func.getHeroEmbed(hero, msg.author.username, msg.author.avatarURL());
-                    monsterEmbed = await func.getMonsterEmbed(monster);
+                    enemy = new Monster(await func.getEnemy(difficult));
+                    heroEmbed = hero.getHeroEmbed(username);
+                    enemyEmbed = enemy.getMonsterEmbed();
 
                     await webhook.send(difficult, {
-                        embeds: [heroEmbed, monsterEmbed],
+                        embeds: [heroEmbed, enemyEmbed],
                     });
 
-                    wins = func.fightMonster(monster, hero);
-                    client.channels.cache.get(msg.channel.id).send(`${hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${monster.name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
+                    wins = hero.fightMonster(hero.getHero(), enemy.getMonster());
+                    func.toDiscordMessage(client, msg,`${hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${enemy.name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
                     if (wins[0] === 'hero') {
-                        let newXp = hero.experience + monster.experience;
+                        let newXp = hero.experience + enemy.experience;
                         let levelled = func.checkLevels(hero.level, newXp);
                         if (levelled !== 0){
-                            levelled -= monster.experience;
-                            await database.levelUpCharacter(hero, levelled);
-                            client.channels.cache.get(msg.channel.id).send(`<:pogger:780724037331845151> Juhúú ${hero.name} szintet léptél! Jutalmad 1db Talent pont! ?levelup paranccsal oszd ki a talentedet.`);
+                            levelled -= enemy.experience;
+                            hero.levelUpHero(hero.getHero(), levelled);
+                            func.toDiscordMessage(client, msg, `<:pogger:780724037331845151> Juhúú ${hero.name} szintet léptél! Jutalmad 1db Talent pont! ?levelup paranccsal oszd ki a talentedet.`);
                         } else {
-                            if ((hero.level - monster.level) > 4){
-                                client.channels.cache.get(msg.channel.id).send(`Gratulálok ${hero.name} elintézted ${monster.name}-t. Szinted meghaladja 4-gyel az ellenfeledét így nem jár jutalom <:sadge:783272338975621160>`);
-                                return;
+                            if ((hero.level - enemy.level) > 4){
+                                func.toDiscordMessage(client, msg, `Gratulálok ${hero.name} elintézted ${enemy.name}-t. Szinted meghaladja 4-gyel az ellenfeledét így nem jár jutalom <:sadge:783272338975621160>`);
                             } else {
-                                client.channels.cache.get(msg.channel.id).send(`Gratulálok ${hero.name} elintézted ${monster.name}-t. Jutalmad ${monster.experience}xp!`);
-                                await database.updateCharacterXp(hero, monster.experience);
+                                hero.setHeroXp(hero.getHero(), newXp);
+                                func.toDiscordMessage(client, msg, `Gratulálok ${hero.name} elintézted ${enemy.name}-t. Jutalmad ${enemy.experience}xp!`);
                             }
                         }
                     } else {
-                        client.channels.cache.get(msg.channel.id).send(`${monster.name} most jól agyonvert <a:bonkgif:780722290945294356>. Visszatértél a város gyengélkedőjére.`);
+                        func.toDiscordMessage(client, msg, `${enemy.name} most jól agyonvert <a:bonkgif:780722290945294356>. Visszatértél a város gyengélkedőjére.`);
                     }
+                    break;
+            }
+        }
+        if (msg.content.substring(0, 1) === '>') {
+            switch (cmd.toLocaleLowerCase()) {
+                case 'adventures':
+                    func.toDiscordMessage(client, msg, func.getAdventures());
+                    break;
+                case 'races':
+                    func.toDiscordMessage(client, msg, func.getRaceList());
+                    break;
+                case 'levelup':
+                    if (args[1] === undefined) {
+                        client.channels.cache.get(messageChannel).send('Add meg mire akarsz talentolni');
+                        return;
+                    }
+                    if (hero.getHero().talent > 0 && func.getStats(args[1])) {
+                        func.toDiscordMessage(client, msg, `${hero.name}, egy talent pontot elhasználtál, maradt: ${hero.talent - 1}`);
+                        hero.setTalentPoint(args[1].toLowerCase());
+                    } else {
+                        func.toDiscordMessage(client, msg, 'Neked nincs talent pontod, elősször szintet kell, hogy lépj');
+                    }
+                    break;
+                case 'char':
+                    func.toDiscordMessage(client, msg, hero.getHeroEmbed(username));
+                    break;
+                case 'heroes':
+                    func.toDiscordMessage(client, msg, func.getAllHero());
+                    break;
+                case 'chest':
+                    chest = new Chest(await database.getMiscellaneous({type: 'lesser'}));
+                    func.toDiscordMessage(client, msg, chest.getChestEmbed(hero));
+                    func.toDiscordMessage(client, msg, await chest.getChestRewards(hero));
                     break;
             }
         }
@@ -543,14 +474,14 @@ client.on('message', async msg => {
             const splitSong = lowerCase.split('\n');
             for (let i = 0; i < splitSong.length; i++) {
                 if (splitSong[i] === startSong) {
-                    client.channels.cache.get(msg.channel.id).send(splitSong[i + 1]);
+                    func.toDiscordMessage(client, msg, splitSong[i + 1]);
                     break;
                 }
             }
         }
     }
 
-    if (msg.content.substring(0, 1) === '.' && (msg.channel.id === '704983142452428933' || msg.channel.id === '786140249809354793')) {
+    if (msg.content.substring(0, 1) === '.' && (messageChannel === '704983142452428933' || messageChannel === '786140249809354793')) {
         let args = msg.content.substring(1).split(' ');
         let cmd = args[0];
         let channel = args[1];
@@ -560,7 +491,7 @@ client.on('message', async msg => {
         let sentence = msg.content.slice(5);
         switch (cmd.toLocaleLowerCase()) {
             case 'help':
-                client.channels.cache.get(msg.channel.id).send('Elérhető kommandok:\n ".say" + "channel név" + "szöveg" -> az adott channel-re a szöveget kiírja\n' +
+                func.toDiscordMessage(client, msg, 'Elérhető kommandok:\n ".say" + "channel név" + "szöveg" -> az adott channel-re a szöveget kiírja\n' +
                 'elérhető channelek: "suwuli", "owoff (ezt nem kötelező kiírni)", "kuwuka", "18", "mowozi", "jatekowos", "altalanowos", "lotto"\n' +
                 '.sup <:surp:708969952354500658>\n.tri <:trigger:708979797895938168>\n.cute <:cute:735574079851200582>\n' +
                     '.on_no <:oh_no:735574451088785498>\n.gimme <:gimme:744540992430145586>\n.simp <:simp:744540966215483442>\n' +
@@ -570,76 +501,71 @@ client.on('message', async msg => {
                 break;
             case 'say':
                 if (channelId === '667783025811259448') {
-                    client.channels.cache.get('667783025811259448').send(sentence);
+                    func.toDiscordMessageChannel(client, channelId, sentence);
                 } else {
-                    client.channels.cache.get(channelId).send(sentence.slice(channel.length + 1)).catch(data => {
+                    func.toDiscordMessageChannel(client, channelId, sentence.slice(channel.length + 1)).catch(data => {
                         console.log(data);
                     });
                 }
                 break;
 
             case 'sup':
-                client.channels.cache.get(channelId).send('<:surp:708969952354500658>');
+                func.toDiscordMessageChannel(client, channelId, '<:surp:708969952354500658>');
                 break;
             case 'tri':
-                client.channels.cache.get(channelId).send('<:trigger:708979797895938168>');
+                func.toDiscordMessageChannel(client, channelId, '<:trigger:708979797895938168>');
                 break;
             case 'cute':
-                client.channels.cache.get(channelId).send('<:cute:735574079851200582>');
-                break;
-            case 'oh_no':
-                client.channels.cache.get(channelId).send('oh...nooo');
-                client.channels.cache.get(channelId).send('<:oh_no:735574451088785498>');
+                func.toDiscordMessageChannel(client, channelId, '<:cute:735574079851200582>');
                 break;
             case 'gimme':
-                client.channels.cache.get(channelId).send('<:gimme:744540992430145586>');
+                func.toDiscordMessageChannel(client, channelId, '<:gimme:744540992430145586>');
                 break;
             case 'simp':
-                client.channels.cache.get(channelId).send('<:simp:744540966215483442>');
+                func.toDiscordMessageChannel(client, channelId, '<:simp:744540966215483442>');
                 break;
             case 'ew':
-                client.channels.cache.get(channelId).send('<:ew:744540932967235674>');
+                func.toDiscordMessageChannel(client, channelId, '<:ew:744540932967235674>');
                 break;
             case 'burn':
-                client.channels.cache.get(channelId).send('<:burn:744540895478808626>');
+                func.toDiscordMessageChannel(client, channelId, '<:burn:744540895478808626>');
                 break;
             case 'nameselj':
-                client.channels.cache.get(channelId).send('<:marotihaha:759804122139983873>');
+                func.toDiscordMessageChannel(client, channelId, '<:marotihaha:759804122139983873>');
                 break;
             case 'hmm':
-                client.channels.cache.get(channelId).send('<:pepehmm:780723259355824128>');
+                func.toDiscordMessageChannel(client, channelId, '<:pepehmm:780723259355824128>');
                 break;
             case 'dayum':
-                client.channels.cache.get(channelId).send('<:dayum:785148917326675998>');
+                func.toDiscordMessageChannel(client, channelId, '<:dayum:785148917326675998>');
                 break;
             case 'fuck':
-                client.channels.cache.get(channelId).send('<a:yourmom:787410945541537842>');
+                func.toDiscordMessageChannel(client, channelId, '<a:yourmom:787410945541537842>');
                 break;
             case 'kikerdezte':
-                client.channels.cache.get(channelId).send('<a:whoasked:719267371029889168>');
+                func.toDiscordMessageChannel(client, channelId, '<a:whoasked:719267371029889168>');
                 break;
         }
     }
 
-    if (msg.author.id === '376439826549047296' && msg.content.toLowerCase() === 'tap') {
-        attachment = new Discord.MessageAttachment('./szerb/ninjatap.png');
-        client.channels.cache.get(msg.channel.id).send(attachment);
+    if (author === '376439826549047296' && msg.content.toLowerCase() === 'tap') {
+        func.sendAttachment('./szerb/ninjatap.png', client, msg);
     }
 
     if (msg.content.toLowerCase() === 'baszadék') {
-        client.channels.cache.get(msg.channel.id).send('Szopadék');
+        func.toDiscordMessage(client, msg, 'Szopadék');
     } else if (msg.content.toLowerCase() === 'szopadék') {
-        client.channels.cache.get(msg.channel.id).send('Baszadék');
+        func.toDiscordMessage(client, msg, 'Baszadék');
     }
 
     if (msg.content.toLowerCase() === '<:medishrug:788463541107163137>') {
-        client.channels.cache.get(msg.channel.id).send('<:madishrug:788328467485032458>');
+        func.toDiscordMessage(client, msg, '<:madishrug:788328467485032458>');
     } else if (msg.content.toLowerCase() === '<:madishrug:788463507082575893>') {
-        client.channels.cache.get(msg.channel.id).send('<:medishrug:788328451550871552>');
+        func.toDiscordMessage(client, msg, '<:medishrug:788328451550871552>');
     }
 
     if (msg.content.toLowerCase().includes('no bully')) {
-        client.channels.cache.get(msg.channel.id).send('https://i.pinimg.com/originals/78/e3/6c/78e36c8c096aeb13b46a3b41cd934c9f.jpg');
+        func.toDiscordMessage(client, msg, 'https://i.pinimg.com/originals/78/e3/6c/78e36c8c096aeb13b46a3b41cd934c9f.jpg');
     }
 
     if (msg.content.toLowerCase().includes('maróti') || msg.content.toLowerCase().includes('dimat') || msg.content.toLowerCase().includes('maroti') || msg.content.toLowerCase().includes('aranyember')) {
@@ -651,52 +577,27 @@ client.on('message', async msg => {
     }
 
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
-        client.channels.cache.get(msg.channel.id).send('<a:uwu_flotespanking:677984852963885075>');
-    }
-
-    /*if (func.swearListCheck(msg.content)) {
-        swearStack++;
-        let textArray = ['hagyd abba', 'Ne beszélj már csúnyán', 'Kell a baj?', 'Mit káromkodsz?', 'Moderáljad már magad', 'Szépen meg ki fog beszélni?', 'Kőban?', 'ffs'];
-        let randomNumber = Math.floor(Math.random() * textArray.length);
-        if (swearStack === 10) {
-            client.channels.cache.get(msg.channel.id).send(textArray[randomNumber]);
-            swearStack = 0;
-        }
-    }*/
-
-    if (msg.content.toLocaleLowerCase() === 'beírta?' ||
-    msg.content.toLocaleLowerCase() === 'beírtamá?' ||
-    msg.content.toLocaleLowerCase() === 'beírta már?' ||
-    msg.content.toLocaleLowerCase() === 'mikor írja be?' ||
-    msg.content.toLocaleLowerCase() === 'mikor írja be'||
-        msg.content.toLocaleLowerCase() === 'beirta?' ||
-        msg.content.toLocaleLowerCase() === 'beirtamá?' ||
-        msg.content.toLocaleLowerCase() === 'beirta már?' ||
-        msg.content.toLocaleLowerCase() === 'mikor irja be?' ||
-        msg.content.toLocaleLowerCase() === 'mikor irja be') {
-        let furryArray = ['soha', 'úgyse fogja', 'csitt', 'engedd el', '(puskázás)', 'Tanultál volna'];
-        let randomNumber = Math.floor(Math.random() * furryArray.length);
-        client.channels.cache.get(msg.channel.id).send(furryArray[randomNumber]);
+        func.toDiscordMessage(client, msg, '<a:uwu_flotespanking:677984852963885075>');
     }
 
     if (msg.content.toLocaleLowerCase().includes('nem mered')) {
-        client.channels.cache.get(msg.channel.id).send('hang vaaaagy');
+        func.toDiscordMessage(client, msg, 'hang vaaaagy');
     }
 
     if (msg.content.toLocaleLowerCase().includes('nem leszek')) {
-        client.channels.cache.get(msg.channel.id).send('Miért nem leszel? ( ._.) Lehet páran örülnének neki...');
+        func.toDiscordMessage(client, msg, 'Miért nem leszel? ( ._.) Lehet páran örülnének neki...');
     }
 
     if (msg.content.toLocaleLowerCase() === 'ok') {
         let randomNumber = Math.floor(Math.random() * 5);
         if (randomNumber === 4) {
-            client.channels.cache.get(msg.channel.id).send('"k" legalább csináld rendesen');
+            func.toDiscordMessage(client, msg, '"k" legal csináld rendesen');
         }
     }
 
     try {
-        if (msg.mentions.members.first().user.username === 'Pearly') {
-            client.channels.cache.get(msg.channel.id).send('Szeretnél valamit?');
+        if (firstMention.user.username === 'Pearly') {
+            func.toDiscordMessage(client, msg, 'Szeretnél valamit?');
         }
     }catch (e) {
 
@@ -723,7 +624,7 @@ client.on('messageDelete', message => {
         .setTimestamp();
 
     let attachment = (message.attachments).array();
-    if (message.author.bot || message.channel.id === '704983142452428933' || message.channel.id === '740536932303634473') {
+    if (message.author.bot || message.channel.id === '704983142452428933' || message.channel.id === deleteChannelId) {
 
     }
 
@@ -743,12 +644,12 @@ client.on('messageDelete', message => {
                         .setDescription(`${channel}`)
                         .addField('Message: ', messageContent, true)
                         .setTimestamp();
-                    client.channels.cache.get("740536932303634473").send(pictureEmbed);
+                    func.toDiscordMessageChannel(client, deleteChannelId, pictureEmbed);
                 }
             }
         }).catch(console.error);
     } else {
-        client.channels.cache.get("740536932303634473").send(textEmbed);
+        func.toDiscordMessageChannel(client, deleteChannelId, textEmbed);
     }
 });
 
@@ -804,11 +705,10 @@ client.on('messageReactionAdd', async (reaction, user) => {
             .setAuthor(`${user.username}`)
             .addField('Message: ', reaction.message.url, true)
             .setTimestamp();
-        client.channels.cache.get("740536932303634473").send(textEmbed);
+        client.channels.cache.get(deleteChannelId).send(textEmbed);
     }
 });
 
-//740536932303634473
 client.login('NjgzNzAyNzgyODk2NzY3MDE2.XlvZ1g.pD5CXOTEyBkiA0G-L_jMRAlPVbo');
 
 
