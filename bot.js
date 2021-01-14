@@ -168,6 +168,9 @@ client.on('message', async msg => {
             case 'assemble':
                 func.sendAttachment('./szerb/assemble.gif', client, msg);
                 break;
+            case 'uncool':
+                func.sendAttachment('./szerb/uncool.mp4', client, msg);
+                break;
             case 'kezelhetetlen':
                 files = fs.readdirSync('./slap');
                 chosenFile = files[Math.floor(Math.random() * files.length)];
