@@ -1,5 +1,5 @@
-const database = require('./database/handle_database');
-const Discord = require('discord.js');
+import database from './database/handle_database.js';
+import Discord from 'discord.js';
 
 
 function getLottoNumbers(array) {
@@ -11,7 +11,7 @@ function getLottoNumbers(array) {
     return returnArray;
 }
 
-module.exports = {
+export default {
     getChannel: (channel) => {
         switch (channel) {
             case 'suwuli':
@@ -50,6 +50,12 @@ module.exports = {
         if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
             return true;
         }
+    },
+
+    fightEmbed(heroEmbed, enemyEmbed, desc, webhook) {
+        webhook.send(desc, {
+            embeds: [heroEmbed, enemyEmbed],
+        });
     },
 
     raceCheck: (message) => {
@@ -126,7 +132,7 @@ module.exports = {
         return enemies[Math.floor(Math.random() * enemies.length)];
     },
     getCharacter: async (id) => {
-        return await database.listCharacter(id);
+        return database.listCharacter(id);
     },
 
     getAllHero: async () => {
@@ -322,4 +328,4 @@ module.exports = {
     toDiscordMessageChannel(client, channelId, message) {
         client.channels.cache.get(channelId).send(message);
     },
-}
+};

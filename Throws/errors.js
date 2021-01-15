@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+import Discord from 'discord.js';
 
 export class Errors {
     message;
@@ -7,7 +7,7 @@ export class Errors {
     }
 
     getReply(message) {
-        return new Discord.MessageEmbed().setColor('#ff0000').addField('❌', message);
+        return new Discord.MessageEmbed().setColor('#ff0000').setTitle('❌ ' + message);
     }
 
     wrongChannel() {
@@ -22,6 +22,11 @@ export class Errors {
 
     noTalent() {
         this.message = 'Neked nincs talent pontod!';
+        return this.getReply(this.message);
+    }
+
+    noStatGiven() {
+        this.message = 'Add meg mire akarsz talentolni';
         return this.getReply(this.message);
     }
 
@@ -64,5 +69,4 @@ export class Errors {
         this.message = 'Adj meg nevet és fajt is!';
         return this.getReply(this.message);
     }
-
 }

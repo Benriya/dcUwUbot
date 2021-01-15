@@ -1,6 +1,5 @@
-import database from "../database/handle_database";
-
-const Discord = require("discord.js");
+import database from "../database/handle_database.js";
+import Discord from 'discord.js';
 
 export class Chest {
     name;

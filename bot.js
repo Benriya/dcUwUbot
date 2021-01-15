@@ -1,6 +1,23 @@
-require('heroku-self-ping').default("https://discord8w8bot.herokuapp.com");
+/*import hsp from 'heroku-self-ping';
+hsp('https://discord8w8bot.herokuapp.com');*/
 
-const http = require('http');
+import http from 'http';
+import PornSearch from 'pornsearch';
+import {song} from './songs.js';
+import func from './functions.js';
+import Discord from 'discord.js';
+import database from './database/handle_database.js';
+import fs from 'fs';
+import { Errors } from './Throws/errors.js';
+import { Monster } from './dungenowos/Monster.js';
+import { Hero } from './dungenowos/Hero.js';
+import { Chest } from './dungenowos/chest.js';
+let voters = [];
+let winningNumbers = [];
+let winners = [];
+let cheater;
+let lottoChannelId = '779395227688501298';
+let deleteChannelId = '740536932303634473';
 
 const PORT = process.env.PORT || 4040;
 const server = http.createServer((req, res) => {
@@ -12,61 +29,41 @@ server.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });
 
-const PornSearch = require('pornsearch');
-const gifSearch = require('gif-search');
-const songs = require('./songs');
-const func = require('./functions');
-const Discord = require('discord.js');
-const database = require('./database/handle_database');
 const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-let fs = require('fs');
-const {Errors} = require("./Throws/errors");
-const {Monster} = require("./dungenowos/Monster");
-const {Hero} = require("./dungenowos/Hero");
-const {Chest} = require("./dungenowos/chest");
-let files;
-let chosenFile;
-let voters = [];
-let winningNumbers = [];
-let winners = [];
-let cheater;
-let lottoChannelId = '779395227688501298';
-let deleteChannelId = '740536932303634473';
+setInterval(async () => {
+    let nowDate = new Date();
+    if (nowDate.getMinutes() === 0 && nowDate.getHours() % 3 === 0) {
+        func.toDiscordMessageChannel(client, lottoChannelId, '***Lotto***');
+        let checkNumbers = await func.setLottoNumbers();
+        let getNumbers = await func.setLottoNumbers('draw');
+        func.toDiscordMessageChannel(client, lottoChannelId, checkNumbers);
+        winningNumbers = func.drawNumbers();
+        func.toDiscordMessageChannel(client, lottoChannelId, 'Nyertes számok: ' + winningNumbers);
+        winners = func.drawWinners(getNumbers, winningNumbers);
 
-    setInterval(async () => {
-        let nowDate = new Date();
-        if (nowDate.getMinutes() === 0 && nowDate.getHours() % 3 === 0) {
-            func.toDiscordMessageChannel(client, lottoChannelId, '***Lotto***');
-            let checkNumbers = await func.setLottoNumbers();
-            let getNumbers = await func.setLottoNumbers('draw');
-            func.toDiscordMessageChannel(client, lottoChannelId, checkNumbers);
-            winningNumbers = func.drawNumbers();
-            func.toDiscordMessageChannel(client, lottoChannelId, 'Nyertes számok: ' + winningNumbers);
-            winners = func.drawWinners(getNumbers, winningNumbers);
-
-            const list = client.guilds.cache.get("661569830469632007");
-            let nyertes = list.roles.cache.get('779370085487083520');
-            list.members.cache.array().forEach(member => {
-                if (member.roles.cache.has('779370085487083520')) {
-                    member.roles.remove('779370085487083520');
+        const list = client.guilds.cache.get("661569830469632007");
+        let nyertes = list.roles.cache.get('779370085487083520');
+        list.members.cache.array().forEach(member => {
+            if (member.roles.cache.has('779370085487083520')) {
+                member.roles.remove('779370085487083520');
+            }
+            for (let i = 0; i < client.users.cache.array().length; i++) {
+                if (member.user.username === winners[i]) {
+                    member.roles.add(nyertes);
+                    func.toDiscordMessageChannel(client, lottoChannelId, 'Nyertes: ' + '<@' + member.user.id + '>');
                 }
-                for (let i = 0; i < client.users.cache.array().length; i++) {
-                    if (member.user.username === winners[i]) {
-                        member.roles.add(nyertes);
-                        func.toDiscordMessageChannel(client, lottoChannelId, 'Nyertes: ' + '<@' + member.user.id + '>');
-                    }
-                }
-            });
-            winners = [];
-            winningNumbers = [];
-            await database.deleteLottoTips();
-            func.toDiscordMessageChannel(client, lottoChannelId, 'Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
-        }
-    },60 * 1000);
+            }
+        });
+        winners = [];
+        winningNumbers = [];
+        await database.deleteLottoTips();
+        func.toDiscordMessageChannel(client, lottoChannelId, 'Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
+    }
+},60 * 1000);
 
 client.on('message', async msg => {
     if (msg === undefined) return;
@@ -77,15 +74,15 @@ client.on('message', async msg => {
     let messageChannel = msg.channel.id;
     let firstMention = msg.mentions.members.first();
     let error = new Errors();
+    let args = msg.content.substring(1).split(' ');
+    let cmd = args[0];
+    let attachment = (msg.attachments).array();
 
     if (msg.content === '+farm') {
         func.toDiscordMessage(client, msg,'nem használunk automatikus botokat, ejnye');
         cheater = author;
     }
 
-    let args = msg.content.substring(1).split(' ');
-    let cmd = args[0];
-    let attachment = (msg.attachments).array();
     if (msg.attachments.size > 0) {
         func.toDiscordMessageChannel(client, '745317754256490567', `${attachment[0].proxyURL} id: ${attachment[0].id}`);
     }
@@ -164,8 +161,8 @@ client.on('message', async msg => {
                 func.sendAttachment('./szerb/assemble.gif', client, msg);
                 break;
             case 'kezelhetetlen':
-                files = fs.readdirSync('./slap');
-                chosenFile = files[Math.floor(Math.random() * files.length)];
+                let files = fs.readdirSync('./slap');
+                let chosenFile = files[Math.floor(Math.random() * files.length)];
                 func.sendAttachment('./slap/' + chosenFile, client, msg);
                 break;
             case 'porn':
@@ -268,7 +265,6 @@ client.on('message', async msg => {
             case 'lotto':
                 if (messageChannel === lottoChannelId) {
                     let tips = `${args[1]} ${args[2]}`;
-
                     if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2])) && (0 < parseInt(args[1])) && (parseInt(args[1]) < 8) && (0 < parseInt(args[2])) && (0 < parseInt(args[2]) < 8)) {
                         if (args[3] === 'change'){
                             await database.updateLottoTip(msg.author.username, author, tips);
@@ -300,7 +296,6 @@ client.on('message', async msg => {
                 break;
             case 'votemute':
                 await msg.react('👍');
-
                 msg.awaitReactions(voteMuteFilter, { max: 1, time: 10000, errors: ['time']})
                     .then(async () => {
                         let mute_role = msg.guild.roles.cache.get("686288799109480523");
@@ -314,7 +309,6 @@ client.on('message', async msg => {
                         });
                 break;
             case 'votenick':
-
                 try{
                     if (firstMention.roles.cache.has('671107459858956299')) {
                         func.toDiscordMessage(client, msg,'Botot nem nevezhetsz át');
@@ -324,7 +318,6 @@ client.on('message', async msg => {
                     console.log('error');
                 }
                 await msg.react('👍');
-
                 msg.awaitReactions(voteNickFilter, { max: 1, time: 30000, errors: ['time']})
                     .then( () => {
                         firstMention.setNickname(nickname, 'Sikeres Szavazás');
@@ -334,7 +327,6 @@ client.on('message', async msg => {
                     console.log(r);
                 });
                 break;
-
         }
     }
 
@@ -345,7 +337,6 @@ client.on('message', async msg => {
         let heroEmbed;
         let enemy;
         let enemyEmbed;
-        let wins = [];
         let chest;
         const webhooks = await client.channels.cache.get(messageChannel).fetchWebhooks();
         const webhook = webhooks.first();
@@ -376,29 +367,13 @@ client.on('message', async msg => {
                         func.toDiscordMessage(client, msg, error.noResult());
                         return;
                     }
-
                     heroEmbed = hero.getHeroEmbed(username);
                     enemyEmbed = enemy.getHeroEmbed(firstMention.user.username);
-                    await webhook.send('Harc a végsőkig két UwU között', {
-                        embeds: [heroEmbed, enemyEmbed],
-                    });
-
-                    wins = hero.fightMonster(hero.getHero(), enemy.getHero());
-                    client.channels.cache.get(messageChannel).send(`${hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${enemy.name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
-                    if (wins[0] === 'hero') {
-                        func.toDiscordMessage(client, msg, `${hero.name} Kiélezett csatában sikeresen elintézte ${enemy.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
-                        await database.updateCharacterXp(hero, 5);
-                    } else {
-                        func.toDiscordMessage(client, msg, `${enemy.name} Kiélezett csatában sikeresen elintézte ${hero.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
-                        await database.updateCharacterXp(enemy, 5);
-                    }
+                    func.fightEmbed(heroEmbed, enemyEmbed, 'Harc a végsőkig', webhook);
+                    hero.fightResult(client, msg, enemy);
                     break;
                 case 'adventure':
-                    if (args[1] === undefined) {
-                        func.toDiscordMessage(client, msg, error.noDifficultGiven());
-                        return;
-                    }
-                    if (func.adventureCheck(args[1])) {
+                    if (args[1] === undefined || func.adventureCheck(args[1])) {
                         func.toDiscordMessage(client, msg, error.noDifficultGiven());
                         return;
                     }
@@ -406,34 +381,12 @@ client.on('message', async msg => {
                     enemy = new Monster(await func.getEnemy(difficult));
                     heroEmbed = hero.getHeroEmbed(username);
                     enemyEmbed = enemy.getMonsterEmbed();
-
-                    await webhook.send(difficult, {
-                        embeds: [heroEmbed, enemyEmbed],
-                    });
-
-                    wins = hero.fightMonster(hero.getHero(), enemy.getMonster());
-                    func.toDiscordMessage(client, msg,`${hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${enemy.name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
-                    if (wins[0] === 'hero') {
-                        let newXp = hero.experience + enemy.experience;
-                        let levelled = func.checkLevels(hero.level, newXp);
-                        if (levelled !== 0){
-                            levelled -= enemy.experience;
-                            hero.levelUpHero(hero.getHero(), levelled);
-                            func.toDiscordMessage(client, msg, `<:pogger:780724037331845151> Juhúú ${hero.name} szintet léptél! Jutalmad 1db Talent pont! ?levelup paranccsal oszd ki a talentedet.`);
-                        } else {
-                            if ((hero.level - enemy.level) > 4){
-                                func.toDiscordMessage(client, msg, `Gratulálok ${hero.name} elintézted ${enemy.name}-t. Szinted meghaladja 4-gyel az ellenfeledét így nem jár jutalom <:sadge:783272338975621160>`);
-                            } else {
-                                hero.setHeroXp(hero.getHero(), newXp);
-                                func.toDiscordMessage(client, msg, `Gratulálok ${hero.name} elintézted ${enemy.name}-t. Jutalmad ${enemy.experience}xp!`);
-                            }
-                        }
-                    } else {
-                        func.toDiscordMessage(client, msg, `${enemy.name} most jól agyonvert <a:bonkgif:780722290945294356>. Visszatértél a város gyengélkedőjére.`);
-                    }
+                    func.fightEmbed(heroEmbed, enemyEmbed, difficult, webhook);
+                    hero.fightResult(client, msg, enemy);
                     break;
             }
         }
+
         if (msg.content.substring(0, 1) === '>') {
             switch (cmd.toLocaleLowerCase()) {
                 case 'adventures':
@@ -444,7 +397,7 @@ client.on('message', async msg => {
                     break;
                 case 'levelup':
                     if (args[1] === undefined) {
-                        client.channels.cache.get(messageChannel).send('Add meg mire akarsz talentolni');
+                        func.toDiscordMessage(client, msg, error.noStatGiven());
                         return;
                     }
                     if (hero.getHero().talent > 0 && func.getStats(args[1])) {
@@ -468,11 +421,12 @@ client.on('message', async msg => {
             }
         }
     }
+    //RPG-project
 
     if(msg.attachments.size === 0) {
-        if (songs.song.toLowerCase().includes(msg.content.toLowerCase())) {
+        if (song.toLowerCase().includes(msg.content.toLowerCase())) {
             const startSong = msg.content.toLowerCase();
-            const lowerCase = songs.song.toLowerCase();
+            const lowerCase = song.toLowerCase();
             const splitSong = lowerCase.split('\n');
             for (let i = 0; i < splitSong.length; i++) {
                 if (splitSong[i] === startSong) {

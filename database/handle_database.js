@@ -1,13 +1,14 @@
-let MongoClient = require('mongodb').MongoClient;
+import pkg from 'mongodb';
+const { MongoClient } = pkg;
 
 const url = 'mongodb+srv://Kuroko:Madamadadane@uwuniverzum.cegga.mongodb.net/test';
 
-module.exports = {
-    characterCreate: (name, race, description, id, Power, Intellect, Agility, Luck) => {
+export default {
+    characterCreate: (name, race, description, id, hp, shield, Power, Intellect, Agility, Luck) => {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
-            let myobj = {name: name, description: description, race: race, id: id, Power: Power, Intellect: Intellect, Agility: Agility, Luck: Luck, experience: 0, level: 1, talent: 0, type: 'Player'};
+            let myobj = {name: name, description: description, race: race, id: id, hp: hp, shield: shield, Power: Power, Intellect: Intellect, Agility: Agility, Luck: Luck, experience: 0, level: 1, talent: 0, type: 'Player'};
             dbo.collection("Characters").insertOne(myobj, function (err, res) {
                 if (err) throw err;
                 console.log("1 document inserted");
@@ -222,4 +223,4 @@ module.exports = {
         });
     },
 
-}
+};

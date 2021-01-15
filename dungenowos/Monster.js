@@ -1,7 +1,4 @@
-import database from "../database/handle_database";
-import func from "../functions";
-
-const Discord = require("discord.js");
+import Discord from 'discord.js';
 
 export class Monster {
     monster;
