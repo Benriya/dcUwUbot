@@ -24,6 +24,7 @@ client.on('ready', () => {
 });
 
 let fs = require('fs');
+const {Errors} = require("./Throws/errors");
 const {Monster} = require("./dungenowos/Monster");
 const {Hero} = require("./dungenowos/Hero");
 const {Chest} = require("./dungenowos/chest");
@@ -75,6 +76,7 @@ client.on('message', async msg => {
     let author = msg.author.id;
     let messageChannel = msg.channel.id;
     let firstMention = msg.mentions.members.first();
+    let error = new Errors();
 
     if (msg.content === '+farm') {
         func.toDiscordMessage(client, msg,'nem használunk automatikus botokat, ejnye');
@@ -176,11 +178,11 @@ client.on('message', async msg => {
                             func.toDiscordMessage(client, msg, gifs[random].webm);
                             func.toDiscordMessage(client, msg, gifs[random].title);
                         }).catch(err => {
-                        func.toDiscordMessage(client, msg, 'Nincs találat');
+                        func.toDiscordMessage(client, msg, error.noResult());
                         console.log('nothing found');
                     });
                 } else {
-                    func.toDiscordMessage(client, msg, 'Ne ebbe a channelbe írd');
+                    func.toDiscordMessage(client, msg, error.wrongChannel());
                 }
                 break;
             case '!help':
@@ -264,7 +266,7 @@ client.on('message', async msg => {
                 func.toDiscordMessage(client, msg, '<a:retard:788703547335901184>');
                 break;
             case 'lotto':
-                if (messageChannel === '779395227688501298') {
+                if (messageChannel === lottoChannelId) {
                     let tips = `${args[1]} ${args[2]}`;
 
                     if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2])) && (0 < parseInt(args[1])) && (parseInt(args[1]) < 8) && (0 < parseInt(args[2])) && (0 < parseInt(args[2]) < 8)) {
@@ -274,26 +276,26 @@ client.on('message', async msg => {
                         } else if (args[3] === undefined) {
                             let exist = await database.getLotto(author);
                             if (exist !== null) {
-                                func.toDiscordMessage(client, msg,'Te már tippeltél, tippet a beírt számok után való "change" szöveggel módosíthatsz');
+                                func.toDiscordMessage(client, msg, error.alreadyTipped());
                             } else {
                                 await database.createLottoTip(msg.author.username, author, tips);
                                 func.toDiscordMessage(client, msg,`Tipped mentve: ${args[1]} ${args[2]}`);
                             }
                         } else {
-                            func.toDiscordMessage(client, msg,'2 egész egyjegyű számot adj meg 1 és 7 között');
+                            func.toDiscordMessage(client, msg,error.badTipForLotto());
                         }
                     } else {
-                        func.toDiscordMessage(client, msg,'2 egész egyjegyű számmal tippelj 1 és 7 között');
+                        func.toDiscordMessage(client, msg, error.badTipForLotto());
                     }
                 } else {
-                    func.toDiscordMessage(client, msg,'Itt nem tippelhetsz');
+                    func.toDiscordMessage(client, msg, error.wrongChannel());
                 }
                 break;
             case 'tippek':
-                if (messageChannel === '779395227688501298') {
+                if (messageChannel === lottoChannelId) {
                     func.toDiscordMessage(client, msg, await func.setLottoNumbers());
                 } else {
-                    func.toDiscordMessage(client, msg,'no');
+                    func.toDiscordMessage(client, msg, error.wrongChannel());
                 }
                 break;
             case 'votemute':
@@ -307,7 +309,7 @@ client.on('message', async msg => {
                         setTimeout(() => {firstMention.roles.remove(mute_role);
                         }, 30 * 1000);
                     }).catch(r => {
-                    func.toDiscordMessage(client, msg, 'Elutasítva');
+                    func.toDiscordMessage(client, msg, error.deniedVote());
                             console.log(r);
                         });
                 break;
@@ -328,7 +330,7 @@ client.on('message', async msg => {
                         firstMention.setNickname(nickname, 'Sikeres Szavazás');
                         func.toDiscordMessage(client, msg,'Sikeres átnevezés: ' + firstMention.user.username);
                     }).catch(r => {
-                    func.toDiscordMessage(client, msg,'Elutasítva');
+                    func.toDiscordMessage(client, msg, error.deniedVote());
                     console.log(r);
                 });
                 break;
@@ -351,27 +353,27 @@ client.on('message', async msg => {
             switch (cmd.toLocaleLowerCase()) {
                 case 'create':
                     if (args[1] === undefined || args[2] === undefined) {
-                        client.channels.cache.get(messageChannel).send('Adj meg nevet és fajt is');
+                        func.toDiscordMessage(client, msg,error.badRaceOrName());
                         return;
                     }
                     let description = msg.content.slice(10 + args[1].length + args[2].length);
                     let exist = await func.getCharacter(author);
                     if (exist !== null) {
-                        client.channels.cache.get(messageChannel).send('Neked már létezik karaktered');
+                        func.toDiscordMessage(client, msg,error.existHero());
                     } else {
                         if (func.raceCheck(args[2]) !== false) {
                             let stats = func.getRaceStats(args[2].toLowerCase());
                             database.characterCreate(args[1], args[2], description, author, stats[0], stats[1], stats[2], stats[3]);
-                            client.channels.cache.get(messageChannel).send('Karakter létrehozva');
+                            func.toDiscordMessage(client, msg, 'Karakter létrehozva');
                         } else {
-                            client.channels.cache.get(messageChannel).send('Választható fajt adj meg légyszi\n Fajok listáját ezzel találod: ?races');
+                            func.toDiscordMessage(client, msg, error.badRaceGiven());
                         }
                     }
                     break;
                 case 'pvp':
                     enemy = new Hero(await func.getCharacter(firstMention.id));
                     if (enemy === null) {
-                        func.toDiscordMessage(client, msg, 'Sajnálom, ő neki még nincs karaktere');
+                        func.toDiscordMessage(client, msg, error.noResult());
                         return;
                     }
 
@@ -384,20 +386,20 @@ client.on('message', async msg => {
                     wins = hero.fightMonster(hero.getHero(), enemy.getHero());
                     client.channels.cache.get(messageChannel).send(`${hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${enemy.name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
                     if (wins[0] === 'hero') {
-                        client.channels.cache.get(messageChannel).send(`${hero.name} Kiélezett csatában sikeresen elintézte ${enemy.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
+                        func.toDiscordMessage(client, msg, `${hero.name} Kiélezett csatában sikeresen elintézte ${enemy.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
                         await database.updateCharacterXp(hero, 5);
                     } else {
-                        client.channels.cache.get(messageChannel).send(`${enemy.name} Kiélezett csatában sikeresen elintézte ${hero.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
+                        func.toDiscordMessage(client, msg, `${enemy.name} Kiélezett csatában sikeresen elintézte ${hero.name}-t. <a:bonkgif2:780722305759838249> (+5xp)`);
                         await database.updateCharacterXp(enemy, 5);
                     }
                     break;
                 case 'adventure':
                     if (args[1] === undefined) {
-                        func.toDiscordMessage(client, msg, 'Adj meg nehézséget');
+                        func.toDiscordMessage(client, msg, error.noDifficultGiven());
                         return;
                     }
                     if (func.adventureCheck(args[1])) {
-                        func.toDiscordMessage(client, msg, 'Adj meg nehézséget');
+                        func.toDiscordMessage(client, msg, error.noDifficultGiven());
                         return;
                     }
                     let difficult = args[1];
@@ -449,7 +451,7 @@ client.on('message', async msg => {
                         func.toDiscordMessage(client, msg, `${hero.name}, egy talent pontot elhasználtál, maradt: ${hero.talent - 1}`);
                         hero.setTalentPoint(args[1].toLowerCase());
                     } else {
-                        func.toDiscordMessage(client, msg, 'Neked nincs talent pontod, elősször szintet kell, hogy lépj');
+                        func.toDiscordMessage(client, msg, error.noTalent());
                     }
                     break;
                 case 'char':

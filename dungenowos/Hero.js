@@ -16,7 +16,7 @@ export class Hero {
 
     getHeroEmbed(username) {
         return new Discord.MessageEmbed()
-            .setColor('#36ff00')
+            .setColor('#26a900')
             .setTitle(`[${this.hero.name}] LvL: ${this.hero.level}`)
             .setThumbnail(this.hero.img)
             .setAuthor(`${username}`)

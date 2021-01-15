@@ -16,7 +16,7 @@ export class Monster {
 
     getMonsterEmbed() {
         return new Discord.MessageEmbed()
-            .setColor('#ff0202')
+            .setColor('#850000')
             .setTitle(`[${this.monster.name}] LvL: ${this.monster.level}`)
             .setThumbnail(`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcg2z-7M1BLuu4WbVKYQzv8Ya30gb5-b5n4Q&usqp=CAU`)
             .setAuthor(`Monster`)
