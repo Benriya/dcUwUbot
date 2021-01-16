@@ -4,11 +4,11 @@ const { MongoClient } = pkg;
 const url = 'mongodb+srv://Kuroko:Madamadadane@uwuniverzum.cegga.mongodb.net/test';
 
 export default {
-    characterCreate: (name, race, description, id, hp, shield, Power, Intellect, Agility, Luck) => {
+    characterCreate: (name, race, description, id, hp, maxHp, regen, armor, defense, strength, intellect, agility, luck, gold) => {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
-            let myobj = {name: name, description: description, race: race, id: id, hp: hp, shield: shield, Power: Power, Intellect: Intellect, Agility: Agility, Luck: Luck, experience: 0, level: 1, talent: 0, type: 'Player'};
+            let myobj = {name: name, description: description, race: race, id: id, hp: hp, maxHp: maxHp, regen: regen, armor: armor, defense: defense, strength: strength, intellect: intellect, agility: agility, luck: luck, gold: gold, experience: 0, level: 1, talent: 0, type: 'Player', timeout: 0};
             dbo.collection("Characters").insertOne(myobj, function (err, res) {
                 if (err) throw err;
                 console.log("1 document inserted");
@@ -45,7 +45,7 @@ export default {
         });
     },
 
-    getMiscellaneous: (query) => {
+    getEnemy: (query) => {
         return new Promise(function (resolve, reject) {
             MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
@@ -59,61 +59,28 @@ export default {
         });
     },
 
-    updateCharacterXp: (char, xp) => {
-            MongoClient.connect(url, function(err, db) {
+    getMiscellaneous: (query) => {
+        return new Promise(function (resolve, reject) {
+            MongoClient.connect(url, function (err, db) {
                 if (err) throw err;
                 let dbo = db.db("mydb");
-                let myquery = { id: char.id };
-                let newXp = char.experience + xp;
-                let newvalues = { $set: {experience: newXp } };
-                dbo.collection("Characters").updateOne(myquery, newvalues, function(err, res) {
+                dbo.collection("Characters").findOne(query, function (err, result) {
                     if (err) throw err;
-                    console.log("1 document updated");
+                    //console.log(result);
                     db.close();
+                    resolve(result);
                 });
             });
+        });
     },
 
-    updateCharacterStat: (char, ability) => {
+    levelUpCharacter: (char, xp) => {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
-            let myquery = { id: char.id };
-            let newvalues;
-            if (ability[1] === 'good') {
-                if (ability[0] === 'Power') {
-                    newvalues = {$set: {Power: char.Power + 1}};
-                }
-                if (ability[0] === 'Intellect') {
-                    newvalues = {$set: {Intellect: char.Intellect + 1}};
-                }
-                if (ability[0] === 'Agility') {
-                    newvalues = {$set: {Agility: char.Agility + 1}};
-                }
-                if (ability[0] === 'Luck') {
-                    newvalues = {$set: {Luck: char.Luck + 1}};
-                }
-                if (ability[0] === 'experience') {
-                    newvalues = {$set: {experience: (char.experience + char.level * 10)}};
-                }
-            } else {
-                if (ability[0] === 'Power') {
-                    newvalues = {$set: {Power: char.Power - 1}};
-                }
-                if (ability[0] === 'Intellect') {
-                    newvalues = {$set: {Intellect: char.Intellect - 1}};
-                }
-                if (ability[0] === 'Agility') {
-                    newvalues = {$set: {Agility: char.Agility - 1}};
-                }
-                if (ability[0] === 'Luck') {
-                    newvalues = {$set: {Luck: char.Luck - 1}};
-                }
-                if (ability[0] === 'experience') {
-                    newvalues = {$set: {experience: (char.experience - char.level * 10)}};
-                }
-            }
-            dbo.collection("Characters").updateOne(myquery, newvalues, function(err, res) {
+            let myQuery = { id: char.id };
+            let newValues = { $set: {level: char.level+1, talent: char.talent+1, experience: char.experience-xp } };
+            dbo.collection("Characters").updateOne(myQuery, newValues, function(err, res) {
                 if (err) throw err;
                 console.log("1 document updated");
                 db.close();
@@ -121,36 +88,18 @@ export default {
         });
     },
 
-    levelUpCharacter: (char, xp) => {
-            MongoClient.connect(url, function(err, db) {
+    updateCharacter: (char, args) => {
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            let myQuery = { id: char };
+            let newValues = { $set: args };
+            dbo.collection("Characters").updateOne(myQuery, newValues, function(err, res) {
                 if (err) throw err;
-                let dbo = db.db("mydb");
-                let myquery = { id: char.id };
-                let newvalues = { $set: {level: char.level+1, talent: char.talent+1, experience: char.experience-xp } };
-                dbo.collection("Characters").updateOne(myquery, newvalues, function(err, res) {
-                    if (err) throw err;
-                    console.log("1 document updated");
-                    db.close();
-                });
+                console.log('?');
+                db.close();
             });
-    },
-
-    addTalentCharacter: (char, ability) => {
-            MongoClient.connect(url, function(err, db) {
-                if (err) throw err;
-                let dbo = db.db("mydb");
-                let myquery = { id: char.id };
-                let newvalues;
-                if (ability === 'power') {newvalues = { $set: {Power: char.Power+1, talent: char.talent-1} };}
-                if (ability === 'intellect') {newvalues = { $set: {Intellect: char.Intellect+1, talent: char.talent-1} };}
-                if (ability === 'agility') {newvalues = { $set: {Agility: char.Agility+1, talent: char.talent-1} };}
-                if (ability === 'luck') {newvalues = { $set: {Luck: char.Luck+1, talent: char.talent-1} };}
-                dbo.collection("Characters").updateOne(myquery, newvalues, function(err, res) {
-                    if (err) throw err;
-                    console.log("1 document updated");
-                    db.close();
-                });
-            });
+        });
     },
 
     createLottoTip: (name, id, tipp) => {
@@ -170,9 +119,9 @@ export default {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
-            let myquery = { id: id };
-            let newvalues = { $set: {tipp: tipp}};
-            dbo.collection("Lotto").updateOne(myquery, newvalues, function (err, res) {
+            let myQuery = { id: id };
+            let newValues = { $set: {tipp: tipp}};
+            dbo.collection("Lotto").updateOne(myQuery, newValues, function (err, res) {
                 if (err) throw err;
                 console.log("1 document inserted");
                 db.close();
@@ -214,8 +163,8 @@ export default {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
-            let myquery = { type: 'lotto' };
-            dbo.collection("Lotto").deleteMany(myquery, function (err, obj) {
+            let myQuery = { type: 'lotto' };
+            dbo.collection("Lotto").deleteMany(myQuery, function (err, obj) {
                 if (err) throw err;
                 console.log(obj.result.n + " document(s) deleted");
                 db.close();

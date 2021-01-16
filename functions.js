@@ -52,8 +52,8 @@ export default {
         }
     },
 
-    fightEmbed(heroEmbed, enemyEmbed, desc, webhook) {
-        webhook.send(desc, {
+    async fightEmbed(heroEmbed, enemyEmbed, desc, webhook) {
+        await webhook.send(desc, {
             embeds: [heroEmbed, enemyEmbed],
         });
     },
@@ -71,17 +71,17 @@ export default {
     getRaceList: () => {
         return [
             'Human: allstat+1',
-            'Orc: power+3, agility+1',
+            'Orc: strength+3, agility+1',
             'Goblin: luck+4',
-            'Dwarf: power+2, luck+2',
+            'Dwarf: strength+2, luck+2',
             'Elf: intellect+3, agility+1',
-            'Troll: power+2, agility+2',
-            'Draenei: power+2, intellect+2',
+            'Troll: strength+2, agility+2',
+            'Draenei: strength+2, intellect+2',
             'Lizard: agility+4',
             'Skeleton: intellect+4',
-            'Satyr: power+2, intellect+1, agility+1',
+            'Satyr: strength+2, intellect+1, agility+1',
             'Gnome: intellect+1, agility+2, luck+1',
-            'Worgen: power+2, agility+1, luck+1'];
+            'Worgen: strength+2, agility+1, luck+1'];
     },
 
     getRaceStats: (race) =>{
@@ -128,7 +128,7 @@ export default {
     },
 
     getEnemy: async (diff) => {
-        let enemies = await database.getMiscellaneous({diff: diff});
+        let enemies = await database.getEnemy({diff: diff});
         return enemies[Math.floor(Math.random() * enemies.length)];
     },
     getCharacter: async (id) => {
@@ -145,11 +145,11 @@ export default {
     },
 
     showStr:(char, enemy) => {
-    let power = (2*char.Power < 3*enemy.Agility) ? 0 : (2*char.Power - 3*enemy.Agility);
+    let strength = (2*char.strength < 3*enemy.agility) ? 0 : (2*char.strength - 3*enemy.agility);
     let levelDiff = (enemy.level > char.level) ? 2*(enemy.level - char.level) : 0;
 
-    let charMax = 10 + power + char.Intellect - levelDiff;
-    let charMin = 1 + power + char.Intellect - levelDiff;
+    let charMax = 10 + strength + char.intellect - levelDiff;
+    let charMin = 1 + strength + char.intellect - levelDiff;
 
     if (charMax < 1) {
         charMax = 0;
@@ -175,7 +175,7 @@ export default {
     },
 
     getStats: (message) => {
-        let statList = ['power', 'intellect', 'agility', 'luck'];
+        let statList = ['strength', 'intellect', 'agility', 'luck'];
         for (let i = 0; i < statList.length; i++) {
             if(message.toLowerCase() === statList[i]) {
                 return true;
@@ -185,7 +185,7 @@ export default {
     },
 
     adventureCheck: (message) => {
-        let adventureList = ['Weak', 'Easy', 'Normal', 'Hard', 'Expert', 'BOSS', 'Usuper', 'Godlike'];
+        let adventureList = ['Weak', 'Easy', 'Normal', 'Hard', 'Expert', 'BOSS', 'Usurper', 'Godlike'];
         for (let i = 0; i < adventureList.length; i++) {
             if (message === adventureList[i]) {
                 return false;
@@ -195,78 +195,33 @@ export default {
     },
 
     checkLevels: (level, experience) => {
-        let xp = 0;
-      let levels = [
-          {level: 1, xp: 50},
-          {level: 2, xp: 100},
-          {level: 3, xp: 150},
-          {level: 4, xp: 200},
-          {level: 5, xp: 250},
-          {level: 6, xp: 300},
-          {level: 7, xp: 400},
-          {level: 8, xp: 500},
-          {level: 9, xp: 600},
-          {level: 10, xp: 700},
-          {level: 11, xp: 850},
-          {level: 12, xp: 1000},
-          {level: 13, xp: 1150},
-          {level: 14, xp: 1300},
-          {level: 15, xp: 1450},
-          {level: 16, xp: 1650},
-          {level: 17, xp: 2050},
-          {level: 18, xp: 2550},
-          {level: 19, xp: 2700},
-          {level: 20, xp: 3450},
-          {level: 21, xp: 3700},
-          {level: 22, xp: 3950},
-          {level: 23, xp: 4200},
-          {level: 24, xp: 4450},
-          {level: 25, xp: 4700},
-          {level: 26, xp: 5000},
-          {level: 27, xp: 5300},
-          {level: 28, xp: 5600},
-          {level: 29, xp: 5900},
-          {level: 30, xp: 6200},
-          {level: 31, xp: 6550},
-          {level: 32, xp: 6900},
-          {level: 33, xp: 7250},
-          {level: 34, xp: 7600},
-          {level: 35, xp: 7950},
-          {level: 36, xp: 8350},
-          {level: 37, xp: 8750},
-          {level: 38, xp: 9150},
-          {level: 39, xp: 9550},
-          {level: 40, xp: 10000},
-          ];
-        levels.forEach((value) =>{
-            if (value.level === level) {
-                if (value.xp <= experience) {
-                    xp = value.xp
-                    /*if (value.level === 40){
-                        return 'Ascend';
-                    }*/
+        let xp = 100;
+        for (let i = 1; i <= 70; i++) {
+            if (i === level) {
+                if (experience >= xp) {
+                    return xp;
                 }
+                return 0;
             }
-        });
-        return xp;
+            xp += i*100;
+        }
+        return 0;
     },
 
-
-
     setLottoNumbers: async (type = 'get') => {
-        let returnarray = new Map();
+        let returnArray = new Map();
         let lottok = await database.getLottoTips();
         if (type === 'get') {
             for (let i = 0; i < lottok.length; i++) {
-                returnarray.set(lottok[i].name, lottok[i].tipp);
+                returnArray.set(lottok[i].name, lottok[i].tipp);
             }
-            return getLottoNumbers(returnarray);
+            return getLottoNumbers(returnArray);
         }
         if (type === 'draw') {
             for (let i = 0; i < lottok.length; i++) {
-                returnarray.set(lottok[i].name, lottok[i].tipp);
+                returnArray.set(lottok[i].name, lottok[i].tipp);
             }
-            return returnarray;
+            return returnArray;
         }
 
     },
@@ -282,11 +237,6 @@ export default {
         });
         console.log(winners);
         return winners;
-    },
-
-    addMemberLotto: (message, member, array) => {
-        array.set(member, message);
-        return array;
     },
 
     drawNumbers: () => {

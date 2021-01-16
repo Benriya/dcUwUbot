@@ -331,15 +331,14 @@ client.on('message', async msg => {
     }
 
     //RPG-project
-    if (messageChannel === '796405215279972353' && author !== cheater) {
+    if (messageChannel === '645415255597645848' && author !== cheater) {
         let hero = new Hero(await func.getCharacter(author));
         let username = msg.author.username;
-        let heroEmbed;
-        let enemy;
-        let enemyEmbed;
-        let chest;
+        let heroEmbed, enemyEmbed, enemy, chest;
         const webhooks = await client.channels.cache.get(messageChannel).fetchWebhooks();
         const webhook = webhooks.first();
+        hero.rest();
+
         if (msg.content.substring(0, 1) === '?') {
             switch (cmd.toLocaleLowerCase()) {
                 case 'create':
@@ -369,8 +368,8 @@ client.on('message', async msg => {
                     }
                     heroEmbed = hero.getHeroEmbed(username);
                     enemyEmbed = enemy.getHeroEmbed(firstMention.user.username);
-                    func.fightEmbed(heroEmbed, enemyEmbed, 'Harc a végsőkig', webhook);
-                    hero.fightResult(client, msg, enemy);
+                    await func.fightEmbed(heroEmbed, enemyEmbed, 'Harc a végsőkig', webhook);
+                    hero.fightResult(client, msg, enemy, 'pvp');
                     break;
                 case 'adventure':
                     if (args[1] === undefined || func.adventureCheck(args[1])) {
@@ -381,7 +380,7 @@ client.on('message', async msg => {
                     enemy = new Monster(await func.getEnemy(difficult));
                     heroEmbed = hero.getHeroEmbed(username);
                     enemyEmbed = enemy.getMonsterEmbed();
-                    func.fightEmbed(heroEmbed, enemyEmbed, difficult, webhook);
+                    await func.fightEmbed(heroEmbed, enemyEmbed, difficult, webhook);
                     hero.fightResult(client, msg, enemy);
                     break;
             }
@@ -402,7 +401,7 @@ client.on('message', async msg => {
                     }
                     if (hero.getHero().talent > 0 && func.getStats(args[1])) {
                         func.toDiscordMessage(client, msg, `${hero.name}, egy talent pontot elhasználtál, maradt: ${hero.talent - 1}`);
-                        hero.setTalentPoint(args[1].toLowerCase());
+                        hero.updateHeroPoint(args[1].toLowerCase(),1, 1);
                     } else {
                         func.toDiscordMessage(client, msg, error.noTalent());
                     }
@@ -414,9 +413,11 @@ client.on('message', async msg => {
                     func.toDiscordMessage(client, msg, func.getAllHero());
                     break;
                 case 'chest':
-                    chest = new Chest(await database.getMiscellaneous({type: 'lesser'}));
+                    chest = new Chest(await database.getMiscellaneous({id: 'chest'}), await func.getCharacter(author));
+                    console.log(chest.chest.price);
+                    hero.setHeroGold(hero, -Math.abs(chest.chest.price));
                     func.toDiscordMessage(client, msg, chest.getChestEmbed(hero));
-                    func.toDiscordMessage(client, msg, await chest.getChestRewards(hero));
+                    func.toDiscordMessage(client, msg, await chest.getChestRewards());
                     break;
             }
         }

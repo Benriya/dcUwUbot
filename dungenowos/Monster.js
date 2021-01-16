@@ -17,17 +17,22 @@ export class Monster {
             .setTitle(`[${this.monster.name}] LvL: ${this.monster.level}`)
             .setThumbnail(`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcg2z-7M1BLuu4WbVKYQzv8Ya30gb5-b5n4Q&usqp=CAU`)
             .setAuthor(`Monster`)
-            .addField('Race: ',
+            .addField('Status: ',
+                `HP: ${this.monster.hp}/${this.monster.maxHp}\n` +
+                `Armor: ${this.monster.armor}`)
+            .addField('Faj: ',
                 `${this.monster.race}`)
-            .addField('Description: ',
+            .addField('Leírás: ',
                 `*${this.monster.description}*`)
             .addField('Stats: ',
-                `Power: ${this.monster.Power}\n` +
-                `Intellect: ${this.monster.Intellect}\n` +
-                `Agility: ${this.monster.Agility}`)
+                `Power: ${this.monster.strength}\n` +
+                `Intellect: ${this.monster.intellect}\n` +
+                `Agility: ${this.monster.agility}\n` +
+                `Defense: ${this.monster.defense}\n` +
+                `Gold: ${this.monster.gold}`)
             .addField('Experience: ',
                 `${this.monster.experience}xp`)
-            .addField('Difficult: ',
+            .addField('Nehézség: ',
                 `${this.monster.diff}`);
     }
 }
