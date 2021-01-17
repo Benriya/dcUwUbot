@@ -159,9 +159,15 @@ client.on('message', async msg => {
             case 'vicci':
                 func.sendAttachment('./szerb/vicci.jpg', client, msg);
                 break;
+            case 'kuba':
+                if (!msg.author.id === '310497849274007553') {
+                    break;
+                }
             case 'gay':
                 func.sendAttachment('./szerb/gay.jpg', client, msg);
                 break;
+            case 'alma':
+                func.sendAttachment('./szerb/alma.png', client, msg);
             case 'uwu':
                 func.sendAttachment('./szerb/uwu.gif', client, msg);
                 break;
