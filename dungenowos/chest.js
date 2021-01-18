@@ -12,7 +12,7 @@ export class Chest extends Hero{
     getChestEmbed(hero) {
     return new Discord.MessageEmbed()
         .setColor('#ffd500')
-        .setTitle(this.chest.type)
+        .setTitle(this.chest.name)
         .setThumbnail(this.chest.img)
         .setAuthor(`Kinyitotta: ${hero.hero.name}`)
         .addField('Ára: ',
@@ -22,62 +22,61 @@ export class Chest extends Hero{
     }
 
     rollChest(hero) {
-
         let type = this.chest.type;
         let chestRoll = Math.round(Math.random() * 100 + 1);
         let good, status, reward, scale;
         let rewards = [];
         switch (type) {
             case 'minor':
-                good = (76 - hero.luck) <= 50 ? 50 : (76 - hero.luck);
+                good = (76 - hero.luck) <= 20 ? 20 : (76 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'armor', 'gold', 'armor');
                 scale = Math.round(Math.random() * 200 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'small':
-                good = (81 - hero.luck) <= 55 ? 55 : (81 - hero.luck);
+                good = (81 - hero.luck) <= 30 ? 30 : (81 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'armor', 'gold', 'gold', 'experience', 'gold');
                 scale = Math.round(Math.random() * 300 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'normal':
-                good = (81 - hero.luck) <= 65 ? 65 : (81 - hero.luck);
+                good = (81 - hero.luck) <= 40 ? 40 : (81 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'experience', 'armor', 'armor', 'experience', 'gold');
                 scale = Math.round(Math.random() * 400 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'big':
-                good = (86 - hero.luck) <= 65 ? 65 : (86 - hero.luck);
+                good = (81 - hero.luck) <= 50 ? 50 : (86 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'gold');
-                scale = Math.round(Math.random() * 600 + 1);
+                scale = Math.round(Math.random() * 500 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'huge':
-                good = (91 - hero.luck * 0.9) <= 60 ? 60 : (91 - hero.luck * 0.9);
+                good = (81 - hero.luck * 0.9) <= 60 ? 60 : (91 - hero.luck * 0.9);
                 rewards.push('experience', 'gold', 'armor', 'experience', 'armor', 'armor', 'experience', 'gold');
-                scale = Math.round(Math.random() * 800 + 1);
+                scale = Math.round(Math.random() * 600 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'gorgeous':
-                good = (91 - hero.luck * 0.7) <= 60 ? 60 : (91 - hero.luck * 0.7);
-                rewards.push('experience', 'gold', 'armor', 'defense', 'experience', 'gold', 'armor', 'regen', 'armor', 'experience', 'gold');
-                scale = Math.round(Math.random() * 1000 + 1);
+                good = (86 - hero.luck * 0.7) <= 60 ? 60 : (91 - hero.luck * 0.7);
+                rewards.push('experience', 'gold', 'armor', 'defense', 'experience', 'gold', 'armor', 'armor', 'experience', 'gold');
+                scale = Math.round(Math.random() * 700 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'giant':
                 good = (91 - hero.luck * 0.5) <= 80 ? 80 : (91 - hero.luck * 0.5);
                 rewards.push('strength', 'agility', 'intellect', 'defense', 'regen',);
-                reward = this.calculateReward(rewards, 1);
+                reward = this.calculateReward(rewards, 3);
                 break;
             case 'colossus':
                 good = (96 - hero.luck * 0.3) <= 80 ? 80 : (96 - hero.luck * 0.3);
                 rewards.push('strength', 'agility', 'intellect', 'defense', 'regen');
-                reward = this.calculateReward(rewards, 3);
+                reward = this.calculateReward(rewards, 5);
                 break;
-            case 'rightHandOfGod':
+            case 'god':
                 good = (99 - hero.luck * 0.1) <= 80 ? 80 : (99 - hero.luck * 0.1);
                 rewards.push('strength', 'agility', 'intellect', 'defense');
-                reward = this.calculateReward(rewards, 5);
+                reward = this.calculateReward(rewards, 10);
                 break;
         }
     console.log(good, chestRoll);
@@ -116,6 +115,7 @@ export class Chest extends Hero{
         if (reward[2] === 'neutral') {
             return 'A fenébe, egy újabb üres ládát találtál. Biztos fosztogatók jártak itt előtted!';
         } else {
+            console.log(reward);
             this.updateHeroPoint(reward[0], reward[1]);
             return 'Ládát kinyitottad, és egy üveget találtál benne, valami kékes folyadékkal, amit azonnal meg is ittál.\n' +
                 `Érzed hogy megerősödtél, kaptál ${reward[0]} * ${reward[1]}-t `;

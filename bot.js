@@ -12,6 +12,7 @@ import { Errors } from './Throws/errors.js';
 import { Monster } from './dungenowos/Monster.js';
 import { Hero } from './dungenowos/Hero.js';
 import { Chest } from './dungenowos/chest.js';
+const question = JSON.parse(fs.readFileSync('./dungenowos/fight.json', 'utf8'));
 let voters = [];
 let winningNumbers = [];
 let winners = [];
@@ -331,13 +332,13 @@ client.on('message', async msg => {
     }
 
     //RPG-project
-    if (messageChannel === '645415255597645848' && author !== cheater) {
+    if (messageChannel === '645415255597645848' && author !== cheater && await func.getCharacter(author) !== null) {
         let hero = new Hero(await func.getCharacter(author));
         let username = msg.author.username;
-        let heroEmbed, enemyEmbed, enemy, chest;
+        let heroEmbed, enemyEmbed, enemy, chest, chestType;
         const webhooks = await client.channels.cache.get(messageChannel).fetchWebhooks();
         const webhook = webhooks.first();
-        hero.rest();
+        //await hero.rest();
 
         if (msg.content.substring(0, 1) === '?') {
             switch (cmd.toLocaleLowerCase()) {
@@ -369,19 +370,48 @@ client.on('message', async msg => {
                     heroEmbed = hero.getHeroEmbed(username);
                     enemyEmbed = enemy.getHeroEmbed(firstMention.user.username);
                     await func.fightEmbed(heroEmbed, enemyEmbed, 'Harc a végsőkig', webhook);
-                    hero.fightResult(client, msg, enemy, 'pvp');
+                    hero.fightResult(client, msg, enemy, 'pvp', 'pvp');
                     break;
                 case 'adventure':
-                    if (args[1] === undefined || func.adventureCheck(args[1])) {
+                    /*if (args[1] === undefined || func.adventureCheck(args[1])) {
                         func.toDiscordMessage(client, msg, error.noDifficultGiven());
                         return;
-                    }
+                    }*/
                     let difficult = args[1];
                     enemy = new Monster(await func.getEnemy(difficult));
                     heroEmbed = hero.getHeroEmbed(username);
                     enemyEmbed = enemy.getMonsterEmbed();
                     await func.fightEmbed(heroEmbed, enemyEmbed, difficult, webhook);
-                    hero.fightResult(client, msg, enemy);
+
+                    const filter = response => {
+                        console.log(question[0].answers.some(answer => answer.toLowerCase() === response.content.toLowerCase()) && response.author.id === author)
+                        return question[0].answers.some(answer => answer.toLowerCase() === response.content.toLowerCase()) && response.author.id === author;
+                    };
+
+                    await chooseAttack();
+
+                    function chooseAttack() {
+                        client.channels.cache.get(msg.channel.id).send(question[0].question).then(() => {
+                            client.channels.cache.get(messageChannel).awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] })
+                                .then(collected => {
+                                    func.toDiscordMessage(client, msg,`${hero.getHero().name} ${collected.first().content} támadást hajtott végre`);
+                                    if (collected.first().content === 'flee') {
+                                        func.toDiscordMessage(client, msg,`${hero.getHero().name} elmenekült a csatától`);
+                                        return;
+                                    }
+                                    let result = hero.fightResult(client, msg, enemy, collected.first().content);
+                                    console.log(result);
+                                    if (result === 'done') return;
+                                    chooseAttack();
+                                })
+                                .catch(collected => {
+                                    console.log(collected);
+                                    func.toDiscordMessage(client, msg,'Lejárt az időd!');
+                                });
+                        });
+                    }
+
+
                     break;
             }
         }
@@ -413,7 +443,12 @@ client.on('message', async msg => {
                     func.toDiscordMessage(client, msg, func.getAllHero());
                     break;
                 case 'chest':
-                    chest = new Chest(await database.getMiscellaneous({id: 'chest'}), await func.getCharacter(author));
+                    if (args[1] === undefined || func.chestCheck(args[1])) {
+                        func.toDiscordMessage(client, msg, error.noDifficultGiven());
+                        return;
+                    }
+                    chestType = args[1];
+                    chest = new Chest(await database.getMiscellaneous({type: chestType}), await func.getCharacter(author));
                     console.log(chest.chest.price);
                     hero.setHeroGold(hero, -Math.abs(chest.chest.price));
                     func.toDiscordMessage(client, msg, chest.getChestEmbed(hero));

@@ -82,7 +82,7 @@ export default {
             let newValues = { $set: {level: char.level+1, talent: char.talent+1, experience: char.experience-xp } };
             dbo.collection("Characters").updateOne(myQuery, newValues, function(err, res) {
                 if (err) throw err;
-                console.log("1 document updated");
+                console.log('levelup');
                 db.close();
             });
         });
@@ -96,7 +96,7 @@ export default {
             let newValues = { $set: args };
             dbo.collection("Characters").updateOne(myQuery, newValues, function(err, res) {
                 if (err) throw err;
-                console.log('?');
+                console.log('updateHero');
                 db.close();
             });
         });

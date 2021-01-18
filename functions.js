@@ -58,6 +58,16 @@ export default {
         });
     },
 
+    chestCheck: (message) => {
+        let chestList = ['minor', 'small', 'normal', 'big', 'huge', 'gorgeous', 'giant', 'colossus', 'god'];
+        for (let i = 0; i < chestList.length; i++) {
+            if(message.toLowerCase().includes(chestList[i])) {
+                return false;
+            }
+        }
+        return true;
+    },
+
     raceCheck: (message) => {
         let raceList = ['human', 'orc', 'goblin', 'dwarf', 'elf', 'troll', 'draenei', 'lizard', 'skeleton', 'satyr', 'gnome', 'worgen'];
         for (let i = 0; i < raceList.length; i++) {
@@ -144,21 +154,25 @@ export default {
         return returnArray;
     },
 
-    showStr:(char, enemy) => {
-    let strength = (2*char.strength < 3*enemy.agility) ? 0 : (2*char.strength - 3*enemy.agility);
-    let levelDiff = (enemy.level > char.level) ? 2*(enemy.level - char.level) : 0;
+    showStr:(char, enemy, scale, mage) => {
+        if (mage) char.intellect *= 1.2;
+        let strength = (2*char.strength < 3*enemy.agility) ? 0 : (2*char.strength - 3*enemy.agility);
+        let levelDiff = (enemy.level > char.level) ? 2*(enemy.level - char.level) : 0;
+        let charMax = 10 + strength + char.intellect - 2*levelDiff;
+        let charMin = 1 + strength + char.intellect - 2*levelDiff;
 
-    let charMax = 10 + strength + char.intellect - levelDiff;
-    let charMin = 1 + strength + char.intellect - levelDiff;
+        if (charMax < 1) {
+            charMax = 0;
+        }
+        if (charMin < 1) {
+            charMin = 0;
+        }
+        let finalDmg = (Math.floor(Math.random() * charMax) + charMin) * scale;
+        let def = finalDmg * (enemy.defense / 500);
+        finalDmg = Math.floor(finalDmg - def);
+        console.log(def, finalDmg);
 
-    if (charMax < 1) {
-        charMax = 0;
-    }
-    if (charMin < 1) {
-        charMin = 0;
-    }
-
-    return [Math.floor(Math.random() * charMax) + charMin, charMin, charMax+charMin];
+        return [finalDmg, Math.floor(charMin), Math.floor(charMax+charMin)];
     },
 
     getAdventures: () => {

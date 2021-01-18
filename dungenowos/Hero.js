@@ -29,19 +29,63 @@ export class Hero extends Errors{
             .addField('Leírás: ',
                 `*${this.hero.description}*`)
             .addField('Stats: ',
-                `Power: ${this.hero.strength}\n` +
+                `Strength: ${this.hero.strength}\n` +
                 `Intellect: ${this.hero.intellect}\n` +
                 `Agility: ${this.hero.agility}\n` +
                 `Luck: ${this.hero.luck}\n` +
-                `Power: ${this.hero.defense}\n` +
+                `Defense: ${this.hero.defense}\n` +
                 `Gold: ${this.hero.gold}`)
             .addField('Experience: ',
                 `${this.hero.experience}xp, Elérhető talent: ${this.hero.talent}`);
     }
 
-    fightMonster(hero, enemy) {
-        let heroStr = func.showStr(hero, enemy);
-        let monsterStr = func.showStr(enemy, hero);
+    setFightHp(enemy, wins) {
+        if (this.hero.armor > 0) {
+            this.hero.armor -= wins[2];
+            if (this.hero.armor < 0) {
+                this.hero.hp += this.hero.armor;
+                this.hero.armor = 0;
+            }
+        } else {
+            this.hero.hp = (this.hero.hp - wins[1] < 0) ? 0 : this.hero.hp - wins[1];
+        }
+        if (enemy.armor > 0){
+            enemy.armor -= wins[1];
+            if (enemy.armor < 0) {
+                enemy.hp += enemy.armor;
+                enemy.armor = 0;
+            }
+        } else {
+            enemy.hp = (enemy.hp - wins[1] < 0) ? 0 : enemy.hp - wins[1];
+        }
+    }
+
+    fightMonster(hero, enemy, attackType) {
+        let missChance = 0;
+        let scale = 1;
+        let mage = false;
+        let hit = Math.floor(Math.random() * 100 + 1);
+        switch (attackType) {
+            case 'heavy':
+                missChance = 50 + hero.agility * 0.5;
+                scale = 1.5
+                break;
+            case 'mid':
+                missChance = 70 + hero.agility * 0.5;
+                break;
+            case 'weak':
+                missChance = 90 + hero.agility * 0.5;
+                scale = 0.8
+                break;
+            case 'magic':
+                missChance = 101;
+                mage = true;
+                break;
+        }
+
+        let monsterStr = func.showStr(enemy, hero, 1, mage);
+        if (hit > missChance) return ['miss', 0, monsterStr[0], 0, monsterStr[1], 0, monsterStr[2]];
+        let heroStr = func.showStr(hero, enemy, scale, mage);
         let result = [];
 
         if (monsterStr[0] > heroStr[0]) {
@@ -53,33 +97,42 @@ export class Hero extends Errors{
         }
     }
 
-    fightResult(client, msg, enemy, type = 'monster') {
-        let wins = this.fightMonster(this.hero, enemy.getMonster());
+    fightResult(client, msg, enemy, attackType, type = 'monster') {
+        let wins = this.fightMonster(this.hero, enemy.getMonster(), attackType);
+        let result = 'idle';
         func.toDiscordMessage(client, msg,`${this.hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${enemy.getMonster().name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
 
         switch (type) {
             case 'monster':
-                if (wins[0] === 'hero') {
-                    let newXp = this.hero.experience + enemy.getMonster().experience;
-                    let levelled = func.checkLevels(this.hero.level, newXp);
-                    console.log(levelled);
-                    if (levelled !== 0) {
-                        levelled -= enemy.getMonster().experience;
+                this.setFightHp(enemy.getMonster(), wins);
+                console.log(this.hero.hp, enemy.getMonster().hp);
+                if (enemy.getMonster().hp === 0) {
+                    console.log('war');
+                        let newXp = this.hero.experience + enemy.getMonster().experience;
+                        let levelled = func.checkLevels(this.hero.level, newXp);
                         console.log(levelled);
-                        this.levelUpHero(levelled);
-                        func.toDiscordMessage(client, msg, this.decideVictory(this.hero, enemy, 'level'));
-                    } else {
-                        if ((this.hero.level - enemy.getMonster().level) > 4) {
-                            func.toDiscordMessage(client, msg, this.levelGapExceeded());
-                            return;
+                        if (levelled !== 0) {
+                            levelled -= enemy.getMonster().experience;
+                            console.log(levelled);
+                            this.levelUpHero(levelled);
+                            func.toDiscordMessage(client, msg, this.decideVictory(this.hero, enemy, 'level'));
                         } else {
-                            func.toDiscordMessage(client, msg, this.decideVictory(this.hero, enemy.getMonster(), 'hero'));
-                            this.updateHeroPoint('experience', newXp);
+                            if ((this.hero.level - enemy.getMonster().level) > 4) {
+                                func.toDiscordMessage(client, msg, this.levelGapExceeded());
+                                return;
+                            } else {
+                                func.toDiscordMessage(client, msg, this.decideVictory(this.hero, enemy.getMonster(), 'hero'));
+                                this.updateHeroPoint('experience', newXp);
+                            }
                         }
-                    }
-                    this.setHeroGold(this.hero, enemy.getMonster().gold);
-                } else {
+                        this.updateHeroPoint('hp', this.hero.hp, this.hero.armor);
+                        this.setHeroGold(this.hero, enemy.getMonster().gold);
+                        result = 'done';
+                } else if (enemy.getMonster().hp === 0) {
                     func.toDiscordMessage(client, msg, this.decideVictory(enemy.getMonster(), this.hero, 'enemy'));
+                    result = 'done';
+                } else {
+                    func.toDiscordMessage(client, msg,`${this.hero.name}: ${this.hero.hp}/${this.hero.maxHp} (${this.hero.armor}) Vs ${enemy.getMonster().name}: ${enemy.getMonster().hp}/${enemy.getMonster().maxHp} (${enemy.getMonster().armor}).`);
                 }
                 break;
 
@@ -102,6 +155,7 @@ export class Hero extends Errors{
                 }
                 break;
         }
+        return result;
     }
 
     calculateGold(loserGold, levelDiff) {
@@ -123,12 +177,12 @@ export class Hero extends Errors{
         }
     }
 
-    rest() {
+    async rest() {
        let elapsedTime = this.calculateElapsedTime();
        let rested = this.hero.regen * elapsedTime;
        let hpGain = (this.hero.hp + rested > this.hero.maxHp) ? rested - (this.hero.hp + rested - this.hero.maxHp) : rested;
        if (hpGain === 0) return;
-       this.updateHeroPoint('rest', hpGain);
+       await this.updateHeroPoint('rest', hpGain);
     }
 
     calculateElapsedTime() {
@@ -167,10 +221,17 @@ export class Hero extends Errors{
             case 'gold':
                 talent = {gold: this.hero.gold + number};
                 break;
+            case 'hp':
+                talent = {hp: number, armor: talentPoint};
+                break;
+            case 'armor':
+                talent = {armor: this.hero.armor + number};
+                break;
             case 'rest':
                 talent = {hp: this.hero.hp + number};
                 break;
         }
+        console.log(talent, number, stat);
         database.updateCharacter(this.hero.id, talent);
     }
 
