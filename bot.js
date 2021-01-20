@@ -1,5 +1,5 @@
-/*import hsp from 'heroku-self-ping';
-hsp('https://discord8w8bot.herokuapp.com');*/
+import hsp from 'heroku-self-ping';
+hsp('https://discord8w8bot.herokuapp.com');
 
 import http from 'http';
 import PornSearch from 'pornsearch';
@@ -443,6 +443,13 @@ client.on('message', async msg => {
                 case 'heroes':
                     allHeroes = await func.getAllHero();
                     await func.sendAllHeroes(allHeroes, 'All heroes', webhook);
+                    break;
+                case 'repair':
+                    if (args[1] === undefined) {
+                        func.toDiscordMessage(client, msg, error.noAmountGiven());
+                        return;
+                    }
+                    func.toDiscordMessage(client, msg, hero.repairHero(args[1]));
                     break;
                 case 'chest':
                     if (args[1] === undefined || func.chestCheck(args[1])) {

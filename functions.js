@@ -172,18 +172,18 @@ export default {
         });
     },
 
-    showStr:(char, enemy, scale, mage) => {
+    showStr:(attacker, enemy, scale, mage) => {
         let strength, intellect;
         if (mage) {
-            intellect = (char.intellect * 1.2) + char.intellect*0.1;
-            strength = (1*char.strength < 3*enemy.agility) ? 0 : (1*char.strength - 3*enemy.agility);
+            intellect = (attacker.intellect * 1.2) + attacker.intellect*0.1;
+            strength = (1*attacker.strength < 3*enemy.agility) ? 0 : (1*attacker.strength - 3*enemy.agility);
         }
         if (!mage) {
-            intellect = char.intellect;
-            strength = (2*char.strength < 3*enemy.agility) ? 0 : (2*((char.strength * scale) + char.strength*0.1) - 3*enemy.agility);
+            intellect = attacker.intellect;
+            strength = (2*attacker.strength < 3*enemy.agility) ? 0 : (2*((attacker.strength * scale) + attacker.strength*0.1) - 3*enemy.agility);
         }
 
-        let levelDiff = (enemy.level > char.level) ? 2*(enemy.level - char.level) : 0;
+        let levelDiff = (enemy.level > attacker.level) ? 2*(enemy.level - attacker.level) : 0;
         let charMax = 10 + strength + intellect - levelDiff;
         let charMin = 1 + strength + intellect - levelDiff;
 
@@ -204,14 +204,16 @@ export default {
 
     getAdventures: () => {
         return [
-            'Weak: lvl <5',
-            'Easy: lvl 5-10',
-            'Normal: lvl 10-15',
-            'Hard: lvl 15-20',
-            'Expert: lvl 20-25',
-            'BOSS: lvl 25-30',
-            'Usurper: lvl 30-35',
-            'Godlike: lvl 35-40'
+            '**Critter**: lvl 1-3',
+            '**Weak**: lvl 4-7',
+            '**Easy**: lvl 8-11',
+            '**Normal**: lvl 12-15',
+            '**Hard**: lvl 16-19',
+            '**Expert**: lvl 21-23',
+            '**Usurper**: lvl 24-27',
+            '**DeathWish**: lvl 28-31',
+            '**Mythical**: lvl 32-35',
+            '**Godlike**: lvl 36-39',
         ]
     },
 
@@ -226,7 +228,7 @@ export default {
     },
 
     adventureCheck: (message) => {
-        let adventureList = ['Weak', 'Easy', 'Normal', 'Hard', 'Expert', 'BOSS', 'Usurper', 'Godlike'];
+        let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard', 'expert', 'deathwish', 'usurper', 'mythical', 'godlike'];
         for (let i = 0; i < adventureList.length; i++) {
             if (message === adventureList[i]) {
                 return false;

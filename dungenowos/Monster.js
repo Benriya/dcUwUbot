@@ -21,9 +21,9 @@ export class Monster {
                 `HP: ${this.monster.hp}/${this.monster.maxHp}\n` +
                 `Armor: ${this.monster.armor}`)
             .addField('Faj: ',
-                `${this.monster.race}`)
+                `${this.monster.race}`, true)
             .addField('Leírás: ',
-                `*${this.monster.description}*`)
+                `*${this.monster.description}*`, true)
             .addField('Stats: ',
                 `Power: ${this.monster.strength}\n` +
                 `Intellect: ${this.monster.intellect}\n` +
@@ -31,8 +31,15 @@ export class Monster {
                 `Defense: ${this.monster.defense}\n` +
                 `Gold: ${this.monster.gold}`)
             .addField('Experience: ',
-                `${this.monster.experience}xp`)
+                `${this.monster.experience}xp`, true)
             .addField('Nehézség: ',
-                `${this.monster.diff}`);
+                `${this.monster.diff}`, true);
+    }
+
+    makeAttack() {
+        let attackTypes;
+        if (this.monster.mage) return 'magic';
+        attackTypes = ['weak', 'mid', 'heavy'];
+        return attackTypes[Math.floor(Math.random() * 3)];
     }
 }

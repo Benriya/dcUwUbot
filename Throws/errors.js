@@ -70,6 +70,16 @@ export class Errors {
         return this.getReply(this.message);
     }
 
+    noAmountGiven() {
+        this.message = 'Adj meg összeget!';
+        return this.getReply(this.message);
+    }
+
+    notEnoughMoney() {
+        this.message = 'Nincs elég pénzed hozzá!';
+        return this.getReply(this.message);
+    }
+
     notEnoughRest() {
         this.message = 'Többet kell várnod, hogy regenerálódj!';
         return this.getReply(this.message);
