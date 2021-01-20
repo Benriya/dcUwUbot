@@ -11,6 +11,17 @@ function getLottoNumbers(array) {
     return returnArray;
 }
 
+
+function getEmbeds(hero) {
+    return new Discord.MessageEmbed()
+        .setColor('#2a5fff')
+        .setTitle(`[${hero.name}] LvL: ${hero.level}`)
+        .addField('Faj: ',
+            `${hero.race}`, true)
+        .addField('Leírás: ',
+            `*${hero.description}*`, true);
+}
+
 export default {
     getChannel: (channel) => {
         switch (channel) {
@@ -80,58 +91,58 @@ export default {
 
     getRaceList: () => {
         return [
-            'Human: allstat+1',
-            'Orc: strength+3, agility+1',
-            'Goblin: luck+4',
-            'Dwarf: strength+2, luck+2',
-            'Elf: intellect+3, agility+1',
-            'Troll: strength+2, agility+2',
-            'Draenei: strength+2, intellect+2',
-            'Lizard: agility+4',
-            'Skeleton: intellect+4',
-            'Satyr: strength+2, intellect+1, agility+1',
-            'Gnome: intellect+1, agility+2, luck+1',
-            'Worgen: strength+2, agility+1, luck+1'];
+            '**Human**: maxHp:70, regen:19, armor:10, def:5, str:3, int:3, agi:3, luck:3, gold:100',
+            '**Orc**: maxHp:120, regen:4, armor:10, def:5, str:7, int:1, agi:3, luck:1, gold:100',
+            '**Goblin**: maxHp:40, regen:28, armor:10, def:5, str:1, int:1, agi:1, luck:9, gold:500',
+            '**Dwarf**: maxHp:70, regen:19, armor:10, def:5, str:4, int:1, agi:4, luck:3, gold:100',
+            '**Elf**: maxHp:50, regen:25, armor:10, def:0, str:1, int:6, agi:4, luck:1, gold:500',
+            '**Troll**: maxHp:100 regen:37, armor:10, def:0, str:4, int:1, agi:6, luck:1, gold:100',
+            '**Draenei**: maxHp:80, regen:16, armor:10, def:5, str:5, int:5, agi:1, luck:1, gold:100',
+            '**Lizard**: maxHp:60, regen:2, armor:10, def:5, str:3, int:1, agi:7, luck:1, gold:100',
+            '**Skeleton**: maxHp:100, regen:10, armor:10, def:0, str:1, int:9, agi:1, luck:1, gold:500',
+            '**Satyr**: maxHp:80, regen:16, armor:10, def:0, str:4, int:3, agi:4, luck:1, gold:500',
+            '**Gnome**: maxHp:60, regen:22, armor:10, def:0, str:1, int:5, agi:3, luck:3, gold:500',
+            '**Worgen**: maxHp:90, regen:13, armor:10, def:5, str:3, int:1, agi:5, luck:3, gold:100'];
     },
 
     getRaceStats: (race) =>{
         let stats = [];
         switch (race) {
             case 'human':
-                stats.push(2, 2, 2, 2);
+                stats.push(70, 19, 10, 5, 3, 3, 3, 3, 100);
                 break;
             case 'orc':
-                stats.push(4, 1, 2, 1);
+                stats.push(120, 4, 10, 5, 7, 1, 3, 1, 100);
                 break;
             case 'goblin':
-                stats.push(1, 1, 1, 5);
+                stats.push(40, 28, 10, 0, 1, 1, 1, 9, 500);
                 break;
             case 'draenei':
-                stats.push(3, 3, 1, 1);
+                stats.push(80, 16, 10, 5, 5, 5, 1, 1, 100);
                 break;
             case 'gnome':
-                stats.push(1, 2, 3, 2);
+                stats.push(60, 22, 10, 0, 1, 5, 3, 3, 500);
                 break;
             case 'dwarf':
-                stats.push(3, 1, 1, 3);
+                stats.push(70, 19, 10, 5, 4, 1, 4, 3, 100);
                 break;
             case 'elf':
-                stats.push(1, 4, 2, 1);
+                stats.push(50, 25, 10, 0, 1, 6, 4, 1, 500);
                 break;
             case 'troll':
-                stats.push(3, 1, 3, 1);
+                stats.push(100, 37, 10, 0, 4, 1, 6, 1, 100);
                 break;
             case 'lizard':
-                stats.push(1, 1, 5, 1);
+                stats.push(60, 22, 10, 5, 3, 1, 7, 1, 100);
                 break;
             case 'skeleton':
-                stats.push(1, 5, 1, 1);
+                stats.push(100, 10, 10, 0, 1, 9, 1, 1, 500);
                 break;
             case 'satyr':
-                stats.push(3, 2, 2, 1);
+                stats.push(80, 16, 10, 0, 4, 3, 4, 1, 500);
                 break;
             case 'worgen':
-                stats.push(3, 1, 2, 2);
+                stats.push(90, 13, 10, 5, 3, 1, 5, 3, 100);
                 break;
         }
         return stats;
@@ -147,19 +158,34 @@ export default {
 
     getAllHero: async () => {
         let returnArray = [];
-        let heroes = await database.listCharacters({type: 'Player'});
+        let heroes = await database.getEnemy({type: 'Player'});
         for (let i = 0; i < heroes.length; i++) {
-            returnArray.push(heroes[i].name, `LvL: ${heroes[i].level}`, `*${heroes[i].description}*`);
+            returnArray.push(getEmbeds(heroes[i]));
         }
+
         return returnArray;
     },
 
+    async sendAllHeroes(heroEmbed, desc, webhook) {
+        await webhook.send(desc, {
+            embeds: heroEmbed,
+        });
+    },
+
     showStr:(char, enemy, scale, mage) => {
-        if (mage) char.intellect *= 1.2;
-        let strength = (2*char.strength < 3*enemy.agility) ? 0 : (2*char.strength - 3*enemy.agility);
+        let strength, intellect;
+        if (mage) {
+            intellect = (char.intellect * 1.2) + char.intellect*0.1;
+            strength = (1*char.strength < 3*enemy.agility) ? 0 : (1*char.strength - 3*enemy.agility);
+        }
+        if (!mage) {
+            intellect = char.intellect;
+            strength = (2*char.strength < 3*enemy.agility) ? 0 : (2*((char.strength * scale) + char.strength*0.1) - 3*enemy.agility);
+        }
+
         let levelDiff = (enemy.level > char.level) ? 2*(enemy.level - char.level) : 0;
-        let charMax = 10 + strength + char.intellect - 2*levelDiff;
-        let charMin = 1 + strength + char.intellect - 2*levelDiff;
+        let charMax = 10 + strength + intellect - levelDiff;
+        let charMin = 1 + strength + intellect - levelDiff;
 
         if (charMax < 1) {
             charMax = 0;
@@ -167,10 +193,11 @@ export default {
         if (charMin < 1) {
             charMin = 0;
         }
-        let finalDmg = (Math.floor(Math.random() * charMax) + charMin) * scale;
+        let finalDmg = (Math.floor(Math.random() * charMax) + charMin);
         let def = finalDmg * (enemy.defense / 500);
-        finalDmg = Math.floor(finalDmg - def);
+        finalDmg = Math.floor(finalDmg - def) < 0 ? 0 : Math.floor(finalDmg - def);
         console.log(def, finalDmg);
+
 
         return [finalDmg, Math.floor(charMin), Math.floor(charMax+charMin)];
     },
@@ -189,7 +216,7 @@ export default {
     },
 
     getStats: (message) => {
-        let statList = ['strength', 'intellect', 'agility', 'luck'];
+        let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense'];
         for (let i = 0; i < statList.length; i++) {
             if(message.toLowerCase() === statList[i]) {
                 return true;

@@ -28,25 +28,25 @@ export class Chest extends Hero{
         let rewards = [];
         switch (type) {
             case 'minor':
-                good = (76 - hero.luck) <= 20 ? 20 : (76 - hero.luck);
+                good = (61 - hero.luck) <= 20 ? 20 : (61 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'armor', 'gold', 'armor');
                 scale = Math.round(Math.random() * 200 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'small':
-                good = (81 - hero.luck) <= 30 ? 30 : (81 - hero.luck);
+                good = (66 - hero.luck) <= 30 ? 30 : (66 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'armor', 'gold', 'gold', 'experience', 'gold');
                 scale = Math.round(Math.random() * 300 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'normal':
-                good = (81 - hero.luck) <= 40 ? 40 : (81 - hero.luck);
+                good = (71 - hero.luck) <= 40 ? 40 : (71 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'experience', 'armor', 'armor', 'experience', 'gold');
                 scale = Math.round(Math.random() * 400 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'big':
-                good = (81 - hero.luck) <= 50 ? 50 : (86 - hero.luck);
+                good = (76 - hero.luck) <= 50 ? 50 : (76 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'gold');
                 scale = Math.round(Math.random() * 500 + 1);
                 reward = this.calculateReward(rewards, scale);
@@ -113,12 +113,11 @@ export class Chest extends Hero{
     async getChestRewards() {
         let reward = await this.rollChest(this.hero);
         if (reward[2] === 'neutral') {
-            return 'A fenébe, egy újabb üres ládát találtál. Biztos fosztogatók jártak itt előtted!';
+            return 'A francba, hát nem üres a láda?!';
         } else {
-            console.log(reward);
-            this.updateHeroPoint(reward[0], reward[1]);
-            return 'Ládát kinyitottad, és egy üveget találtál benne, valami kékes folyadékkal, amit azonnal meg is ittál.\n' +
-                `Érzed hogy megerősödtél, kaptál ${reward[0]} * ${reward[1]}-t `;
+            console.log('reward: ' + reward);
+            this.updateHeroPoint(reward[0], Math.round(reward[1]));
+            return `Ládát kinyitva nagy meglepetésben részesültél, kaptál: ${reward[0]} * ${Math.round(reward[1])}-t!`;
         }
     }
 }

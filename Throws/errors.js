@@ -69,4 +69,9 @@ export class Errors {
         this.message = 'Adj meg nevet és fajt is!';
         return this.getReply(this.message);
     }
+
+    notEnoughRest() {
+        this.message = 'Többet kell várnod, hogy regenerálódj!';
+        return this.getReply(this.message);
+    }
 }

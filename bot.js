@@ -332,13 +332,16 @@ client.on('message', async msg => {
     }
 
     //RPG-project
-    if (messageChannel === '645415255597645848' && author !== cheater && await func.getCharacter(author) !== null) {
+    if (messageChannel === '645415255597645848') {
         let hero = new Hero(await func.getCharacter(author));
         let username = msg.author.username;
-        let heroEmbed, enemyEmbed, enemy, chest, chestType;
+        let heroEmbed, enemyEmbed, enemy, chest, chestType, rested, allHeroes;
         const webhooks = await client.channels.cache.get(messageChannel).fetchWebhooks();
         const webhook = webhooks.first();
-        //await hero.rest();
+        const adventureFilter = response => {
+            console.log(question[0].answers.some(answer => answer.toLowerCase() === response.content.toLowerCase()) && response.author.id === author)
+            return question[0].answers.some(answer => answer.toLowerCase() === response.content.toLowerCase()) && response.author.id === author;
+        };
 
         if (msg.content.substring(0, 1) === '?') {
             switch (cmd.toLocaleLowerCase()) {
@@ -347,14 +350,14 @@ client.on('message', async msg => {
                         func.toDiscordMessage(client, msg,error.badRaceOrName());
                         return;
                     }
-                    let description = msg.content.slice(10 + args[1].length + args[2].length);
+                    let description = msg.content.slice(11 + args[1].length + args[2].length + args[3].length);
                     let exist = await func.getCharacter(author);
                     if (exist !== null) {
                         func.toDiscordMessage(client, msg,error.existHero());
                     } else {
                         if (func.raceCheck(args[2]) !== false) {
                             let stats = func.getRaceStats(args[2].toLowerCase());
-                            database.characterCreate(args[1], args[2], description, author, stats[0], stats[1], stats[2], stats[3]);
+                            database.characterCreate(args[1], args[2], args[3], description, author, stats[0], stats[1], stats[2], stats[3], stats[4], stats[5], stats[6], stats[7], stats[8]);
                             func.toDiscordMessage(client, msg, 'Karakter létrehozva');
                         } else {
                             func.toDiscordMessage(client, msg, error.badRaceGiven());
@@ -373,30 +376,26 @@ client.on('message', async msg => {
                     hero.fightResult(client, msg, enemy, 'pvp', 'pvp');
                     break;
                 case 'adventure':
-                    /*if (args[1] === undefined || func.adventureCheck(args[1])) {
+                    if (args[1] === undefined || func.adventureCheck(args[1])) {
                         func.toDiscordMessage(client, msg, error.noDifficultGiven());
                         return;
-                    }*/
+                    }
                     let difficult = args[1];
                     enemy = new Monster(await func.getEnemy(difficult));
                     heroEmbed = hero.getHeroEmbed(username);
                     enemyEmbed = enemy.getMonsterEmbed();
                     await func.fightEmbed(heroEmbed, enemyEmbed, difficult, webhook);
 
-                    const filter = response => {
-                        console.log(question[0].answers.some(answer => answer.toLowerCase() === response.content.toLowerCase()) && response.author.id === author)
-                        return question[0].answers.some(answer => answer.toLowerCase() === response.content.toLowerCase()) && response.author.id === author;
-                    };
-
                     await chooseAttack();
 
                     function chooseAttack() {
                         client.channels.cache.get(msg.channel.id).send(question[0].question).then(() => {
-                            client.channels.cache.get(messageChannel).awaitMessages(filter, { max: 1, time: 30000, errors: ['time'] })
+                            client.channels.cache.get(messageChannel).awaitMessages(adventureFilter, { max: 1, time: 30000, errors: ['time'] })
                                 .then(collected => {
                                     func.toDiscordMessage(client, msg,`${hero.getHero().name} ${collected.first().content} támadást hajtott végre`);
                                     if (collected.first().content === 'flee') {
                                         func.toDiscordMessage(client, msg,`${hero.getHero().name} elmenekült a csatától`);
+                                        hero.fleeHero();
                                         return;
                                     }
                                     let result = hero.fightResult(client, msg, enemy, collected.first().content);
@@ -410,8 +409,10 @@ client.on('message', async msg => {
                                 });
                         });
                     }
-
-
+                    break;
+                case 'rest':
+                    rested = hero.rest();
+                    func.toDiscordMessage(client, msg, rested);
                     break;
             }
         }
@@ -430,7 +431,7 @@ client.on('message', async msg => {
                         return;
                     }
                     if (hero.getHero().talent > 0 && func.getStats(args[1])) {
-                        func.toDiscordMessage(client, msg, `${hero.name}, egy talent pontot elhasználtál, maradt: ${hero.talent - 1}`);
+                        func.toDiscordMessage(client, msg, `${hero.getHero().name}, egy talent pontot elhasználtál, maradt: ${hero.getHero().talent - 1}`);
                         hero.updateHeroPoint(args[1].toLowerCase(),1, 1);
                     } else {
                         func.toDiscordMessage(client, msg, error.noTalent());
@@ -440,7 +441,8 @@ client.on('message', async msg => {
                     func.toDiscordMessage(client, msg, hero.getHeroEmbed(username));
                     break;
                 case 'heroes':
-                    func.toDiscordMessage(client, msg, func.getAllHero());
+                    allHeroes = await func.getAllHero();
+                    await func.sendAllHeroes(allHeroes, 'All heroes', webhook);
                     break;
                 case 'chest':
                     if (args[1] === undefined || func.chestCheck(args[1])) {
@@ -450,7 +452,7 @@ client.on('message', async msg => {
                     chestType = args[1];
                     chest = new Chest(await database.getMiscellaneous({type: chestType}), await func.getCharacter(author));
                     console.log(chest.chest.price);
-                    hero.setHeroGold(hero, -Math.abs(chest.chest.price));
+                    hero.setHeroGold(-Math.abs(chest.chest.price));
                     func.toDiscordMessage(client, msg, chest.getChestEmbed(hero));
                     func.toDiscordMessage(client, msg, await chest.getChestRewards());
                     break;
