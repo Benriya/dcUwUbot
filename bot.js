@@ -168,9 +168,12 @@ client.on('message', async msg => {
                 break;
             case 'alma':
                 func.sendAttachment('./szerb/alma.png', client, msg);
+                break;
             case 'uwu':
                 func.sendAttachment('./szerb/uwu.gif', client, msg);
-                break;
+                if (args[1] === undefined || args[1] !== "assemble") {
+                    break;
+                }
             case 'assemble':
                 func.sendAttachment('./szerb/assemble.gif', client, msg);
                 break;
