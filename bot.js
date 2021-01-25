@@ -180,6 +180,13 @@ client.on('message', async msg => {
             case 'uncool':
                 func.sendAttachment('./szerb/uncool.mp4', client, msg);
                 break;
+            case 'sanfrancisco':
+            case 'sanfransicoboljottem':
+            case 'krisz':
+            case 'szpringbut':
+            case 'springboot':
+                func.sendAttachment('./szerb/springbooooot.mp4', client, msg);
+                break;
             case 'kezelhetetlen':
                 files = fs.readdirSync('./slap');
                 chosenFile = files[Math.floor(Math.random() * files.length)];
