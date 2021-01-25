@@ -325,7 +325,7 @@ client.on('message', async msg => {
                     member = msg.author.username;
                     let tips = `${args[1]} ${args[2]}`;
 
-                    if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2])) && (0 < parseInt(args[1])) && (parseInt(args[1]) < 8) && (0 < parseInt(args[2])) && (0 < parseInt(args[2]) < 8)) {
+                    if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2])) && (0 < parseInt(args[1])) && (parseInt(args[1]) < 8) && (0 < parseInt(args[2])) && (parseInt(args[2]) < 8)) {
                         if (args[3] === 'change'){
                             await database.updateLottoTip(member, msg.author.id, tips);
                             client.channels.cache.get(msg.channel.id).send(`Tipped mentve: ${args[1]} ${args[2]}`);
