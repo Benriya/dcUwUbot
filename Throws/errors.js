@@ -50,6 +50,11 @@ export class Errors {
         return this.getReply(this.message);
     }
 
+    nonExistHero() {
+        this.message = 'Még nincs karaktered!';
+        return this.getReply(this.message);
+    }
+
     badRaceGiven() {
         this.message = 'Választható fajt adj meg!';
         return this.getReply(this.message);

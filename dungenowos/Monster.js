@@ -42,4 +42,14 @@ export class Monster {
         attackTypes = ['weak', 'mid', 'heavy'];
         return attackTypes[Math.floor(Math.random() * 3)];
     }
+
+    makeAscended() {
+        this.monster.level += 40;
+        this.monster.hp += 2000;
+        this.monster.maxHp += 2000;
+        this.monster.defense += 50;
+        this.monster.strength += 30;
+        this.monster.agility += 30;
+        this.monster.intellect += 30;
+    }
 }

@@ -1,5 +1,5 @@
 import hsp from 'heroku-self-ping';
-hsp('https://discord8w8bot.herokuapp.com');
+hsp.default("https://discord8w8bot.herokuapp.com");
 
 import http from 'http';
 import PornSearch from 'pornsearch';
@@ -333,6 +333,12 @@ client.on('message', async msg => {
 
     //RPG-project
     if (messageChannel === '645415255597645848') {
+
+        if (await func.getCharacter(author) === null && cmd.toLowerCase() !== 'create') {
+            func.toDiscordMessage(client, msg, error.nonExistHero());
+            return;
+        }
+
         let hero = new Hero(await func.getCharacter(author));
         let username = msg.author.username;
         let heroEmbed, enemyEmbed, enemy, chest, chestType, rested, allHeroes;
