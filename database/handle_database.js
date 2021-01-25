@@ -1,6 +1,6 @@
 let MongoClient = require('mongodb').MongoClient;
 
-const url = process.env.MONGODB_URI;
+const url = "mongodb+srv://dawe:V5vSixleH7xS1SlM@uwuniverzum.cegga.mongodb.net/test";
 
 module.exports = {
     characterCreate: (name, race, description, id, Power, Intellect, Agility, Luck) => {
