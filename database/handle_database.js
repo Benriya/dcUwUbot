@@ -65,7 +65,7 @@ export default {
             if (err) throw err;
             let dbo = db.db("mydb");
             let myQuery = { id: char.id };
-            let newValues = { $set: {level: char.level+1, hp: char.maxHp+20, maxHp: char.maxHp+20, armor: char.armor+50, talent: char.talent+3, experience: char.experience-xp } };
+            let newValues = { $set: {level: char.level+1, hp: char.maxHp, maxHp: char.maxHp+20, armor: char.armor+50, talent: char.talent+3, experience: char.experience-xp } };
             dbo.collection("Characters").updateOne(myQuery, newValues, function(err, res) {
                 if (err) throw err;
                 console.log('levelup');

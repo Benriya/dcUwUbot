@@ -69,7 +69,7 @@ export class Chest extends Hero{
                 break;
             case 'colossus':
                 good = (96 - hero.luck * 0.3) <= 80 ? 80 : (96 - hero.luck * 0.3);
-                rewards.push('strength', 'agility', 'intellect', 'defense', 'regen');
+                rewards.push('strength', 'agility', 'intellect', 'defense');
                 reward = this.calculateReward(rewards, 5);
                 break;
             case 'god':

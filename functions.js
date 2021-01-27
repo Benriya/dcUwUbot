@@ -175,7 +175,7 @@ export default {
     showStr:(attacker, enemy, scale, mage) => {
         let strength, intellect;
         if (mage) {
-            intellect = (attacker.intellect * 1.2) + attacker.intellect*0.1;
+            intellect = (attacker.intellect * 1.1) + attacker.intellect*0.1;
             strength = (1*attacker.strength < 3*enemy.agility) ? 0 : (1*attacker.strength - 3*enemy.agility);
         }
         if (!mage) {

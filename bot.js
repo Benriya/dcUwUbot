@@ -333,7 +333,6 @@ client.on('message', async msg => {
 
     //RPG-project
     if (messageChannel === '645415255597645848') {
-
         if (await func.getCharacter(author) === null && cmd.toLowerCase() !== 'create') {
             func.toDiscordMessage(client, msg, error.nonExistHero());
             return;
@@ -345,7 +344,7 @@ client.on('message', async msg => {
         const webhooks = await client.channels.cache.get(messageChannel).fetchWebhooks();
         const webhook = webhooks.first();
         const adventureFilter = response => {
-            console.log(question[0].answers.some(answer => answer.toLowerCase() === response.content.toLowerCase()) && response.author.id === author)
+            if (response.author.id === author && response.content.toLowerCase().startsWith('?')) return true;
             return question[0].answers.some(answer => answer.toLowerCase() === response.content.toLowerCase()) && response.author.id === author;
         };
 
@@ -398,6 +397,11 @@ client.on('message', async msg => {
                         client.channels.cache.get(msg.channel.id).send(question[0].question).then(() => {
                             client.channels.cache.get(messageChannel).awaitMessages(adventureFilter, { max: 1, time: 30000, errors: ['time'] })
                                 .then(collected => {
+                                    if (collected.first().content.startsWith('?')) {
+                                        func.toDiscordMessage(client, msg,'Új csatát indítottál');
+                                        hero.fleeHero();
+                                        return;
+                                    }
                                     func.toDiscordMessage(client, msg,`${hero.getHero().name} ${collected.first().content} támadást hajtott végre`);
                                     if (collected.first().content === 'flee') {
                                         func.toDiscordMessage(client, msg,`${hero.getHero().name} elmenekült a csatától`);
@@ -412,6 +416,7 @@ client.on('message', async msg => {
                                 .catch(collected => {
                                     console.log(collected);
                                     func.toDiscordMessage(client, msg,'Lejárt az időd!');
+                                    hero.fleeHero();
                                 });
                         });
                     }
@@ -449,6 +454,19 @@ client.on('message', async msg => {
                 case 'heroes':
                     allHeroes = await func.getAllHero();
                     await func.sendAllHeroes(allHeroes, 'All heroes', webhook);
+                    break;
+                case 'halloffame':
+                    func.toDiscordMessage(client, msg,
+                        '┌───── •✧Wall Of Fame✧• ─────┐\n' +
+                        '    1. NagyDorongúKanCigány, LvL: 33, race: Orc\n' +
+                        '    2. Bélpoklos, LvL: 26, race: Lizard\n' +
+                        '    3. GopsySlavRepairKing, LvL: 22, race: Troll\n' +
+                        '    4. CyberFánk, LvL: 21, race: Elf\n' +
+                        '    5. SkeleTram LvL: 12, Skeleton\n' +
+                        '    6. Tamás, LvL: 9, Orc\n' +
+                        '    7. AshenFang, LvL: 7, race: Worgen\n' +
+                        '    8. FródiMigal, LvL: 7, race: Dwarf\n' +
+                        '└───── •✧✧✧✧✧✧✧✧✧✧• ─────┘');
                     break;
                 case 'repair':
                     if (args[1] === undefined) {

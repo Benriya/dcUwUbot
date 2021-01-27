@@ -62,8 +62,17 @@ export class Hero extends Errors{
     }
 
     fightMonster(hero, enemy, attackType) {
-        let monsterStr = this.calculateDmg(enemy, hero, attackType);
-        let heroStr = this.calculateDmg(hero, enemy, attackType);
+        let monster, monsterAttackType;
+        try {
+            monster = enemy.getMonster();
+            monsterAttackType = enemy.makeAttack();
+        } catch (e) {
+            monster = enemy.getHero();
+            monsterAttackType = attackType;
+        }
+
+        let monsterStr = this.calculateDmg(monster, hero, monsterAttackType);
+        let heroStr = this.calculateDmg(hero, monster, attackType);
         let result = [];
 
         if (monsterStr[0] > heroStr[0]) {
@@ -80,7 +89,6 @@ export class Hero extends Errors{
         let scale = 1;
         let mage = false;
         let hit = Math.floor(Math.random() * 100 + 1);
-        if (attacker.type === 'monster') attackType = attacker.makeAttack();
         switch (attackType) {
             case 'heavy':
                 missChance = 50 + (attacker.agility * 0.5 - enemy.agility * 0.5);
@@ -101,7 +109,7 @@ export class Hero extends Errors{
                 missChance = 101;
                 break;
         }
-        console.log('hit: ' + hit + ' miss: ' + missChance);
+        console.log('hit: ' + hit + ' miss: ' + missChance + ' atk: ' + attackType + ' scale: ' + scale);
         if (hit > missChance) return [0, 0, 0];
         return func.showStr(attacker, enemy, scale, mage);
 
@@ -110,10 +118,10 @@ export class Hero extends Errors{
     fightResult(client, msg, enemy, attackType, type = 'monster') {
         let wins;
         let result = 'idle';
-
+        console.log(attackType);
         switch (type) {
             case 'monster':
-                wins = this.fightMonster(this.hero, enemy.getMonster(), attackType);
+                wins = this.fightMonster(this.hero, enemy, attackType);
                 func.toDiscordMessage(client, msg,`${this.hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1] === 0 ? '**Miss**' : wins[1]} Vs ${enemy.getMonster().name}: (${wins[4]} - ${wins[6]}) ${wins[2] === 0 ? '**Miss**' : wins[2]}.`);
                 this.setFightHp(enemy.getMonster(), wins);
                 console.log(this.hero.hp, enemy.getMonster().hp);

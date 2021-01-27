@@ -51,5 +51,7 @@ export class Monster {
         this.monster.strength += 30;
         this.monster.agility += 30;
         this.monster.intellect += 30;
+        this.monster.gold += 1500;
+        this.monster.experience += 1000;
     }
 }
