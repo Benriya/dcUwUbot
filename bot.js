@@ -166,6 +166,11 @@ client.on('message', async msg => {
             case 'gay':
                 func.sendAttachment('./szerb/gay.jpg', client, msg);
                 break;
+            case 'szepi':
+            case 'pisti':
+            case 'inevitable':
+                func.sendAttachment('./szerb/inevitable.png', client, msg);
+                break;
             case 'alma':
                 func.sendAttachment('./szerb/alma.png', client, msg);
                 break;
