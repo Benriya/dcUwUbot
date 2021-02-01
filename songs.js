@@ -1,6 +1,4 @@
-module.exports = {
-
-    song : "We're no strangers to love\n" +
+export const song = "We're no strangers to love\n" +
     "You know the rules and so do I\n" +
     "A full commitment's what I'm thinking of\n" +
     "You wouldn't get this from any other guy\n" +
@@ -181,5 +179,5 @@ module.exports = {
         "A locale alapján eldönthetem hogy es No Please\n" +
         "Nem kérem vagy Nein bitte\n" +
         "Az Error Page fel lesz véve rendesen csak\n" +
-        "ThymeLeaf-et használj a front end-eden\n"
-}
+        "ThymeLeaf-et használj a front end-eden\n";
+

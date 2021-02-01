@@ -1,22 +1,6 @@
-const database = require('./database/handle_database');
-const Discord = require('discord.js');
+import database from './database/handle_database.js';
+import Discord from 'discord.js';
 
-function showStr(char, enemy) {
-    let power = (2*char.Power < 3*enemy.Agility) ? 0 : (2*char.Power - 3*enemy.Agility);
-    let levelDiff = (enemy.level > char.level) ? (enemy.level - char.level) : 0;
-
-    let charMax = 10 + power + char.Intellect - levelDiff;
-    let charMin = 1 + power + char.Intellect - levelDiff;
-
-    if (charMax < 1) {
-        charMax = 0;
-    }
-    if (charMin < 1) {
-        charMin = 0;
-    }
-
-    return [Math.floor(Math.random() * charMax) + charMin, charMin, charMax+charMin];
-}
 
 function getLottoNumbers(array) {
     let returnArray = [];
@@ -27,7 +11,18 @@ function getLottoNumbers(array) {
     return returnArray;
 }
 
-module.exports = {
+
+function getEmbeds(hero) {
+    return new Discord.MessageEmbed()
+        .setColor('#2a5fff')
+        .setTitle(`[${hero.name}] LvL: ${hero.level}`)
+        .addField('Faj: ',
+            `${hero.race}`, true)
+        .addField('Leírás: ',
+            `*${hero.description}*`, true);
+}
+
+export default {
     getChannel: (channel) => {
         switch (channel) {
             case 'suwuli':
@@ -68,6 +63,22 @@ module.exports = {
         }
     },
 
+    async fightEmbed(heroEmbed, enemyEmbed, desc, webhook) {
+        await webhook.send(desc, {
+            embeds: [heroEmbed, enemyEmbed],
+        });
+    },
+
+    chestCheck: (message) => {
+        let chestList = ['minor', 'small', 'normal', 'big', 'huge', 'gorgeous', 'giant', 'colossus', 'god'];
+        for (let i = 0; i < chestList.length; i++) {
+            if(message.toLowerCase().includes(chestList[i])) {
+                return false;
+            }
+        }
+        return true;
+    },
+
     raceCheck: (message) => {
         let raceList = ['human', 'orc', 'goblin', 'dwarf', 'elf', 'troll', 'draenei', 'lizard', 'skeleton', 'satyr', 'gnome', 'worgen'];
         for (let i = 0; i < raceList.length; i++) {
@@ -80,151 +91,150 @@ module.exports = {
 
     getRaceList: () => {
         return [
-            'Human: allstat+1',
-            'Orc: power+3, agility+1',
-            'Goblin: luck+4',
-            'Dwarf: power+2, luck+2',
-            'Elf: intellect+3, agility+1',
-            'Troll: power+2, agility+2',
-            'Draenei: power+2, intellect+2',
-            'Lizard: agility+4',
-            'Skeleton: intellect+4',
-            'Satyr: power+2, intellect+1, agility+1',
-            'Gnome: intellect+1, agility+2, luck+1',
-            'Worgen: power+2, agility+1, luck+1'];
+            '**Human**: maxHp:70, regen:19, armor:10, def:5, str:3, int:3, agi:3, luck:3, gold:100',
+            '**Orc**: maxHp:120, regen:4, armor:10, def:5, str:7, int:1, agi:3, luck:1, gold:100',
+            '**Goblin**: maxHp:40, regen:28, armor:10, def:5, str:1, int:1, agi:1, luck:9, gold:500',
+            '**Dwarf**: maxHp:70, regen:19, armor:10, def:5, str:4, int:1, agi:4, luck:3, gold:100',
+            '**Elf**: maxHp:50, regen:25, armor:10, def:0, str:1, int:6, agi:4, luck:1, gold:500',
+            '**Troll**: maxHp:100 regen:37, armor:10, def:0, str:4, int:1, agi:6, luck:1, gold:100',
+            '**Draenei**: maxHp:80, regen:16, armor:10, def:5, str:5, int:5, agi:1, luck:1, gold:100',
+            '**Lizard**: maxHp:60, regen:2, armor:10, def:5, str:3, int:1, agi:7, luck:1, gold:100',
+            '**Skeleton**: maxHp:100, regen:10, armor:10, def:0, str:1, int:9, agi:1, luck:1, gold:500',
+            '**Satyr**: maxHp:80, regen:16, armor:10, def:0, str:4, int:3, agi:4, luck:1, gold:500',
+            '**Gnome**: maxHp:60, regen:22, armor:10, def:0, str:1, int:5, agi:3, luck:3, gold:500',
+            '**Worgen**: maxHp:90, regen:13, armor:10, def:5, str:3, int:1, agi:5, luck:3, gold:100'];
     },
 
     getRaceStats: (race) =>{
         let stats = [];
         switch (race) {
             case 'human':
-                stats.push(2, 2, 2, 2);
+                stats.push(70, 19, 10, 5, 3, 3, 3, 3, 100);
                 break;
             case 'orc':
-                stats.push(4, 1, 2, 1);
+                stats.push(120, 4, 10, 5, 7, 1, 3, 1, 100);
                 break;
             case 'goblin':
-                stats.push(1, 1, 1, 5);
+                stats.push(40, 28, 10, 0, 1, 1, 1, 9, 500);
                 break;
             case 'draenei':
-                stats.push(3, 3, 1, 1);
+                stats.push(80, 16, 10, 5, 5, 5, 1, 1, 100);
                 break;
             case 'gnome':
-                stats.push(1, 2, 3, 2);
+                stats.push(60, 22, 10, 0, 1, 5, 3, 3, 500);
                 break;
             case 'dwarf':
-                stats.push(3, 1, 1, 3);
+                stats.push(70, 19, 10, 5, 4, 1, 4, 3, 100);
                 break;
             case 'elf':
-                stats.push(1, 4, 2, 1);
+                stats.push(50, 25, 10, 0, 1, 6, 4, 1, 500);
                 break;
             case 'troll':
-                stats.push(3, 1, 3, 1);
+                stats.push(100, 37, 10, 0, 4, 1, 6, 1, 100);
                 break;
             case 'lizard':
-                stats.push(1, 1, 5, 1);
+                stats.push(60, 22, 10, 5, 3, 1, 7, 1, 100);
                 break;
             case 'skeleton':
-                stats.push(1, 5, 1, 1);
+                stats.push(100, 10, 10, 0, 1, 9, 1, 1, 500);
                 break;
             case 'satyr':
-                stats.push(3, 2, 2, 1);
+                stats.push(80, 16, 10, 0, 4, 3, 4, 1, 500);
                 break;
             case 'worgen':
-                stats.push(3, 1, 2, 2);
+                stats.push(90, 13, 10, 5, 3, 1, 5, 3, 100);
                 break;
         }
         return stats;
     },
 
     getEnemy: async (diff) => {
-        let enemies = await database.listEnemy(diff);
+        let enemies = await database.getEnemy({diff: diff});
         return enemies[Math.floor(Math.random() * enemies.length)];
     },
-
     getCharacter: async (id) => {
-        return await database.listCharacter(id);
+        return database.listCharacter(id);
     },
 
-    getMonsterEmbed(enemy) {
-        return new Discord.MessageEmbed()
-            .setColor('#ff0202')
-            .setTitle(`[${enemy.name}] LvL: ${enemy.level}`)
-            .setThumbnail(`https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcg2z-7M1BLuu4WbVKYQzv8Ya30gb5-b5n4Q&usqp=CAU`)
-            .setAuthor(`Monster`)
-            .addField('Race: ',
-                `${enemy.race}`)
-            .addField('Description: ',
-                `*${enemy.description}*`)
-            .addField('Stats: ',
-                `Power: ${enemy.Power}\n` +
-                `Intellect: ${enemy.Intellect}\n` +
-                `Agility: ${enemy.Agility}`)
-            .addField('Experience: ',
-                `${enemy.experience}xp`)
-            .addField('Difficult: ',
-                `${enemy.diff}`);
-    },
-
-    getHeroEmbed(myChar, username, avatar) {
-        let thumbnail = myChar.name === 'SkeleTram' ? 'https://media.discordapp.net/attachments/713415837356392508/797236204801228840/d41d95204242b85336ee6900acfb69e3.jpg' : `${avatar}`;
-        return new Discord.MessageEmbed()
-            .setColor('#36ff00')
-            .setTitle(`[${myChar.name}] LvL: ${myChar.level}`)
-            .setThumbnail(thumbnail)
-            .setAuthor(`${username}`)
-            .addField('Race: ',
-                `${myChar.race}`)
-            .addField('Description: ',
-                `*${myChar.description}*`)
-            .addField('Stats: ',
-                `Power: ${myChar.Power}\n` +
-                `Intellect: ${myChar.Intellect}\n` +
-                `Agility: ${myChar.Agility}\n` +
-                `Luck: ${myChar.Luck}`)
-            .addField('Experience: ',
-                `${myChar.experience}xp, Elérhető talent: ${myChar.talent}`);
-    },
-
-    getChestEmbed:(hero) => {
-        return new Discord.MessageEmbed()
-            .setColor('#ffd500')
-            .setTitle('Jelentéktelen Láda')
-            .setThumbnail('https://files.cults3d.com/uploaders/14771211/illustration-file/7c699387-0726-4a5e-9ce1-f58ba2c08c64/1.jpg')
-            .setAuthor(`Kinyitotta: ${hero.name}`)
-            .addField('Description: ',
-                `Ki tudja előre egy rejtélyes láda mit rejthet?`);
-    },
-
-    fightMonster: (monster, hero) => {
-        let heroStr = showStr(hero, monster);
-        let monsterStr =  showStr(monster, hero);
-        let result = [];
-
-        if (monsterStr[0] > heroStr[0]) {
-            result.push('monster', heroStr[0], monsterStr[0], heroStr[1], monsterStr[1], heroStr[2], monsterStr[2]);
-            return result;
-        } else {
-            result.push('hero', heroStr[0], monsterStr[0], heroStr[1], monsterStr[1], heroStr[2], monsterStr[2]);
-            return result;
+    getAllHero: async () => {
+        let returnArray = [];
+        let heroes = await database.getEnemy({type: 'Player'});
+        for (let i = 0; i < heroes.length; i++) {
+            returnArray.push(getEmbeds(heroes[i]));
         }
+
+        return returnArray;
+    },
+
+    async sendAllHeroes(heroEmbed, desc, webhook) {
+        await webhook.send(desc, {
+            embeds: heroEmbed,
+        });
+    },
+
+    showStr:(attacker, enemy, scale, mage) => {
+        let strength, intellect;
+        if (mage) {
+            intellect = (attacker.intellect * 1.1) + attacker.intellect*0.1;
+            strength = (1*attacker.strength < 3*enemy.agility) ? 0 : (1*attacker.strength - 3*enemy.agility);
+        }
+        if (!mage) {
+            intellect = attacker.intellect;
+            strength = (2*attacker.strength < 3*enemy.agility) ? 0 : (2*((attacker.strength * scale) + attacker.strength*0.1) - 3*enemy.agility);
+        }
+
+        let levelDiff = (enemy.level > attacker.level) ? 2*(enemy.level - attacker.level) : 0;
+        let charMax = 10 + strength + intellect - levelDiff;
+        let charMin = 1 + strength + intellect - levelDiff;
+
+        if (charMax < 1) {
+            charMax = 0;
+        }
+        if (charMin < 1) {
+            charMin = 0;
+        }
+        let finalDmg = (Math.floor(Math.random() * charMax) + charMin);
+        let def = finalDmg * (enemy.defense / 500);
+        finalDmg = Math.floor(finalDmg - def) < 0 ? 0 : Math.floor(finalDmg - def);
+        console.log(def, finalDmg);
+
+
+        return [finalDmg, Math.floor(charMin), Math.floor(charMax+charMin)];
     },
 
     getAdventures: () => {
         return [
-            'Weak: lvl <5',
-            'Easy: lvl 5-10',
-            'Normal: lvl 10-15',
-            'Hard: lvl 15-20',
-            'Expert: lvl 20-25',
-            'BOSS: lvl 25-30',
-            'Usuper: lvl 30-35',
-            'Godlike: lvl 35-40'
+            '**Critter**: lvl 1-3',
+            '**Weak**: lvl 4-7',
+            '**Easy**: lvl 8-11',
+            '**Normal**: lvl 12-15',
+            '**Hard**: lvl 16-19',
+            '**Expert**: lvl 21-23',
+            '**Usurper**: lvl 24-27',
+            '**DeathWish**: lvl 28-31',
+            '**Mythical**: lvl 32-35',
+            '**Godlike**: lvl 36-39',
+        ]
+    },
+
+    getChests: () => {
+        return [
+            'Gold, armor, xp:',
+            '**Minor**: 200g',
+            '**Small**: 400g',
+            '**Normal**: 800g',
+            '**Big**: 1200g',
+            '**Huge**: 2000g',
+            'Csak statokat adnak:',
+            '**Gorgeous**: 4000g (1)',
+            '**Giant**: 6000g (3)',
+            '**Colossus**: 8000g (5)',
+            '**God**: 10000g (10)',
         ]
     },
 
     getStats: (message) => {
-        let statList = ['power', 'intellect', 'agility', 'luck'];
+        let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense'];
         for (let i = 0; i < statList.length; i++) {
             if(message.toLowerCase() === statList[i]) {
                 return true;
@@ -233,8 +243,9 @@ module.exports = {
         return false;
     },
 
+    //'expert', 'deathwish', 'usurper', 'mythical', 'godlike'
     adventureCheck: (message) => {
-        let adventureList = ['Weak', 'Easy', 'Normal', 'Hard', 'Expert', 'BOSS', 'Usuper', 'Godlike'];
+        let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard'];
         for (let i = 0; i < adventureList.length; i++) {
             if (message === adventureList[i]) {
                 return false;
@@ -244,98 +255,33 @@ module.exports = {
     },
 
     checkLevels: (level, experience) => {
-        let xp = 0;
-      let levels = [
-          {level: 1, xp: 50},
-          {level: 2, xp: 100},
-          {level: 3, xp: 150},
-          {level: 4, xp: 200},
-          {level: 5, xp: 250},
-          {level: 6, xp: 300},
-          {level: 7, xp: 400},
-          {level: 8, xp: 500},
-          {level: 9, xp: 600},
-          {level: 10, xp: 700},
-          {level: 11, xp: 850},
-          {level: 12, xp: 1000},
-          {level: 13, xp: 1150},
-          {level: 14, xp: 1300},
-          {level: 15, xp: 1450},
-          {level: 16, xp: 1650},
-          {level: 17, xp: 2050},
-          {level: 18, xp: 2550},
-          {level: 19, xp: 2700},
-          {level: 20, xp: 3450},
-          {level: 21, xp: 3700},
-          {level: 22, xp: 3950},
-          {level: 23, xp: 4200},
-          {level: 24, xp: 4450},
-          {level: 25, xp: 4700},
-          {level: 26, xp: 5000},
-          {level: 27, xp: 5300},
-          {level: 28, xp: 5600},
-          {level: 29, xp: 5900},
-          {level: 30, xp: 6200},
-          {level: 31, xp: 6550},
-          {level: 32, xp: 6900},
-          {level: 33, xp: 7250},
-          {level: 34, xp: 7600},
-          {level: 35, xp: 7950},
-          {level: 36, xp: 8350},
-          {level: 37, xp: 8750},
-          {level: 38, xp: 9150},
-          {level: 39, xp: 9550},
-          {level: 40, xp: 10000},
-          ];
-        levels.forEach((value) =>{
-            if (value.level === level) {
-                if (value.xp <= experience) {
-                    xp = value.xp
-                    /*if (value.level === 40){
-                        return 'Ascend';
-                    }*/
+        let xp = 100;
+        for (let i = 1; i <= 70; i++) {
+            if (i === level) {
+                if (experience >= xp) {
+                    return xp;
                 }
+                return 0;
             }
-        });
-        return xp;
-    },
-
-    rollChest: (hero) => {
-        let chestRoll = Math.round(Math.random() * 100 + 1);
-        let good = (86 - hero.Luck) <= 60 ? 60 : (86 - hero.Luck);
-        let bad = (31 - hero.Luck) <= 5 ? 5 : (31 - hero.Luck);
-        let randomBonus = Math.floor(Math.random() * 17);
-        let bonuses = ['experience', 'experience', 'Luck', 'experience', 'experience', 'experience', 'Power', 'experience', 'experience', 'experience', 'Intellect', 'experience', 'experience', 'experience', 'Agility', 'experience', 'experience'];
-        let bonus = bonuses[randomBonus];
-        let status;
-
-
-        console.log(good, bad, bonus, chestRoll);
-
-        if(chestRoll > good) {
-            status = 'good';
-        } else if (chestRoll < bad) {
-            status = 'bad';
-        } else {
-            status = 'neutral';
+            xp += i*100;
         }
-        return [bonus, status];
+        return 0;
     },
 
     setLottoNumbers: async (type = 'get') => {
-        let returnarray = new Map();
+        let returnArray = new Map();
         let lottok = await database.getLottoTips();
         if (type === 'get') {
             for (let i = 0; i < lottok.length; i++) {
-                returnarray.set(lottok[i].name, lottok[i].tipp);
+                returnArray.set(lottok[i].name, lottok[i].tipp);
             }
-            return getLottoNumbers(returnarray);
+            return getLottoNumbers(returnArray);
         }
         if (type === 'draw') {
             for (let i = 0; i < lottok.length; i++) {
-                returnarray.set(lottok[i].name, lottok[i].tipp);
+                returnArray.set(lottok[i].name, lottok[i].tipp);
             }
-            return returnarray;
+            return returnArray;
         }
 
     },
@@ -351,11 +297,6 @@ module.exports = {
         });
         console.log(winners);
         return winners;
-    },
-
-    addMemberLotto: (message, member, array) => {
-        array.set(member, message);
-        return array;
     },
 
     drawNumbers: () => {
@@ -388,5 +329,13 @@ module.exports = {
     sendAttachment: (image, client, msg) => {
         let attachment = new Discord.MessageAttachment(image);
         return client.channels.cache.get(msg.channel.id).send(attachment);
-    }
-}
+    },
+
+    toDiscordMessage(client, msg, message) {
+        client.channels.cache.get(msg.channel.id).send(message);
+    },
+
+    toDiscordMessageChannel(client, channelId, message) {
+        client.channels.cache.get(channelId).send(message);
+    },
+};
