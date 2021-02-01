@@ -217,6 +217,22 @@ export default {
         ]
     },
 
+    getChests: () => {
+        return [
+            'Gold, armor, xp:',
+            '**Minor**: 200g',
+            '**Small**: 400g',
+            '**Normal**: 800g',
+            '**Big**: 1200g',
+            '**Huge**: 2000g',
+            'Csak statokat adnak:',
+            '**Gorgeous**: 4000g (1)',
+            '**Giant**: 6000g (3)',
+            '**Colossus**: 8000g (5)',
+            '**God**: 10000g (10)',
+        ]
+    },
+
     getStats: (message) => {
         let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense'];
         for (let i = 0; i < statList.length; i++) {
@@ -227,8 +243,9 @@ export default {
         return false;
     },
 
+    //'expert', 'deathwish', 'usurper', 'mythical', 'godlike'
     adventureCheck: (message) => {
-        let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard', 'expert', 'deathwish', 'usurper', 'mythical', 'godlike'];
+        let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard'];
         for (let i = 0; i < adventureList.length; i++) {
             if (message === adventureList[i]) {
                 return false;

@@ -63,6 +63,7 @@ export class Hero extends Errors{
 
     fightMonster(hero, enemy, attackType) {
         let monster, monsterAttackType;
+
         try {
             monster = enemy.getMonster();
             monsterAttackType = enemy.makeAttack();
@@ -158,7 +159,7 @@ export class Hero extends Errors{
                 break;
 
             case 'pvp':
-                wins = this.fightMonster(this.hero, enemy.getHero(), attackType);
+                wins = this.fightMonster(this.hero, enemy, attackType);
                 func.toDiscordMessage(client, msg,`${this.hero.name}: (${wins[3]} - ${wins[5]}) ${wins[1]} Vs ${enemy.getHero().name}: (${wins[4]} - ${wins[6]}) ${wins[2]}.`);
                 let heroGold = this.hero.gold;
                 let enemyGold = enemy.getHero().gold;
@@ -289,6 +290,10 @@ export class Hero extends Errors{
 
     setHeroGold(gold) {
         console.log('gold: ' + gold);
-        database.updateCharacter(this.hero.id, {gold: this.hero.gold + gold});
+        if (this.hero.gold < Math.abs(gold)) {
+            return 'no money';
+        } else {
+            database.updateCharacter(this.hero.id, {gold: this.hero.gold + gold});
+        }
     }
 }

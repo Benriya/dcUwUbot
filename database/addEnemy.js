@@ -6,22 +6,22 @@ const url = 'mongodb+srv://dawe:V5vSixleH7xS1SlM@uwuniverzum.cegga.mongodb.net/t
 MongoClient.connect(url, function (err, db) {
     if (err) throw err;
     let myobj = {
-        name: 'Parszifál',
-        description: 'humolosz',
+        name: 'Nodnol',
+        description: 'UwU',
         race: 'Human',
-        id: 'B-16',
-        level: 13,
-        hp: 630,
-        maxHp: 630,
+        id: 'B-22',
+        level: 19,
+        hp: 930,
+        maxHp: 930,
         armor: 0,
-        defense: 0,
-        strength: 17,
-        intellect: 11,
-        agility: 14,
-        gold: 325,
-        experience: 260,
+        defense: 20,
+        strength: 20,
+        intellect: 1,
+        agility: 19,
+        gold: 475,
+        experience: 380,
         mage: false,
-        diff: 'normal',
+        diff: 'hard',
         type: 'monster'
     };
     let dbo = db.db("mydb");

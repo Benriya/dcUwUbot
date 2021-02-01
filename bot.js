@@ -477,15 +477,22 @@ client.on('message', async msg => {
                     break;
                 case 'chest':
                     if (args[1] === undefined || func.chestCheck(args[1])) {
-                        func.toDiscordMessage(client, msg, error.noDifficultGiven());
+                        func.toDiscordMessage(client, msg, error.noChestGiven());
                         return;
                     }
                     chestType = args[1];
                     chest = new Chest(await database.getMiscellaneous({type: chestType}), await func.getCharacter(author));
                     console.log(chest.chest.price);
-                    hero.setHeroGold(-Math.abs(chest.chest.price));
+                    let hasGold = hero.setHeroGold(-Math.abs(chest.chest.price));
+                    if (hasGold === 'no money') {
+                        func.toDiscordMessage(client, msg, error.notEnoughMoney());
+                        return;
+                    }
                     func.toDiscordMessage(client, msg, chest.getChestEmbed(hero));
                     func.toDiscordMessage(client, msg, await chest.getChestRewards());
+                    break;
+                case 'chests':
+                    func.toDiscordMessage(client, msg, func.getChests());
                     break;
             }
         }

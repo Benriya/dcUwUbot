@@ -25,7 +25,7 @@ export class Monster {
             .addField('Leírás: ',
                 `*${this.monster.description}*`, true)
             .addField('Stats: ',
-                `Power: ${this.monster.strength}\n` +
+                `Strength: ${this.monster.strength}\n` +
                 `Intellect: ${this.monster.intellect}\n` +
                 `Agility: ${this.monster.agility}\n` +
                 `Defense: ${this.monster.defense}\n` +

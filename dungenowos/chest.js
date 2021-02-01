@@ -28,52 +28,52 @@ export class Chest extends Hero{
         let rewards = [];
         switch (type) {
             case 'minor':
-                good = (61 - hero.luck) <= 20 ? 20 : (61 - hero.luck);
+                good = (61 - hero.luck) <= 10 ? 10 : (61 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'armor', 'gold', 'armor');
                 scale = Math.round(Math.random() * 200 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'small':
-                good = (66 - hero.luck) <= 30 ? 30 : (66 - hero.luck);
+                good = (66 - hero.luck) <= 20 ? 20 : (66 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'armor', 'gold', 'gold', 'experience', 'gold');
                 scale = Math.round(Math.random() * 300 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'normal':
-                good = (71 - hero.luck) <= 40 ? 40 : (71 - hero.luck);
+                good = (71 - hero.luck) <= 30 ? 30 : (71 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'experience', 'armor', 'armor', 'experience', 'gold');
                 scale = Math.round(Math.random() * 400 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'big':
-                good = (76 - hero.luck) <= 50 ? 50 : (76 - hero.luck);
+                good = (76 - hero.luck) <= 40 ? 40 : (76 - hero.luck);
                 rewards.push('experience', 'gold', 'armor', 'gold');
                 scale = Math.round(Math.random() * 500 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'huge':
-                good = (81 - hero.luck * 0.9) <= 60 ? 60 : (91 - hero.luck * 0.9);
+                good = (81 - hero.luck * 0.9) <= 50 ? 50 : (91 - hero.luck * 0.9);
                 rewards.push('experience', 'gold', 'armor', 'experience', 'armor', 'armor', 'experience', 'gold');
                 scale = Math.round(Math.random() * 600 + 1);
                 reward = this.calculateReward(rewards, scale);
                 break;
             case 'gorgeous':
-                good = (86 - hero.luck * 0.7) <= 70 ? 70 : (86 - hero.luck * 0.7);
+                good = (86 - hero.luck * 0.7) <= 60 ? 60 : (86 - hero.luck * 0.7);
                 rewards.push('strength', 'agility', 'intellect', 'defense', 'regen',);
                 reward = this.calculateReward(rewards, 1);
                 break;
             case 'giant':
-                good = (91 - hero.luck * 0.5) <= 80 ? 80 : (91 - hero.luck * 0.5);
+                good = (91 - hero.luck * 0.5) <= 70 ? 70 : (91 - hero.luck * 0.5);
                 rewards.push('strength', 'agility', 'intellect', 'defense', 'regen',);
                 reward = this.calculateReward(rewards, 3);
                 break;
             case 'colossus':
-                good = (96 - hero.luck * 0.3) <= 80 ? 80 : (96 - hero.luck * 0.3);
+                good = (96 - hero.luck * 0.3) <= 70 ? 70 : (96 - hero.luck * 0.3);
                 rewards.push('strength', 'agility', 'intellect', 'defense');
                 reward = this.calculateReward(rewards, 5);
                 break;
             case 'god':
-                good = (99 - hero.luck * 0.1) <= 80 ? 80 : (99 - hero.luck * 0.1);
+                good = (99 - hero.luck * 0.1) <= 70 ? 70 : (99 - hero.luck * 0.1);
                 rewards.push('strength', 'agility', 'intellect', 'defense');
                 reward = this.calculateReward(rewards, 10);
                 break;
@@ -100,7 +100,7 @@ export class Chest extends Hero{
                 scale = scale * 0.01
                 break;
             case 'armor':
-                scale = scale * 0.001
+                scale = scale * 0.0005
                 break;
             default:
                 return [bonus, scale];

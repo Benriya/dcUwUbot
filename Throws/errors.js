@@ -45,6 +45,11 @@ export class Errors {
         return this.getReply(this.message);
     }
 
+    noChestGiven() {
+        this.message = 'Adj meg rendelkezésre álló chestet!';
+        return this.getReply(this.message);
+    }
+
     existHero() {
         this.message = 'Már létezik karaktered!';
         return this.getReply(this.message);
