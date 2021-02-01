@@ -159,10 +159,6 @@ client.on('message', async msg => {
             case 'vicci':
                 func.sendAttachment('./szerb/vicci.jpg', client, msg);
                 break;
-            /*case 'kuba':
-                if (!msg.author.id === '310497849274007553') {
-                    break;
-                }*/
             case 'gay':
                 func.sendAttachment('./szerb/gay.jpg', client, msg);
                 break;
@@ -176,19 +172,16 @@ client.on('message', async msg => {
                 break;
             case 'uwu':
                 func.sendAttachment('./szerb/uwu.gif', client, msg);
-                if (args[1] === undefined || args[1] !== "assemble") {
-                    break;
+                if (args[1] !== undefined && args[1] === "assemble") {
+                    func.sendAttachment('./szerb/assemble.gif', client, msg);
                 }
+                break;
             case 'assemble':
                 func.sendAttachment('./szerb/assemble.gif', client, msg);
                 break;
             case 'uncool':
                 func.sendAttachment('./szerb/uncool.mp4', client, msg);
                 break;
-            case 'sanfrancisco':
-            case 'sanfransicoboljottem':
-            case 'krisz':
-            case 'szpringbut':
             case 'springboot':
                 func.sendAttachment('./szerb/springbooooot.mp4', client, msg);
                 break;
