@@ -306,13 +306,11 @@ export default {
         return winningNumbers;
     },
 
-    randomKuraiSzoveg: () => {
-        let array = ['A', 'S', 'D', '?', ':', '_'];
-        let random = Math.floor(Math.random() * 50 + 10);
+    randomLongMessage: (array, random) => {
         let returnSzoveg = '';
 
         for (let i = 0; i < random; i++) {
-            returnSzoveg += array[Math.floor(Math.random() * 6)];
+            returnSzoveg += array[Math.floor(Math.random() * array.length)];
         }
         return returnSzoveg;
     },

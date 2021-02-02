@@ -128,7 +128,11 @@ client.on('message', async msg => {
                 break;
             case 'kurai':
                 await msg.delete();
-                func.toDiscordMessage(client, msg, func.randomKuraiSzoveg());
+                func.toDiscordMessage(client, msg, func.randomLongMessage(['A', 'S', 'D', '?', ':', '\_'], Math.floor(Math.random() * 50 + 10)));
+                break;
+            case 'ametsu':
+                await msg.delete();
+                func.toDiscordMessage(client, msg, func.randomLongMessage(['<:monkayay:806119728359145512> ', '<:harold:806119762764496949> ', '<:sadcat:806119685145231391> '], Math.floor(Math.random() * 10 + 3)));
                 break;
             case 'hess':
                 func.sendAttachment('./szerb/hess.gif', client, msg);
@@ -212,6 +216,8 @@ client.on('message', async msg => {
                     '!aranywall: kilistázom aranyember tanárokat\n' +
                     '!geci + "valami": meg dingi-dongizom\n' +
                     '!mock + "valami": retard spongyabobként beszélek\n' +
+                    '!kurai: elküldöm karcsi által szeretett vicces reagálást\n' +
+                    '!ametsu: ametsu kedvenc emote-jait küldöm be\n' +
                     '!lotto "szám" "szám": a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n' +
                     '!tippek: kilistázza milyen tippek voltak eddig\n' +
                     '"no bully" a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére. \n' +
@@ -572,6 +578,9 @@ client.on('message', async msg => {
                 break;
             case 'gimme':
                 func.toDiscordMessageChannel(client, channelId, '<:gimme:744540992430145586>');
+                break;
+            case 'exist':
+                func.toDiscordMessageChannel(client, channelId, '<:existing:806124020813791233>');
                 break;
             case 'simp':
                 func.toDiscordMessageChannel(client, channelId, '<:simp:744540966215483442>');
