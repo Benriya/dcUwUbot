@@ -182,6 +182,9 @@ client.on('message', async msg => {
             case 'springboot':
                 func.sendAttachment('./szerb/springbooooot.mp4', client, msg);
                 break;
+            case 'bully':
+                func.sendAttachment('./szerb/bully.gif', client, msg);
+                break;
             case 'kezelhetetlen':
                 let files = fs.readdirSync('./slap');
                 let chosenFile = files[Math.floor(Math.random() * files.length)];
