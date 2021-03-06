@@ -243,6 +243,7 @@ client.on('message', async msg => {
                 func.toDiscordMessage(client, msg,
                     '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
                     '      Bánhelyi Balázs\n' +
+                    '      **BigBlueButton**\n' +
                     '      ***C*** ***s*** ***e*** ***n*** ***d*** ***e*** ***s*** ***T*** ***i*** ***b*** ***o*** ***r***\n' +
                     '      Csókás Eszter\n' +
                     '      Gazdag-Tóth Boglárka Dr.\n' +
