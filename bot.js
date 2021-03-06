@@ -244,13 +244,13 @@ client.on('message', async msg => {
                     '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
                     '      Bánhelyi Balázs\n' +
                     '      **BigBlueButton**\n' +
-                    '      ***C*** ***s*** ***e*** ***n*** ***d*** ***e*** ***s*** ***T*** ***i*** ***b*** ***o*** ***r***\n' +
+                    '      ***C s e n d e s  T i b o r***\n' +
                     '      Csókás Eszter\n' +
                     '      Gazdag-Tóth Boglárka Dr.\n' +
                     '      **Gingl Zoltán**\n' +
                     '      Hirling Dominik\n' +
                     '      **Kulin Julia**\n' +
-                    '      Makan Gergely\n' +
+                    '      __***m a k a n  g e r g e l y***__\n' +
                     '      Márkus András\n' +
                     '      Pletl Szilveszter Dr.\n' +
                     '      Pluhár András\n' +
