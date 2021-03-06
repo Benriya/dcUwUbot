@@ -250,6 +250,7 @@ client.on('message', async msg => {
                     '      **Gingl Zoltán**\n' +
                     '      Hirling Dominik\n' +
                     '      **Kulin Julia**\n' +
+                    '      Makan Gergely\n' +
                     '      Márkus András\n' +
                     '      Pletl Szilveszter Dr.\n' +
                     '      Pluhár András\n' +
@@ -277,7 +278,7 @@ client.on('message', async msg => {
                     '      ***Maróti Miklós***\n' +
                     '      Szabó Tamás\n' +
                     '      Szabolcs Iván\n' +
-                    '└───── •✧✧✧✧✧✧✧✧✧• ─────┘');
+                    '└────── •✧✧✧✧✧✧✧✧✧• ──────┘');
                 break;
             case 'geci':
                 await msg.delete();
