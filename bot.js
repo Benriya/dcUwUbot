@@ -250,7 +250,7 @@ client.on('message', async msg => {
                     '      **Gingl Zoltán**\n' +
                     '      Hirling Dominik\n' +
                     '      **Kulin Julia**\n' +
-                    '      __***m a k a n  g e r g e l y***__\n' +
+                    '      **Makan Gergely**\n' +
                     '      Márkus András\n' +
                     '      Pletl Szilveszter Dr.\n' +
                     '      Pluhár András\n' +
