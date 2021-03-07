@@ -300,10 +300,8 @@ export default {
     },
 
     drawNumbers: () => {
-        let winningNumbers = [];
            // winningNumbers = [1, 1];
-        winningNumbers = [Math.round(Math.random() * 6 + 1), Math.round(Math.random() * 6 + 1)];
-        return winningNumbers;
+        return [Math.round(Math.random() * 6 + 1), Math.round(Math.random() * 6 + 1)];
     },
 
     randomLongMessage: (array, random) => {
@@ -315,7 +313,7 @@ export default {
         return returnSzoveg;
     },
 
-    reardinator: (sentence) => {
+    retardinator: (sentence) => {
         let splittedSentence = sentence.toLowerCase().split("");
         for (let i = 1; i < splittedSentence.length; i+=2) {
             splittedSentence[i] = splittedSentence[i].toUpperCase();
@@ -336,4 +334,29 @@ export default {
     toDiscordMessageChannel(client, channelId, message) {
         client.channels.cache.get(channelId).send(message);
     },
+
+    testCheck: (message) => {
+        let statList = ['mobilalk', 'webkert', 'nlp', 'infbizt'];
+        for (let i = 0; i < statList.length; i++) {
+            if(message.toLowerCase() === statList[i]) {
+                return true;
+            }
+        }
+        return false;
+    },
+
+    getPingUsers: async (nickname) => {
+        let returnArray = [];
+        let ping = await database.getAllSubscriber(nickname);
+        for (let i = 0; i < ping.length; i++) {
+            returnArray.push('<@' + ping[i].id + '>');
+        }
+
+        return returnArray;
+    },
+
+    checkIfPingerSub: async (kurzus, author) => {
+        let result = await database.getPinger(kurzus, author);
+        return result !== null;
+    }
 };

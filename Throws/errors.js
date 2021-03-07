@@ -94,4 +94,9 @@ export class Errors {
         this.message = 'Többet kell várnod, hogy regenerálódj!';
         return this.getReply(this.message);
     }
+
+    wrongTestPing() {
+        this.message = 'Teszttel rendelkező kurzust adj meg!';
+        return this.getReply(this.message);
+    }
 }

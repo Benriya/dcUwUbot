@@ -2,10 +2,11 @@ import pkg from 'mongodb';
 const { MongoClient } = pkg;
 
 const url = 'mongodb+srv://dawe:V5vSixleH7xS1SlM@uwuniverzum.cegga.mongodb.net/test';
+//const dbo = db.db("mydb");
 
 export default {
     characterCreate: (name, race, img, description, id, maxHp, regen, armor, defense, strength, intellect, agility, luck, gold) => {
-        MongoClient.connect(url, function (err, db) {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
             let myobj = {name: name, description: description, img: img, race: race, id: id, hp: maxHp, maxHp: maxHp, regen: regen, armor: armor, defense: defense, strength: strength, intellect: intellect, agility: agility, luck: luck, gold: gold, experience: 0, level: 1, talent: 0, type: 'Player', timeout: 0};
@@ -19,7 +20,7 @@ export default {
 
     listCharacter: (id) => {
         return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, function (err, db) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
                 if (err) throw err;
                 let dbo = db.db("mydb");
                 dbo.collection("Characters").findOne({id: id}, function (err, result) {
@@ -33,7 +34,7 @@ export default {
 
     getEnemy: (query) => {
         return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, function (err, db) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
                 if (err) throw err;
                 let dbo = db.db("mydb");
                 dbo.collection("Characters").find(query).toArray(function (err, result) {
@@ -47,7 +48,7 @@ export default {
 
     getMiscellaneous: (query) => {
         return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, function (err, db) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
                 if (err) throw err;
                 let dbo = db.db("mydb");
                 dbo.collection("Characters").findOne(query, function (err, result) {
@@ -61,7 +62,7 @@ export default {
     },
 
     levelUpCharacter: (char, xp) => {
-        MongoClient.connect(url, function(err, db) {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
             let myQuery = { id: char.id };
@@ -75,7 +76,7 @@ export default {
     },
 
     updateCharacter: (char, args) => {
-        MongoClient.connect(url, function(err, db) {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
             let myQuery = { id: char };
@@ -89,7 +90,7 @@ export default {
     },
 
     createLottoTip: (name, id, tipp) => {
-        MongoClient.connect(url, function (err, db) {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
             let myobj = {name: name, id: id, tipp: tipp, type: 'lotto'};
@@ -102,7 +103,7 @@ export default {
     },
 
     updateLottoTip: (name, id, tipp) => {
-        MongoClient.connect(url, function (err, db) {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
             let myQuery = { id: id };
@@ -117,12 +118,11 @@ export default {
 
     getLottoTips: () => {
         return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, function (err, db) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
                 if (err) throw err;
                 let dbo = db.db("mydb");
                 dbo.collection("Lotto").find({type: 'lotto'}).toArray(function (err, result) {
                     if (err) throw err;
-                    console.log("1 document inserted");
                     db.close();
                     resolve(result);
                 });
@@ -132,7 +132,7 @@ export default {
 
     getLotto: (id) => {
         return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, function (err, db) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
                 if (err) throw err;
                 let dbo = db.db("mydb");
                 dbo.collection("Lotto").findOne({id: id}, function (err, result) {
@@ -146,7 +146,7 @@ export default {
     },
 
     deleteLottoTips: () => {
-        MongoClient.connect(url, function (err, db) {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
             let myQuery = { type: 'lotto' };
@@ -154,6 +154,57 @@ export default {
                 if (err) throw err;
                 console.log(obj.result.n + " document(s) deleted");
                 db.close();
+            });
+        });
+    },
+
+    subscribeForPing: (kurzus, id) => {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            let myobj = { id: id, type: 'ping' };
+            dbo.collection(kurzus).insertOne(myobj, function (err, res) {
+                if (err) throw err;
+                db.close();
+            });
+        });
+    },
+
+    unsubscribeForPing: (kurzus, id) => {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            dbo.collection(kurzus).deleteOne({id: id}, function (err, res) {
+                if (err) throw err;
+                db.close();
+            });
+        });
+    },
+
+    getPinger: (kurzus, id) => {
+        return new Promise(function (resolve, reject) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                dbo.collection(kurzus).findOne({id: id}, function (err, result) {
+                    if (err) throw err;
+                    db.close();
+                    resolve(result);
+                });
+            });
+        });
+    },
+
+    getAllSubscriber: (kurzus) => {
+        return new Promise(function (resolve, reject) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                dbo.collection(kurzus).find({type: 'ping'}).toArray(function (err, result) {
+                    if (err) throw err;
+                    db.close();
+                    resolve(result);
+                });
             });
         });
     },

@@ -16,9 +16,10 @@ const question = JSON.parse(fs.readFileSync('./dungenowos/fight.json', 'utf8'));
 let voters = [];
 let winningNumbers = [];
 let winners = [];
-let cheater;
+let cheater, pinger;
 let lottoChannelId = '779395227688501298';
 let deleteChannelId = '740536932303634473';
+let suwuliId = '706776570836156426';
 
 const PORT = process.env.PORT || 4040;
 const server = http.createServer((req, res) => {
@@ -128,11 +129,12 @@ client.on('message', async msg => {
                 break;
             case 'kurai':
                 await msg.delete();
-                func.toDiscordMessage(client, msg, func.randomLongMessage(['A', 'S', 'D', '?', ':', '\_'], Math.floor(Math.random() * 50 + 10)));
+                func.toDiscordMessage(client, msg, func.randomLongMessage(['A', 'S', 'D', '?', ':', '\_'], Math.floor(Math.random() * 50 + 20)));
                 break;
+            case 'amecu':
             case 'ametsu':
                 await msg.delete();
-                func.toDiscordMessage(client, msg, func.randomLongMessage(['<:monkayay:806119728359145512> ', '<:harold:806119762764496949> ', '<:sadcat:806119685145231391> '], Math.floor(Math.random() * 10 + 3)));
+                func.toDiscordMessage(client, msg, func.randomLongMessage(['<:monkayay:806119728359145512>', '<:harold:806119762764496949>', '<:sadcat:806119685145231391>'], Math.floor(Math.random() * 10 + 3)));
                 break;
             case 'hess':
                 func.sendAttachment('./szerb/hess.gif', client, msg);
@@ -247,7 +249,7 @@ client.on('message', async msg => {
                     '      ***C s e n d e s  T i b o r***\n' +
                     '      Csókás Eszter\n' +
                     '      Gazdag-Tóth Boglárka Dr.\n' +
-                    '      **Gingl Zoltán**\n' +
+                    '      Gingl Zoltán\n' +
                     '      Hirling Dominik\n' +
                     '      **Kulin Julia**\n' +
                     '      **Makan Gergely**\n' +
@@ -288,7 +290,7 @@ client.on('message', async msg => {
             case 'mock':
                 await msg.delete();
                 func.toDiscordMessage(client, msg, '<a:retard:788703547335901184>');
-                func.toDiscordMessage(client, msg, func.reardinator(sentence));
+                func.toDiscordMessage(client, msg, func.retardinator(sentence));
                 func.toDiscordMessage(client, msg, '<a:retard:788703547335901184>');
                 break;
             case 'lotto':
@@ -358,6 +360,38 @@ client.on('message', async msg => {
                     func.toDiscordMessage(client, msg, error.deniedVote());
                     console.log(r);
                 });
+                break;
+            case 'sub':
+                if (messageChannel === suwuliId && nickname !== undefined) {
+                    if (func.testCheck(nickname)) {
+                        database.subscribeForPing(nickname, author);
+                        func.toDiscordMessage(client, msg, 'Feliratkozál teszt pingre: ' + nickname);
+                    } else {
+                        func.toDiscordMessage(client, msg, error.wrongTestPing());
+                    }
+                }
+                break;
+            case 'unsub':
+                 pinger = await func.checkIfPingerSub(nickname, author);
+                if (messageChannel === suwuliId && nickname !== undefined && pinger) {
+                    if (func.testCheck(nickname) && pinger) {
+                        database.unsubscribeForPing(nickname, author);
+                        func.toDiscordMessage(client, msg, 'Leiratkoztál teszt pingről: ' + nickname);
+                    } else {
+                        func.toDiscordMessage(client, msg, error.wrongTestPing());
+                    }
+                }
+                break;
+            case 'teszt':
+                pinger = await func.checkIfPingerSub(nickname, author);
+                if (messageChannel === suwuliId && nickname !== undefined && pinger) {
+                    if (func.testCheck(nickname)) {
+                        let pings = await func.getPingUsers(nickname);
+                        func.toDiscordMessage(client, msg, pings);
+                    } else {
+                        func.toDiscordMessage(client, msg, error.wrongTestPing());
+                    }
+                }
                 break;
         }
     }
