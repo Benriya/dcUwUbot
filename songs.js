@@ -148,7 +148,7 @@ export const song = "We're no strangers to love\n" +
         "Minden apró kis részleteddel\n" +
         "óó spring boot\n" +
         "Egyszer mindenki megtanul\n" +
-        "a beépített tomcateddel\n" +
+        "értékes vagy a beépített tomcateddel\n" +
         "Tudod ott van a Java a Kotlin a Groovy de nem kell egyszerre mindhármat\n" +
         "tanulni A fontosabb hogy csomagolod be az így dukál\n" +
         "a nagy végtermék legyen egy szép Fat jar\n" +
