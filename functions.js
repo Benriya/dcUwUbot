@@ -336,7 +336,7 @@ export default {
     },
 
     testCheck: (message) => {
-        let statList = ['mobilalk', 'webkert', 'nlp', 'infbizt'];
+        let statList = ['mobilalk', 'webkert', 'nlp', 'infbizt', 'pythonprog'];
         for (let i = 0; i < statList.length; i++) {
             if(message.toLowerCase() === statList[i]) {
                 return true;
