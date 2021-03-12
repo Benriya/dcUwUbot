@@ -20,6 +20,11 @@ let cheater, pinger;
 let lottoChannelId = '779395227688501298';
 let deleteChannelId = '740536932303634473';
 let suwuliId = '706776570836156426';
+let kurzusok = ['mobilalk', 'webkert', 'nlp', 'infbizt', 'pythonprog'];
+let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense']
+let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard'];
+//'expert', 'deathwish', 'usurper', 'mythical', 'godlike'
+let chestList = ['minor', 'small', 'normal', 'big', 'huge', 'gorgeous', 'giant', 'colossus', 'god'];
 
 const PORT = process.env.PORT || 4040;
 const server = http.createServer((req, res) => {
@@ -362,8 +367,9 @@ client.on('message', async msg => {
                 });
                 break;
             case 'sub':
-                if (messageChannel === suwuliId && nickname !== undefined) {
-                    if (func.testCheck(nickname)) {
+                pinger = await func.checkIfPingerSub(nickname, author);
+                if (messageChannel === suwuliId && nickname !== undefined && !pinger) {
+                    if (func.checkArrayIncludes(nickname, kurzusok)) {
                         database.subscribeForPing(nickname, author);
                         func.toDiscordMessage(client, msg, 'Feliratkozál teszt pingre: ' + nickname);
                     } else {
@@ -372,9 +378,9 @@ client.on('message', async msg => {
                 }
                 break;
             case 'unsub':
-                 pinger = await func.checkIfPingerSub(nickname, author);
+                pinger = await func.checkIfPingerSub(nickname, author);
                 if (messageChannel === suwuliId && nickname !== undefined && pinger) {
-                    if (func.testCheck(nickname) && pinger) {
+                    if (func.checkArrayIncludes(nickname, kurzusok)) {
                         database.unsubscribeForPing(nickname, author);
                         func.toDiscordMessage(client, msg, 'Leiratkoztál teszt pingről: ' + nickname);
                     } else {
@@ -385,7 +391,7 @@ client.on('message', async msg => {
             case 'teszt':
                 pinger = await func.checkIfPingerSub(nickname, author);
                 if (messageChannel === suwuliId && nickname !== undefined && pinger) {
-                    if (func.testCheck(nickname)) {
+                    if (func.checkArrayIncludes(nickname, kurzusok)) {
                         let pings = await func.getPingUsers(nickname);
                         func.toDiscordMessage(client, msg, pings);
                     } else {
@@ -446,7 +452,7 @@ client.on('message', async msg => {
                     hero.fightResult(client, msg, enemy, 'pvp', 'pvp');
                     break;
                 case 'adventure':
-                    if (args[1] === undefined || func.adventureCheck(args[1])) {
+                    if (args[1] === undefined || !func.checkArrayIncludes(args[1], adventureList)) {
                         func.toDiscordMessage(client, msg, error.noDifficultGiven());
                         return;
                     }
@@ -506,7 +512,7 @@ client.on('message', async msg => {
                         func.toDiscordMessage(client, msg, error.noStatGiven());
                         return;
                     }
-                    if (hero.getHero().talent > 0 && func.getStats(args[1])) {
+                    if (hero.getHero().talent > 0 && func.checkArrayIncludes(args[1], statList)) {
                         func.toDiscordMessage(client, msg, `${hero.getHero().name}, egy talent pontot elhasználtál, maradt: ${hero.getHero().talent - 1}`);
                         hero.updateHeroPoint(args[1].toLowerCase(),1, 1);
                     } else {
@@ -541,7 +547,7 @@ client.on('message', async msg => {
                     func.toDiscordMessage(client, msg, hero.repairHero(args[1]));
                     break;
                 case 'chest':
-                    if (args[1] === undefined || func.chestCheck(args[1])) {
+                    if (args[1] === undefined || !func.checkArrayIncludes(args[1], chestList)) {
                         func.toDiscordMessage(client, msg, error.noChestGiven());
                         return;
                     }

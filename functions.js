@@ -69,22 +69,10 @@ export default {
         });
     },
 
-    chestCheck: (message) => {
-        let chestList = ['minor', 'small', 'normal', 'big', 'huge', 'gorgeous', 'giant', 'colossus', 'god'];
-        for (let i = 0; i < chestList.length; i++) {
-            if(message.toLowerCase().includes(chestList[i])) {
-                return false;
-            }
-        }
-        return true;
-    },
-
     raceCheck: (message) => {
         let raceList = ['human', 'orc', 'goblin', 'dwarf', 'elf', 'troll', 'draenei', 'lizard', 'skeleton', 'satyr', 'gnome', 'worgen'];
-        for (let i = 0; i < raceList.length; i++) {
-            if(message.toLowerCase().includes(raceList[i])) {
-                return message;
-            }
+        if (raceList.includes(message.toLowerCase())) {
+            return message;
         }
         return false;
     },
@@ -233,27 +221,6 @@ export default {
         ]
     },
 
-    getStats: (message) => {
-        let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense'];
-        for (let i = 0; i < statList.length; i++) {
-            if(message.toLowerCase() === statList[i]) {
-                return true;
-            }
-        }
-        return false;
-    },
-
-    //'expert', 'deathwish', 'usurper', 'mythical', 'godlike'
-    adventureCheck: (message) => {
-        let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard'];
-        for (let i = 0; i < adventureList.length; i++) {
-            if (message === adventureList[i]) {
-                return false;
-            }
-        }
-        return true;
-    },
-
     checkLevels: (level, experience) => {
         let xp = 100;
         for (let i = 1; i <= 70; i++) {
@@ -335,14 +302,8 @@ export default {
         client.channels.cache.get(channelId).send(message);
     },
 
-    testCheck: (message) => {
-        let statList = ['mobilalk', 'webkert', 'nlp', 'infbizt', 'pythonprog'];
-        for (let i = 0; i < statList.length; i++) {
-            if(message.toLowerCase() === statList[i]) {
-                return true;
-            }
-        }
-        return false;
+    checkArrayIncludes: (message, params) => {
+        return params.includes(message.toLowerCase());
     },
 
     getPingUsers: async (nickname) => {
