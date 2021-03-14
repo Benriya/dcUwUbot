@@ -300,22 +300,22 @@ client.on('message', async msg => {
                 break;
             case 'lotto':
                 if (messageChannel === lottoChannelId) {
-                    let tips = `${args[1]} ${args[2]}`;
+                    let tip1 = parseInt(args[1]);
+                    let tip2 = parseInt(args[2]);
+                    let tips = `${tip1} ${tip2}`;
 
-
-                    if (!isNaN(parseInt(args[1])) && !isNaN(parseInt(args[2])) && (0 < parseInt(args[1])) && (parseInt(args[1]) < 8) && (0 < parseInt(args[2])) && (parseInt(args[2]) < 8)) {
+                    if (!isNaN(tip1) && !isNaN(tip2) && (0 < parseInt(tip1) && (parseInt(tip1) < 8) && (0 < parseInt(tip2)) && (parseInt(tip2) < 8))) {
                         if (args[3] === undefined) {
                             let exist = await database.getLotto(author);
                             if (exist !== null) {
                                 func.toDiscordMessage(client, msg, error.alreadyTipped());
                             } else {
-
                                 await database.createLottoTip(msg.author.username, author, tips);
-                                func.toDiscordMessage(client, msg,`Tipped mentve: ${args[1]} ${args[2]}`);
+                                func.toDiscordMessage(client, msg,`Tipped mentve: ${tips}`);
 							}
                         } else if (args[3].toLowerCase() === 'change') {
                             await database.updateLottoTip(msg.author.username, author, tips);
-                            func.toDiscordMessage(client, msg,`Tipped mentve: ${args[1]} ${args[2]}`);
+                            func.toDiscordMessage(client, msg,`Tipped mentve: ${tips}`);
                         } else {
                             func.toDiscordMessage(client, msg,error.badTipForLotto());
                         }
