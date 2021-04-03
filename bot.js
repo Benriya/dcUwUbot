@@ -233,6 +233,9 @@ client.on('message', async msg => {
                     '!ametsu: ametsu kedvenc emote-jait küldöm be\n' +
                     '!lotto "szám" "szám": a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n' +
                     '!tippek: kilistázza milyen tippek voltak eddig\n' +
+                    '!chad + emote: chad alakban mutatom az emote-ot\n' +
+                    '!virgin + emote: virgin alakban mutatom az emote-ot\n' +
+                    '!flex + emote + emote: chad vs virgin alakban mutatom az emote-okat\n' +
                     '"no bully" a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére. \n' +
                     'Végül ha valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
                 break;
@@ -289,6 +292,24 @@ client.on('message', async msg => {
                     '      Szabó Tamás\n' +
                     '      Szabolcs Iván\n' +
                     '└────── •✧✧✧✧✧✧✧✧✧• ──────┘');
+                break;
+            case 'chad':
+                await msg.delete();
+                if (args[1] !== undefined) {
+                    func.toDiscordMessage(client, msg, args[1] + '\n<:chad:827883783742029826>');
+                }
+                break;
+            case 'virgin':
+                await msg.delete();
+                if (args[1] !== undefined) {
+                    func.toDiscordMessage(client, msg, args[1] + '\n<:virgin:827883771859828756>');
+                }
+                break;
+            case 'flex':
+                await msg.delete();
+                if (args[1] !== undefined && args[2] !== undefined) {
+                    func.toDiscordMessage(client, msg, args[1] + '     ' + args[2] + '\n<:chad:827883783742029826>     <:virgin:827883771859828756>');
+                }
                 break;
             case 'geci':
                 await msg.delete();
@@ -635,6 +656,9 @@ client.on('message', async msg => {
                 break;
             case 'ew':
                 func.toDiscordMessageChannel(client, channelId, '<:ew:744540932967235674>');
+                break;
+            case 'haha':
+                func.toDiscordMessageChannel(client, channelId, '<a:haha:826381536256589834>');
                 break;
             case 'burn':
                 func.toDiscordMessageChannel(client, channelId, '<:burn:744540895478808626>');
