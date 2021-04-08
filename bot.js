@@ -186,6 +186,9 @@ client.on('message', async msg => {
             case 'uncool':
                 func.sendAttachment('./szerb/uncool.mp4', client, msg);
                 break;
+            case 'kurva':
+                func.sendAttachment('./szerb/kurvaaaa.mp3', client, msg);
+                break;
             case 'springboot':
                 func.sendAttachment('./szerb/springbooooot.mp4', client, msg);
                 break;
