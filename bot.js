@@ -94,6 +94,10 @@ client.on('message', async msg => {
         func.toDiscordMessageChannel(client, '745317754256490567', `${attachment[0].proxyURL} id: ${attachment[0].id}`);
     }
 
+    if (messageChannel === '813842740210958446' && msg.attachments.size === 0) {
+        await msg.delete();
+    }
+
     msg.channel.messages.fetch({limit: 3}).then(messages => {
         let lastMessage = messages.first();
         let lastMessages = messages.array();
@@ -725,10 +729,14 @@ client.on('message', async msg => {
     }
 
     if (msg.content.toLocaleLowerCase() === 'ok') {
-        let randomNumber = Math.floor(Math.random() * 5);
+        let randomNumber = Math.floor(Math.random() * 6);
         if (randomNumber === 4) {
             func.toDiscordMessage(client, msg, '"k" legal csináld rendesen');
         }
+    }
+
+    if (msg.content.toLocaleLowerCase().includes('bully')) {
+        func.toDiscordMessage(client, msg, '<:SprayBottle:836572356004282418>');
     }
 
     try {
