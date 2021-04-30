@@ -134,7 +134,7 @@ client.on('message', async msg => {
         }
         switch (cmd.toLocaleLowerCase()) {
             case 'ido':
-                func.toDiscordMessage(client, msg, new Date());
+                func.toDiscordMessage(client, msg, new Date().toDateString);
                 break;
             case 'praise':
                 func.toDiscordMessage(client, msg, nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
