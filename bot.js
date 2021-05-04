@@ -157,6 +157,9 @@ client.on('message', async msg => {
             case 'faszom':
                 func.sendAttachment('./szerb/picsaba.png', client, msg);
                 break;
+            case 'micsinalsz':
+                func.sendAttachment('./szerb/micsinalsz.png', client, msg);
+                break;
             case 'csokas':
                 func.sendAttachment('./szerb/csokas.png', client, msg);
                 func.sendAttachment('./szerb/fasszopokas.png', client, msg);
