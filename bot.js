@@ -711,7 +711,8 @@ client.on('message', async msg => {
         func.toDiscordMessage(client, msg, 'https://i.pinimg.com/originals/78/e3/6c/78e36c8c096aeb13b46a3b41cd934c9f.jpg');
     }
 
-    if (msg.content.toLowerCase().includes('maróti') || msg.content.toLowerCase().includes('dimat') || msg.content.toLowerCase().includes('maroti') || msg.content.toLowerCase().includes('aranyember')) {
+    if (msg.content.toLowerCase().includes('maróti') || msg.content.toLowerCase().includes('dimat')
+        || msg.content.toLowerCase().includes('maroti') || msg.content.toLowerCase().includes('aranyember')) {
         await msg.react('759804122139983873');
     }
 
@@ -721,6 +722,12 @@ client.on('message', async msg => {
 
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
         func.toDiscordMessage(client, msg, '<a:uwu_flotespanking:677984852963885075>');
+    }
+
+    if (msg.content.toLowerCase().includes('nem tudom')
+        || msg.content.toLowerCase().includes('nemtudom')
+        || msg.content.toLowerCase().includes('nemtom')) {
+        func.sendAttachment('./szerb/nemtudom.png', client, msg);
     }
 
     if (msg.content.toLocaleLowerCase().includes('nem mered')) {
