@@ -433,6 +433,14 @@ client.on('message', async msg => {
                     }
                 }
                 break;
+            case 'nemtudom':
+                func.sendAttachment('./szerb/nemtudom.png', client, msg);
+                break;
+            case 'risus':
+                if (author === '310497849274007553' && args[1] !== undefined) {
+                    await msg.delete();
+                    func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${args[1]}>`);
+                }
         }
     }
 
@@ -724,11 +732,11 @@ client.on('message', async msg => {
         func.toDiscordMessage(client, msg, '<a:uwu_flotespanking:677984852963885075>');
     }
 
-    if (msg.content.toLowerCase().includes('nem tudom')
+    /*if (msg.content.toLowerCase().includes('nem tudom')
         || msg.content.toLowerCase().includes('nemtudom')
         || msg.content.toLowerCase().includes('nemtom')) {
         func.sendAttachment('./szerb/nemtudom.png', client, msg);
-    }
+    }*/
 
     if (msg.content.toLocaleLowerCase().includes('nem mered')) {
         func.toDiscordMessage(client, msg, 'hang vaaaagy');
