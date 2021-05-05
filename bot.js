@@ -741,7 +741,7 @@ client.on('message', async msg => {
     if (msg.content.toLocaleLowerCase() === 'ok') {
         let randomNumber = Math.floor(Math.random() * 6);
         if (randomNumber === 4) {
-            func.toDiscordMessage(client, msg, '"k" legal csináld rendesen');
+            func.toDiscordMessage(client, msg, '"k" legalább csináld rendesen');
         }
     }
 
