@@ -437,7 +437,7 @@ client.on('message', async msg => {
                 func.sendAttachment('./szerb/nemtudom.png', client, msg);
                 break;
             case 'risus':
-                if (author === '310497849274007553' && args[1] !== undefined) {
+                if (author === '310497849274007553') {
                     await msg.delete();
                     func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${func.getChannel(args[1])}>`);
                 }
