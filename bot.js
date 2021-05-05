@@ -439,7 +439,7 @@ client.on('message', async msg => {
             case 'risus':
                 if (author === '310497849274007553' && args[1] !== undefined) {
                     await msg.delete();
-                    func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${args[1]}>`);
+                    func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${func.getChannel(args[1])}>`);
                 }
                 break;
         }
