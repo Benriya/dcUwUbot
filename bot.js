@@ -441,6 +441,7 @@ client.on('message', async msg => {
                     await msg.delete();
                     func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${args[1]}>`);
                 }
+                break;
         }
     }
 
