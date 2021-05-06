@@ -25,29 +25,35 @@ function getEmbeds(hero) {
 export default {
     getChannel: (channel) => {
         switch (channel) {
-            case 'suwuli':
-                return '706776570836156426';
-
+            case 'lowottowo':
+                return '779395227688501298';
+            
+            case 'általános':
+                return '661569831111491618';
+            
+            case '18-pluwusz':
+                return '667779656363278367';
+            
             case 'kuwuka':
                 return '671309309757358123';
-
-            case '18':
-                return '667779656363278367';
-
-            case 'mowozi':
-                return '699657394506170469';
-
+            
             case 'owoff':
                 return '667783025811259448';
-
-            case 'altalanowos':
-                return '661569831111491618';
-
-            case 'jatekowos':
+            
+            case 'mowozi':
+                return '699657394506170469';
+            
+            case 'muwusic':
+                return '776803915898552320';
+            
+            case 'suwuli':
+                return '706776570836156426';
+            
+            case 'játékowos':
                 return '713415837356392508';
-
-            case 'lotto':
-                return '779395227688501298';
+            
+            case 'sowogödör':
+                return '839885997923237889'
 
             default:
                 return '667783025811259448';
