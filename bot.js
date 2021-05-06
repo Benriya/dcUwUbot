@@ -272,6 +272,7 @@ client.on('message', async msg => {
                     '      Gazdag-Tóth Boglárka Dr.\n' +
                     '      Gingl Zoltán\n' +
                     '      Hirling Dominik\n' +
+                    '      Katona Melinda\n' +
                     '      **Kulin Julia**\n' +
                     '      **Makan Gergely**\n' +
                     '      Márkus András\n' +
