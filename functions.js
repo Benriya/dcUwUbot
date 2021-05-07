@@ -52,7 +52,7 @@ export default {
             case 'suwuli':
                 return '706776570836156426';
             
-            case 'jatakowos':
+            case 'jatekowos':
                 return '713415837356392508';
             
             default:
