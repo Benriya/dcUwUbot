@@ -25,13 +25,13 @@ function getEmbeds(hero) {
 export default {
     getChannel: (channel) => {
         switch (channel) {
-            case 'lowottowo':
+            case 'lotto':
                 return '779395227688501298';
             
-            case 'általános':
+            case 'altalanowos':
                 return '661569831111491618';
             
-            case '18-pluwusz':
+            case '18':
                 return '667779656363278367';
             
             case 'kuwuka':
@@ -39,6 +39,9 @@ export default {
             
             case 'owoff':
                 return '667783025811259448';
+            
+            case 'so':
+                return '839885997923237889'
             
             case 'mowozi':
                 return '699657394506170469';
@@ -49,18 +52,15 @@ export default {
             case 'suwuli':
                 return '706776570836156426';
             
-            case 'játékowos':
+            case 'jatakowos':
                 return '713415837356392508';
             
-            case 'sowogödör':
-                return '839885997923237889'
-
             default:
                 return '667783025811259448';
         }
     },
 
-     checkIfSame: (array) => {
+    checkIfSame: (array) => {
         if (array[0].author.bot || array[1].author.bot || array[2].author.bot) {
             return false;
         }
