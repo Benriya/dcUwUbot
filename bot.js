@@ -438,8 +438,8 @@ client.on('message', async msg => {
                 func.sendAttachment('./szerb/nemtudom.png', client, msg);
                 break;
             case 'risus':
+                await msg.delete();
                 if (author === '310497849274007553'|| author === '318072258465628161' || author === '602525564217327637') { //Dawe24 || Kuroko || Kruzor57
-                    await msg.delete();
                     func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${func.getChannel(args[1])}>`);
                 }
                 break;
