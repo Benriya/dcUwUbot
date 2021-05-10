@@ -246,6 +246,9 @@ client.on('message', async msg => {
                     '!chad + emote: chad alakban mutatom az emote-ot\n' +
                     '!virgin + emote: virgin alakban mutatom az emote-ot\n' +
                     '!flex + emote + emote: chad vs virgin alakban mutatom az emote-okat\n' +
+                    '!mitcsinalsz: megkérdőjelezem, hogy tudod-e mit csinálsz\n' +
+                    '!nemtudom: miért nem lehet tudod? Csalódtam.\n' +
+                    '!medikiakad: prezentálim mi van akkor, ha MediMadi kiakad\n' +
                     '"no bully" a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére. \n' +
                     'Végül ha valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
                 break;
@@ -435,6 +438,7 @@ client.on('message', async msg => {
                 }
                 break;
             case 'nemtudom':
+                await msg.delete();
                 func.sendAttachment('./szerb/nemtudom.png', client, msg);
                 break;
             case 'risus':
