@@ -12,6 +12,7 @@ import { Errors } from './Throws/errors.js';
 import { Monster } from './dungenowos/Monster.js';
 import { Hero } from './dungenowos/Hero.js';
 import { Chest } from './dungenowos/chest.js';
+import Pagination from 'discord-paginationembed';
 const question = JSON.parse(fs.readFileSync('./dungenowos/fight.json', 'utf8'));
 let voters = [];
 let winningNumbers = [];
@@ -94,7 +95,7 @@ client.on('message', async msg => {
         func.toDiscordMessageChannel(client, '745317754256490567', `${attachment[0].proxyURL} id: ${attachment[0].id}`);
     }
 
-    if (messageChannel === '813842740210958446' && msg.attachments.size === 0) {
+    if ((messageChannel === '813842740210958446' || messageChannel === '841654691225010206') && msg.attachments.size === 0) {
         await msg.delete();
     }
 
@@ -205,6 +206,10 @@ client.on('message', async msg => {
             case 'bully':
                 func.sendAttachment('./szerb/bully.gif', client, msg);
                 break;
+            case 'nemtudom':
+                await msg.delete();
+                func.sendAttachment('./szerb/nemtudom.png', client, msg);
+                break;
             case 'kezelhetetlen':
                 let files = fs.readdirSync('./slap');
                 let chosenFile = files[Math.floor(Math.random() * files.length)];
@@ -228,29 +233,83 @@ client.on('message', async msg => {
                 }
                 break;
             case '!help':
-                await msg.author.send('Szoszi \nAlábbi parancsokkal rendelkezem: \n' +
-                    '!porn + "tematika": Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n' +
-                    '!votemute "tag": (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n' +
-                    '!votenick "nicknév" "tag: nicknév helyére beírod a kívánt nevet, és tageled akinek a nevét meg akarod változtatni, ehhez 6 szavazat kell, hogy sikeres legyen. \n' +
-                    '!kivagy + "tag" megmondja hogy te ki is vagy valójában. \nTovábbá sok káromkodás esetén jelzek hogy ne tedd. \n' +
-                    '!kezelhetetlen: ha valaki rosszul viselkedik, helyre teszem egy pofon giffel.\n' +
-                    '!praise + "emote" vagy "szöveg": isteni magaslatba emelem azt amit megadtál\n' +
-                    '!csicskawall: kilistázom a csicska tanárokat\n' +
-                    '!aranywall: kilistázom aranyember tanárokat\n' +
-                    '!geci + "valami": meg dingi-dongizom\n' +
-                    '!mock + "valami": retard spongyabobként beszélek\n' +
-                    '!kurai: elküldöm karcsi által szeretett vicces reagálást\n' +
-                    '!ametsu: ametsu kedvenc emote-jait küldöm be\n' +
-                    '!lotto "szám" "szám": a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n' +
-                    '!tippek: kilistázza milyen tippek voltak eddig\n' +
-                    '!chad + emote: chad alakban mutatom az emote-ot\n' +
-                    '!virgin + emote: virgin alakban mutatom az emote-ot\n' +
-                    '!flex + emote + emote: chad vs virgin alakban mutatom az emote-okat\n' +
-                    '!mitcsinalsz: megkérdőjelezem, hogy tudod-e mit csinálsz\n' +
-                    '!nemtudom: miért nem lehet tudod? Csalódtam.\n' +
-                    '!medikiakad: prezentálim mi van akkor, ha MediMadi kiakad\n' +
-                    '"no bully" a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére. \n' +
-                    'Végül ha valamit 3-an beküldenek a channelre egymás után, akkor én is beszállok és megismétlem. \nTájékoztatót "!!help"-el kérhetsz, de ezt már úgy is tudod.');
+                let FieldsEmbed = new Pagination.FieldsEmbed()
+                .setArray([
+                    { Parancsok: '`!porn + "tematika":` Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n\n' +
+                            '`!votemute "tag":` (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n\n' +
+                            '`!votenick "nicknév" "tag:` nicknév helyére beírod a kívánt nevet, és tageled akinek a nevét meg akarod változtatni, ehhez 6 szavazat kell, hogy sikeres legyen.\n\n' +
+                            '`!praise + "emote" vagy "szöveg":` isteni magaslatba emelem azt amit megadtál\n\n' +
+                            '`!kivagy + "tag":` megmondja hogy te ki is vagy valójában. \n\n' +
+                            '`!kezelhetetlen:` ha valaki rosszul viselkedik, helyre teszem egy pofon giffel.\n\n' +
+                            '`!csicskawall:` kilistázom a csicska tanárokat\n\n' +
+                            '`!aranywall:` kilistázom aranyember tanárokat'},
+                    { Parancsok: '`!ametsu/!amecu:` ametsu kedvenc emote-jait küldöm be\n\n' +
+                            '`!geci + "valami":` meg dingi-dongizom\n\n' +
+                            '`!mock + "valami":` retard spongyabobként beszélek\n\n' +
+                            '`!kurai:` elküldöm karcsi által szeretett vicces reagálást\n\n' +
+                            '`!lotto "szám" "szám":` a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n\n' +
+                            '`!tippek:` kilistázza milyen tippek voltak eddig\n\n' +
+                            '`!pisti/!szepi/!inevitable:` pisti az elkerülhetetlen\n\n' +
+                            '`!medikiakad:` prezentálim mi van akkor, ha MediMadi kiakad'},
+                    { Parancsok: '`!chad + emote:` chad alakban mutatom az emote-ot\n\n' +
+                            '`!virgin + emote:` virgin alakban mutatom az emote-ot\n\n' +
+                            '`!flex + emote + emote:` chad vs virgin alakban mutatom az emote-okat\n\n' +
+                            '`!kurva:` Swarci ordít egyet\n\n' +
+                            '`!mitcsinalsz:` megkérdőjelezem, hogy tudod-e mit csinálsz\n\n' +
+                            '`!nemtudom:` miért nem lehet tudod? Csalódtam.\n\n' +
+                            '`!assemble:` UwU egyesülj!\n\n' +
+                            '`!uwu:` strong together'},
+                    { Parancsok: '`!uncool:` hát ez nem menő teso\n\n' +
+                            '`!springboot:` Oooo spring BOOT\n\n' +
+                            '`!vicci:` de vicci vagy\n\n' +
+                            '`!monke:` Return monke\n\n' +
+                            '`!rule:` A legfőbb szabály\n\n' +
+                            '`!alma:` The forbidden one\n\n' +
+                            '`!hess:` Na menj innen\n\n' +
+                            '`!hirling:` Mit csinál vajon javítás helyett?'},
+                    { Parancsok: '`!gay:` Teátrális buzi vagy\n\n' +
+                            '`!csokas:` Aki fasszopókás\n\n' +
+                            '`!micsinalsz:` Mégis mit csinálsz??\n\n' +
+                            '`!faszom:` oh bazdmeg még ez is van\n\n' +
+                            '`!sub + "teszttel rendelkező kurzus":` Feliratkozhatsz olyan ping csoportba, ahol ezt a tesztet töltik ki\n\n' +
+                            '`!unsub + "teszttel rendelkező kurzus":` Leiratkozol a pingekről\n\n' +
+                            '`!teszt + "kurzus":` Akik fel vannak iratkozva a kurzusra azokat megpingelem\n\n' +
+                            '`!risus + "channel név":` Tipik risusing csak te nem használhatod ezt'},
+                    { Parancsok: '`"bully"` a szövegben, akkor lespriccelem a másikat.\n\n' +
+                            '`"no bully"` a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére.\n\n' +
+                            '`Ha 3x beküldik ugyanazt, akkor megismétlem`\n\n' +
+                            '`baszadékra szopadékot írok, és fordítva`\n\n' +
+                            '`medishug-ra madishrugot küldök és fordítva`\n\n' +
+                            '`brc van a szövegben brc-t reactolok`\n\n' +
+                            '`maroti, maróti, dimat van a szövegben marótit reactolok`\n\n' +
+                            '`megcsap, nem mered, nem leszek-re is reactolok`'},
+                ])
+                .setAuthorizedUsers([msg.author.id])
+                .setChannel(msg.channel)
+                .setElementsPerPage(1)
+                .setPage(1)
+                .setPageIndicator(true)
+                .formatField('Parancsok', i => i.Parancsok)
+                .setTimeout(600000000)
+                .setDeleteOnTimeout(false)
+                .setFunctionEmojis({
+                    '🔄': (user, instance) => {
+                        const field = instance.embed.fields[0];
+
+                        if (field.name === 'Parancsok')
+                            field.name = 'Ninja egy fasszopó, Kuba meg a fasz';
+                        else
+                            field.name = 'Parancsok';
+                    }
+                })
+                .setEmojisFunctionAfterNavigation(false);
+
+                FieldsEmbed.embed
+                    .setColor(0xFF00AE)
+                    .setDescription('Nesztek itt vannak a parancsok pupákok');
+
+                await FieldsEmbed.build();
+                func.toDiscordMessage(client, msg, FieldsEmbed);
                 break;
             case 'kivagy':
                 let image;
@@ -342,7 +401,7 @@ client.on('message', async msg => {
                     let tip2 = parseInt(args[2]);
                     let tips = `${tip1} ${tip2}`;
 
-                    if (!isNaN(tip1) && !isNaN(tip2) && (0 < parseInt(tip1) && (parseInt(tip1) < 8) && (0 < parseInt(tip2)) && (parseInt(tip2) < 8))) {
+                    if (!isNaN(tip1) && !isNaN(tip2) && (0 < tip1) && (tip1 < 8) && (0 < tip2) && (tip2 < 8)) {
                         if (args[3] === undefined) {
                             let exist = await database.getLotto(author);
                             if (exist !== null) {
@@ -436,10 +495,6 @@ client.on('message', async msg => {
                         func.toDiscordMessage(client, msg, error.wrongTestPing());
                     }
                 }
-                break;
-            case 'nemtudom':
-                await msg.delete();
-                func.sendAttachment('./szerb/nemtudom.png', client, msg);
                 break;
             case 'risus':
                 await msg.delete();
@@ -656,9 +711,7 @@ client.on('message', async msg => {
                 if (channelId === '667783025811259448') {
                     func.toDiscordMessageChannel(client, channelId, sentence);
                 } else {
-                    func.toDiscordMessageChannel(client, channelId, sentence.slice(channel.length + 1)).catch(data => {
-                        console.log(data);
-                    });
+                    func.toDiscordMessageChannel(client, channelId, sentence.slice(channel.length + 1));
                 }
                 break;
 
@@ -739,12 +792,6 @@ client.on('message', async msg => {
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
         func.toDiscordMessage(client, msg, '<a:uwu_flotespanking:677984852963885075>');
     }
-
-    /*if (msg.content.toLowerCase().includes('nem tudom')
-        || msg.content.toLowerCase().includes('nemtudom')
-        || msg.content.toLowerCase().includes('nemtom')) {
-        func.sendAttachment('./szerb/nemtudom.png', client, msg);
-    }*/
 
     if (msg.content.toLocaleLowerCase().includes('nem mered')) {
         func.toDiscordMessage(client, msg, 'hang vaaaagy');
