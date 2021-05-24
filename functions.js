@@ -60,6 +60,101 @@ export default {
         }
     },
 
+    getCsicskawall: () => {
+        return '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
+            '      Bánhelyi Balázs\n' +
+            '      **BigBlueButton**\n' +
+            '      ***C s e n d e s  T i b o r***\n' +
+            '      Csókás Eszter\n' +
+            '      Gazdag-Tóth Boglárka Dr.\n' +
+            '      Gingl Zoltán\n' +
+            '      Hirling Dominik\n' +
+            '      Jász Judit\n' +
+            '      Katona Melinda\n' +
+            '      **Kulin Julia**\n' +
+            '      **Makan Gergely**\n' +
+            '      Márkus András\n' +
+            '      Pletl Szilveszter Dr.\n' +
+            '      Pluhár András\n' +
+            '      London András\n' +
+            '      Vida Ágnes\n' +
+            '└───── •✧✧✧✧✧✧✧✧✧✧• ─────┘';
+    },
+
+    getAranywall: () => {
+        return '┌──── •✧Wall Of Aranyember✧• ────┐\n' +
+            '      Antal Gábor\n' +
+            '      Balogh András\n' +
+            '      Cservenák Bence\n' +
+            '      Gazdag Zsolt\n' +
+            '      Győrffy Lajos\n' +
+            '      Heinc Emília\n' +
+            '      Kátai Kamilla\n' +
+            '      Kardos Péter\n' +
+            '      Kardos Péter Dr.\n' +
+            '      Fülöp Vanda\n' +
+            '      Keleti Márton\n' +
+            '      Kicsi András\n' +
+            '      Kunos Ádám\n' +
+            '      ***Maróti Miklós***\n' +
+            '      Szabó Tamás\n' +
+            '      Szabolcs Iván\n' +
+            '└────── •✧✧✧✧✧✧✧✧✧• ──────┘';
+    },
+
+    getCommands: () => {
+        return [
+            { Parancsok: '`!porn + "tematika":` Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n\n' +
+                    '`!votemute "tag":` (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n\n' +
+                    '`!votenick "nicknév" "tag:` nicknév helyére beírod a kívánt nevet, és tageled akinek a nevét meg akarod változtatni, ehhez 6 szavazat kell, hogy sikeres legyen.\n\n' +
+                    '`!praise + "emote" vagy "szöveg":` isteni magaslatba emelem azt amit megadtál\n\n' +
+                    '`!kivagy + "tag":` megmondja hogy te ki is vagy valójában. \n\n' +
+                    '`!kezelhetetlen:` ha valaki rosszul viselkedik, helyre teszem egy pofon giffel.\n\n' +
+                    '`!csicskawall:` kilistázom a csicska tanárokat\n\n' +
+                    '`!aranywall:` kilistázom aranyember tanárokat'},
+            { Parancsok: '`!ametsu/!amecu:` ametsu kedvenc emote-jait küldöm be\n\n' +
+                    '`!geci + "valami":` meg dingi-dongizom\n\n' +
+                    '`!mock + "valami":` retard spongyabobként beszélek\n\n' +
+                    '`!kurai:` elküldöm karcsi által szeretett vicces reagálást\n\n' +
+                    '`!lotto "szám" "szám":` a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n\n' +
+                    '`!tippek:` kilistázza milyen tippek voltak eddig\n\n' +
+                    '`!pisti/!szepi/!inevitable:` pisti az elkerülhetetlen\n\n' +
+                    '`!medikiakad:` prezentálim mi van akkor, ha MediMadi kiakad'},
+            { Parancsok: '`!chad + emote:` chad alakban mutatom az emote-ot\n\n' +
+                    '`!virgin + emote:` virgin alakban mutatom az emote-ot\n\n' +
+                    '`!flex + emote + emote:` chad vs virgin alakban mutatom az emote-okat\n\n' +
+                    '`!kurva:` Swarci ordít egyet\n\n' +
+                    '`!mitcsinalsz:` megkérdőjelezem, hogy tudod-e mit csinálsz\n\n' +
+                    '`!nemtudom:` miért nem lehet tudod? Csalódtam.\n\n' +
+                    '`!assemble:` UwU egyesülj!\n\n' +
+                    '`!uwu:` strong together'},
+            { Parancsok: '`!uncool:` hát ez nem menő teso\n\n' +
+                    '`!springboot:` Oooo spring BOOT\n\n' +
+                    '`!vicci:` de vicci vagy\n\n' +
+                    '`!monke:` Return monke\n\n' +
+                    '`!rule:` A legfőbb szabály\n\n' +
+                    '`!alma:` The forbidden one\n\n' +
+                    '`!hess:` Na menj innen\n\n' +
+                    '`!hirling:` Mit csinál vajon javítás helyett?'},
+            { Parancsok: '`!gay:` Teátrális buzi vagy\n\n' +
+                    '`!csokas:` Aki fasszopókás\n\n' +
+                    '`!micsinalsz:` Mégis mit csinálsz??\n\n' +
+                    '`!faszom:` oh bazdmeg még ez is van\n\n' +
+                    '`!sub + "teszttel rendelkező kurzus":` Feliratkozhatsz olyan ping csoportba, ahol ezt a tesztet töltik ki\n\n' +
+                    '`!unsub + "teszttel rendelkező kurzus":` Leiratkozol a pingekről\n\n' +
+                    '`!teszt + "kurzus":` Akik fel vannak iratkozva a kurzusra azokat megpingelem\n\n' +
+                    '`!risus + "channel név":` Tipik risusing csak te nem használhatod ezt'},
+            { Parancsok: '`"bully"` a szövegben, akkor lespriccelem a másikat.\n\n' +
+                    '`"no bully"` a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére.\n\n' +
+                    '`Ha 3x beküldik ugyanazt, akkor megismétlem`\n\n' +
+                    '`baszadékra szopadékot írok, és fordítva`\n\n' +
+                    '`medishug-ra madishrugot küldök és fordítva`\n\n' +
+                    '`brc van a szövegben brc-t reactolok`\n\n' +
+                    '`maroti, maróti, dimat van a szövegben marótit reactolok`\n\n' +
+                    '`megcsap, nem mered, nem leszek-re is reactolok`'},
+        ];
+    },
+
     checkIfSame: (array) => {
         if (array[0].author.bot || array[1].author.bot || array[2].author.bot) {
             return false;
