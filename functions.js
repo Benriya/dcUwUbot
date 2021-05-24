@@ -75,7 +75,6 @@ export default {
             '      **Makan Gergely**\n' +
             '      Márkus András\n' +
             '      Pletl Szilveszter Dr.\n' +
-            '      Pluhár András\n' +
             '      London András\n' +
             '      Vida Ágnes\n' +
             '└───── •✧✧✧✧✧✧✧✧✧✧• ─────┘';
