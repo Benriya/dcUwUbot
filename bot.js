@@ -186,6 +186,12 @@ client.on('message', async msg => {
             case 'alma':
                 func.sendAttachment('./szerb/alma.png', client, msg);
                 break;
+            case 'bullshit':
+                func.sendAttachment('./szerb/bullshit.mp4', client, msg);
+                break;
+            case 'punch':
+                func.sendAttachment('./szerb/punch.mov', client, msg);
+                break;
             case 'uwu':
                 func.sendAttachment('./szerb/uwu.gif', client, msg);
                 if (args[1] !== undefined && args[1] === "assemble") {
