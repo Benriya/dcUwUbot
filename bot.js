@@ -110,10 +110,9 @@ client.on('message', async msg => {
         await msg.reply('Pong!');
     }
 
-
-    func.cigNigCounter(msg.content.toLowerCase());
-
-
+    if (msg.content.toLowerCase() !== '!cignig') {
+        await func.cigNigCounter(msg.content.toLowerCase());
+    }
 
     if (msg.content.substring(0, 1) === '!') {
         let pornChannel = '667779656363278367';
