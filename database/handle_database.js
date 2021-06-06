@@ -5,90 +5,6 @@ const url = 'mongodb+srv://dawe:V5vSixleH7xS1SlM@uwuniverzum.cegga.mongodb.net/t
 //const dbo = db.db("mydb");
 
 export default {
-    characterCreate: (name, race, img, description, id, maxHp, regen, armor, defense, strength, intellect, agility, luck, gold) => {
-        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-            if (err) throw err;
-            let dbo = db.db("mydb");
-            let myobj = {name: name, description: description, img: img, race: race, id: id, hp: maxHp, maxHp: maxHp, regen: regen, armor: armor, defense: defense, strength: strength, intellect: intellect, agility: agility, luck: luck, gold: gold, experience: 0, level: 1, talent: 0, type: 'Player', timeout: 0};
-            dbo.collection("Characters").insertOne(myobj, function (err, res) {
-                if (err) throw err;
-                console.log("1 document inserted");
-                db.close();
-            });
-        });
-    },
-
-    listCharacter: (id) => {
-        return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-                if (err) throw err;
-                let dbo = db.db("mydb");
-                dbo.collection("Characters").findOne({id: id}, function (err, result) {
-                    if (err) throw err;
-                    db.close();
-                    resolve(result);
-                });
-            });
-        });
-    },
-
-    getEnemy: (query) => {
-        return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-                if (err) throw err;
-                let dbo = db.db("mydb");
-                dbo.collection("Characters").find(query).toArray(function (err, result) {
-                    if (err) throw err;
-                    db.close();
-                    resolve(result);
-                });
-            });
-        });
-    },
-
-    getMiscellaneous: (query) => {
-        return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-                if (err) throw err;
-                let dbo = db.db("mydb");
-                dbo.collection("Characters").findOne(query, function (err, result) {
-                    if (err) throw err;
-                    //console.log(result);
-                    db.close();
-                    resolve(result);
-                });
-            });
-        });
-    },
-
-    levelUpCharacter: (char, xp) => {
-        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, db) {
-            if (err) throw err;
-            let dbo = db.db("mydb");
-            let myQuery = { id: char.id };
-            let newValues = { $set: {level: char.level+1, hp: char.maxHp, maxHp: char.maxHp+20, armor: char.armor+50, talent: char.talent+3, experience: char.experience-xp } };
-            dbo.collection("Characters").updateOne(myQuery, newValues, function(err, res) {
-                if (err) throw err;
-                console.log('levelup');
-                db.close();
-            });
-        });
-    },
-
-    updateCharacter: (char, args) => {
-        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, db) {
-            if (err) throw err;
-            let dbo = db.db("mydb");
-            let myQuery = { id: char };
-            let newValues = { $set: args };
-            dbo.collection("Characters").updateOne(myQuery, newValues, function(err, res) {
-                if (err) throw err;
-                console.log('updateHero');
-                db.close();
-            });
-        });
-    },
-
     createLottoTip: (name, id, tipp) => {
         MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
             if (err) throw err;
@@ -208,5 +124,33 @@ export default {
             });
         });
     },
+
+    increaseCigNig: (type) => {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            let myQuery = { type: type };
+            let newValues = { $inc: {counter: 1} };
+            dbo.collection("CigNigList").updateOne(myQuery, newValues, function(err, res) {
+                if (err) throw err;
+                console.log('cignig: ' + type);
+                db.close();
+            });
+        });
+    },
+
+    getCigNig: () => {
+        return new Promise(function (resolve, reject) {
+            MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, function (err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                dbo.collection('CigNigList').find({find: 'CigNig'}).toArray(function (err, result) {
+                    if (err) throw err;
+                    db.close();
+                    resolve(result);
+                });
+            });
+        });
+    }
 
 };
