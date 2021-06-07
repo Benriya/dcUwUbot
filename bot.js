@@ -17,7 +17,7 @@ let cheater, pinger;
 let lottoChannelId = '779395227688501298';
 let deleteChannelId = '740536932303634473';
 let suwuliId = '706776570836156426';
-let kurzusok = ['mobilalk', 'webkert', 'nlp', 'infbizt', 'pythonprog'];
+let kurzusok = ['mobilalk', 'webkert', 'nlp', 'infbizt', 'pythonprog', 'kukacok'];
 
 const PORT = process.env.PORT || 4040;
 const server = http.createServer((req, res) => {
@@ -397,7 +397,7 @@ client.on('message', async msg => {
                 break;
             case 'sub':
                 pinger = await func.checkIfPingerSub(nickname, author);
-                if (messageChannel === suwuliId && nickname !== undefined && !pinger) {
+                if ((messageChannel === suwuliId || nickname.toLowerCase() === 'kukacok') && nickname !== undefined && !pinger) {
                     if (func.checkArrayIncludes(nickname, kurzusok)) {
                         database.subscribeForPing(nickname, author);
                         func.toDiscordMessage(client, msg, 'Feliratkozál teszt pingre: ' + nickname);
@@ -408,7 +408,7 @@ client.on('message', async msg => {
                 break;
             case 'unsub':
                 pinger = await func.checkIfPingerSub(nickname, author);
-                if (messageChannel === suwuliId && nickname !== undefined && pinger) {
+                if ((messageChannel === suwuliId || nickname.toLowerCase() === 'kukacok') && nickname !== undefined && pinger) {
                     if (func.checkArrayIncludes(nickname, kurzusok)) {
                         database.unsubscribeForPing(nickname, author);
                         func.toDiscordMessage(client, msg, 'Leiratkoztál teszt pingről: ' + nickname);
@@ -419,7 +419,7 @@ client.on('message', async msg => {
                 break;
             case 'teszt':
                 pinger = await func.checkIfPingerSub(nickname, author);
-                if (messageChannel === suwuliId && nickname !== undefined && pinger) {
+                if ((messageChannel === suwuliId || nickname.toLowerCase() === 'kukacok') && nickname !== undefined && pinger) {
                     if (func.checkArrayIncludes(nickname, kurzusok)) {
                         let pings = await func.getPingUsers(nickname);
                         func.toDiscordMessage(client, msg, pings);
