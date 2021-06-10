@@ -524,6 +524,10 @@ client.on('message', async msg => {
         }
     }
 
+    if (msg.content.toLowerCase() === 'morning' || msg.content.toLowerCase() === 'morning gang') {
+        func.toDiscordMessage(client, msg, 'Jó reggelt neked is <:tramy:742411354291568840>');
+    }
+
     if (author === '376439826549047296' && msg.content.toLowerCase() === 'tap') {
         func.sendAttachment('./szerb/ninjatap.png', client, msg);
     }
