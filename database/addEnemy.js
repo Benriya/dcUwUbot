@@ -1,7 +1,7 @@
 import pkg from 'mongodb';
 const { MongoClient } = pkg;
 
-const url = 'mongodb+srv://dawe:V5vSixleH7xS1SlM@uwuniverzum.cegga.mongodb.net/test';
+const url = process.env.MONGODB_URI;
 
 MongoClient.connect(url, function (err, db) {
     if (err) throw err;
