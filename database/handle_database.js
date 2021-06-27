@@ -1,6 +1,8 @@
 import pkg from 'mongodb';
-const { MongoClient } = pkg;
+import dotenv from 'dotenv'
+dotenv.config();
 
+const { MongoClient } = pkg;
 const url = process.env.MONGODB_URI;
 
 export default {
