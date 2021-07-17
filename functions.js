@@ -171,7 +171,11 @@ export default {
         if (array[0].author.bot || array[1].author.bot || array[2].author.bot) {
             return false;
         }
-        if (array[0].author !== array[1].author && array[1].author !== array[2].author && array[0].author !== array[2].author && array[0].content === array[1].content && array[1].content === array[2].content) {
+        if (array[0].author !== array[1].author &&
+            array[1].author !== array[2].author &&
+            array[0].author !== array[2].author &&
+            array[0].content === array[1].content &&
+            array[1].content === array[2].content) {
             return true;
         }
     },
@@ -206,7 +210,7 @@ export default {
             '**Worgen**: maxHp:90, regen:13, armor:10, def:5, str:3, int:1, agi:5, luck:3, gold:100'];
     },
 
-    getRaceStats: (race) =>{
+    getRaceStats: (race) => {
         let stats = [];
         switch (race) {
             case 'human':
@@ -276,12 +280,12 @@ export default {
     showStr:(attacker, enemy, scale, mage) => {
         let strength, intellect;
         if (mage) {
-            intellect = (attacker.intellect * 1.1) + attacker.intellect*0.1;
-            strength = (1*attacker.strength < 3*enemy.agility) ? 0 : (1*attacker.strength - 3*enemy.agility);
+            intellect = (attacker.intellect * 1.1) + attacker.intellect * 0.1;
+            strength = (1 * attacker.strength < 3 * enemy.agility) ? 0 : (1 * attacker.strength - 3 * enemy.agility);
         }
         if (!mage) {
             intellect = attacker.intellect;
-            strength = (2*attacker.strength < 3*enemy.agility) ? 0 : (2*((attacker.strength * scale) + attacker.strength*0.1) - 3*enemy.agility);
+            strength = (2 * attacker.strength < 3 * enemy.agility) ? 0 : (2 * ((attacker.strength * scale) + attacker.strength * 0.1) - 3 * enemy.agility);
         }
 
         let levelDiff = (enemy.level > attacker.level) ? 2*(enemy.level - attacker.level) : 0;

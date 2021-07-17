@@ -46,7 +46,7 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-setInterval(async () => {
+/*setInterval(async () => {
     let nowDate = new Date();
     if (nowDate.getMinutes() === 0 && nowDate.getHours() % 6 === 0) {
         func.toDiscordMessageChannel(client, lottoChannelId, '***Lotto***');
@@ -75,7 +75,7 @@ setInterval(async () => {
         await database.deleteLottoTips();
         func.toDiscordMessageChannel(client, lottoChannelId, 'Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
     }
-},60 * 1000);
+},60 * 1000);*/
 
 client.on('message', async msg => {
     if (msg === undefined) return;
