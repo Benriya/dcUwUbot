@@ -1,9 +1,6 @@
 import database from './database/handle_database.js';
 import Discord from 'discord.js';
 
-const niggArray = ['nigger', 'nigga', 'niga', 'néger', 'neger', 'négger', 'negger', 'niger', 'nig'];
-const ciggArray = ['cigány', 'cig', 'cigger', 'ciger', 'cigó', 'cigs', 'cigányok', 'gypsy', 'c tipus', 'kokero', 'kokeró'];
-
 function getLottoNumbers(array) {
     let returnArray = [];
     array.forEach((value, key, map) =>{
@@ -154,8 +151,7 @@ export default {
                     '`!teszt + "kurzus":` Akik fel vannak iratkozva a kurzusra azokat megpingelem\n\n' +
                     '`!risus + "channel név":` Tipik risusing csak te nem használhatod ezt'},
             { Parancsok: '`!bullshit:` Ez bikaszar\n\n' +
-                    '`!punch:` Megcsaplak\n\n' +
-                    '`!CigNig:` Statisztika, hogy a szerveren mennyi cigányozás és niggerezés volt.'},
+                    '`!punch:` Megcsaplak\n\n' },
             { Parancsok: '`"bully"` a szövegben, akkor lespriccelem a másikat.\n\n' +
                     '`"no bully"` a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére.\n\n' +
                     '`Ha 3x beküldik ugyanazt, akkor megismétlem`\n\n' +
@@ -436,15 +432,5 @@ export default {
     checkIfPingerSub: async (kurzus, author) => {
         let result = await database.getPinger(kurzus, author);
         return result !== null;
-    },
-
-    cigNigCounter(message) {
-      if (checkIfMessageContainsArrayElement(message, niggArray)) {
-          database.increaseCigNig('Nigger');
-      }  else if (checkIfMessageContainsArrayElement(message, ciggArray)) {
-          database.increaseCigNig('Cigger');
-      } else {
-          return false;
-      }
     },
 };

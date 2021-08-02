@@ -23,9 +23,9 @@ let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard'];
 //'expert', 'deathwish', 'usurper', 'mythical', 'godlike'
 let chestList = ['minor', 'small', 'normal', 'big', 'huge', 'gorgeous', 'giant', 'colossus', 'god'];
 let voters = [];
-let winningNumbers = [];
-let winners = [];
-let cheater, pinger;
+//let winningNumbers = [];
+//let winners = [];
+let pinger;
 let lottoChannelId = '779395227688501298';
 let deleteChannelId = '740536932303634473';
 let suwuliId = '706776570836156426';
@@ -35,7 +35,7 @@ const PORT = process.env.PORT || 4040;
 const server = http.createServer((req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
-    res.end('Szia Dawe');
+    res.end('Default view');
 });
 server.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
@@ -90,11 +90,6 @@ client.on('message', async msg => {
     let cmd = args[0];
     let attachment = (msg.attachments).array();
 
-    if (msg.content === '+farm') {
-        func.toDiscordMessage(client, msg,'nem használunk automatikus botokat, ejnye');
-        cheater = author;
-    }
-
     if (msg.attachments.size > 0) {
         func.toDiscordMessageChannel(client, '745317754256490567', `${attachment[0].proxyURL} id: ${attachment[0].id}`);
     }
@@ -120,10 +115,6 @@ client.on('message', async msg => {
 
     if (msg.content === 'ping') {
         await msg.reply('Pong!');
-    }
-
-    if (msg.content.toLowerCase() !== '!cignig') {
-        await func.cigNigCounter(msg.content.toLowerCase());
     }
 
     if (msg.content.substring(0, 1) === '!') {
@@ -365,14 +356,6 @@ client.on('message', async msg => {
                 } else {
                     func.toDiscordMessage(client, msg, error.wrongChannel());
                 }
-                break;
-            case 'cignig':
-                let total = await database.getCigNig();
-                func.toDiscordMessage(client, msg, '`Niggerezés:` ' + total[0].counter);
-                func.toDiscordMessage(client, msg, '`Cigányozás:` ' + total[1].counter);
-                let totalCigNig = total[0].counter + total[1].counter;
-                func.toDiscordMessage(client, msg, '`Összesen:` ' + totalCigNig);
-                console.log(total);
                 break;
             case 'votemute':
                 await msg.react('👍');
