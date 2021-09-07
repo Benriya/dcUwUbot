@@ -7,7 +7,7 @@ dotenv.config();
 import http from 'http';
 import PornSearch from 'pornsearch';
 import {song} from './songs.js';
-import func from './functions.js';
+import func from './functions.js';0
 import Discord from 'discord.js';
 import database from './database/handle_database.js';
 import fs from 'fs';
@@ -16,6 +16,7 @@ import Pagination from 'discord-paginationembed';
 import {Hero} from "./dungenowos/Hero.js";
 import {Monster} from "./dungenowos/Monster.js";
 import {Chest} from "./dungenowos/chest.js";
+import {getWeather} from "./weather.js"
 
 const question = JSON.parse(fs.readFileSync('./dungenowos/fight.json', 'utf8'));
 let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense']
@@ -28,6 +29,7 @@ let voters = [];
 let pinger;
 let lottoChannelId = '779395227688501298';
 let deleteChannelId = '740536932303634473';
+let weatherChannelId = '884880382095421550';
 let suwuliId = '706776570836156426';
 let kurzusok = ['mobilalk', 'webkert', 'nlp', 'infbizt', 'pythonprog', 'kukacok'];
 
@@ -76,6 +78,15 @@ client.on('ready', () => {
         func.toDiscordMessageChannel(client, lottoChannelId, 'Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
     }
 },60 * 1000);*/
+
+setInterval(async () => {
+    let nowDate = new Date();
+    if (nowDate.getMinutes() === 0 && nowDate.getHours() === 6) {
+        getWeather(function(weather) {
+            func.toDiscordMessageChannel(client, weatherChannelId, weather);
+        });
+    }
+},60 * 1000);
 
 client.on('message', async msg => {
     if (msg === undefined) return;

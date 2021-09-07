@@ -19,6 +19,7 @@
     "mysql": "^2.18.1",
     "pornsearch": "^2.4.3",
     "pouchdb": "^7.2.2",
+    "request": "^2.88.2",
     "winston": "^3.2.1"
   },
   "type": "module",
