@@ -7,7 +7,7 @@ dotenv.config();
 import http from 'http';
 import PornSearch from 'pornsearch';
 import {song} from './songs.js';
-import func from './functions.js';0
+import func from './functions.js';
 import Discord from 'discord.js';
 import database from './database/handle_database.js';
 import fs from 'fs';
@@ -16,7 +16,7 @@ import Pagination from 'discord-paginationembed';
 import {Hero} from "./dungenowos/Hero.js";
 import {Monster} from "./dungenowos/Monster.js";
 import {Chest} from "./dungenowos/chest.js";
-import {getWeather} from "./weather.js"
+import {getForecast} from "./weather.js"
 
 const question = JSON.parse(fs.readFileSync('./dungenowos/fight.json', 'utf8'));
 let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense']
@@ -82,8 +82,9 @@ client.on('ready', () => {
 setInterval(async () => {
     let nowDate = new Date();
     if (nowDate.getMinutes() === 0 && nowDate.getHours() === 6) {
-        getWeather(function(weather) {
-            func.toDiscordMessageChannel(client, weatherChannelId, weather);
+        getForecast(function(weather) {
+            func.toDiscordMessageChannel(client, weatherChannelId,
+                'Mai napi időjárás jelentésünk következik Szegedről:\n' + weather);
         });
     }
 },60 * 1000);
