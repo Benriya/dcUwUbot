@@ -16,7 +16,7 @@ import Pagination from 'discord-paginationembed';
 import {Hero} from "./dungenowos/Hero.js";
 import {Monster} from "./dungenowos/Monster.js";
 import {Chest} from "./dungenowos/chest.js";
-import {getForecast} from "./weather.js"
+import {getChart, getForecast} from "./weather.js"
 
 const question = JSON.parse(fs.readFileSync('./dungenowos/fight.json', 'utf8'));
 let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense']
@@ -85,6 +85,9 @@ setInterval(async () => {
         getForecast(function(weather) {
             func.toDiscordMessageChannel(client, weatherChannelId,
                 'Mai napi időjárás jelentésünk következik Szegedről:\n' + weather);
+        });
+        await getChart(function (chartUrl) {
+            func.toDiscordMessageChannel(client, weatherChannelId,`Chart: ${chartUrl}`);
         });
     }
 },60 * 1000);
