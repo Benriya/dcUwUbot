@@ -28,8 +28,8 @@ export function getForecast(fn) {
                                - Amilyennek érződik: ${weather.list[i].main.feels_like} ºC
                                - Páratartalom: ${weather.list[i].main.humidity}%
                                - Az ég: ${weather.list[i].weather[0].description}
-                               - Végül a szél ereje: ${weather.list[i].wind.speed}
-                               - és a széllökéseké: ${weather.list[i].wind.gust}\n\n`)
+                               - Végül a szél ereje: ${weather.list[i].wind.speed} km/h
+                               - és a széllökéseké: ${weather.list[i].wind.gust} km/h\n\n`)
         }
         fn(returnForecast);
     });
@@ -40,20 +40,63 @@ export function getChart(fn) {
         let dateArray = [];
         let temperatureArray = [];
         for (let i = 0; i <= 7; i++) {
-            dateArray.push(`${weather.list[i].dt_txt}`);
-            temperatureArray.push(`${weather.list[i].main.temp}`);
-                               /*- Hőmérséklet: ${weather.list[i].main.temp} ºC
-                               - Amilyennek érződik: ${weather.list[i].main.feels_like} ºC
-                               - Páratartalom: ${weather.list[i].main.humidity}%
-                               - Az ég: ${weather.list[i].weather[0].description}
-                               - Végül a szél ereje: ${weather.list[i].wind.speed}
-                               - és a széllökéseké: ${weather.list[i].wind.gust}\n\n`)*/
+            let weatherDate = weather.list[i].dt_txt;
+            dateArray.push(`${weatherDate.slice(10, 13)}`);
+            temperatureArray.push(`${Math.round(weather.list[i].main.temp)}`);
         }
+
         const chart = new QuickChart();
         chart
             .setConfig({
-                type: 'bar',
-                data: { labels: dateArray, datasets: [{ label: 'Hőmérséklet', data: temperatureArray }] },
+                type: 'line',
+                data: {
+                    labels: dateArray,
+                    datasets: [{ label: 'Hőmérséklet',
+                        fill: false,
+                        lineTension: 0.4,
+                        radius: 5,
+                        backgroundColor: ['rgb(255,52,52)'],
+                        borderColor: ['rgb(255,26,26)'],
+                        data: temperatureArray }]
+                },
+                options: {
+                    plugins: {
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            color: '#000000',
+                            font: {
+                                size: 40,
+                            },
+                            borderColor: 'rgb(0,0,0)',
+                            borderWidth: 1,
+                            borderRadius: 5,
+                        },
+                    },
+                    legend: {
+                        display: false,
+                    },
+                    scales: {
+                        yAxes: [
+                            {
+                                ticks: {
+                                    fontSize: 40,
+                                    fontFamily: 'Serif',
+                                    fontStyle: 'italic',
+                                },
+                            },
+                        ],
+                        xAxes: [
+                            {
+                                ticks: {
+                                    fontSize: 35,
+                                    fontFamily: 'Serif',
+                                    fontStyle: 'italic',
+                                },
+                            },
+                        ],
+                    },
+                },
             })
             .setWidth(1280)
             .setHeight(720);
