@@ -36,6 +36,7 @@ export function getForecast(fn) {
 }
 
 export function getChart(fn) {
+    let maximum = -10;
     getWeatherData(async function (weather) {
         let dateArray = [];
         let temperatureArray = [];
@@ -43,6 +44,7 @@ export function getChart(fn) {
             let weatherDate = weather.list[i].dt_txt;
             dateArray.push(`${weatherDate.slice(10, 13)}`);
             temperatureArray.push(`${Math.round(weather.list[i].main.temp)}`);
+            if (maximum < Math.round(weather.list[i].main.temp)) maximum = Math.round(weather.list[i].main.temp);
         }
 
         const chart = new QuickChart();
@@ -77,12 +79,16 @@ export function getChart(fn) {
                         display: false,
                     },
                     scales: {
+                        y: {
+
+                        },
                         yAxes: [
                             {
                                 ticks: {
                                     fontSize: 40,
                                     fontFamily: 'Serif',
                                     fontStyle: 'italic',
+                                    suggestedMax: maximum + 1
                                 },
                             },
                         ],
