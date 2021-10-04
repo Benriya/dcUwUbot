@@ -82,9 +82,13 @@ client.on('ready', () => {
 setInterval(async () => {
     let nowDate = new Date();
     if (nowDate.getMinutes() === 0 && nowDate.getHours() === 6) {
-        getForecast(function(weather) {
+        getForecast(function(weather, rain) {
             func.toDiscordMessageChannel(client, weatherChannelId,
                 'Mai napi időjárás jelentésünk következik Szegedről:\n' + weather);
+            if (rain === true) {
+                func.toDiscordMessageChannel(client, weatherChannelId,
+                    '**Mai nap folyamán eső várható**');
+            }
         });
         await getChart(function (chartUrl) {
             func.toDiscordMessageChannel(client, weatherChannelId,`Chart: ${chartUrl}`);
@@ -185,6 +189,9 @@ client.on('message', async msg => {
                 break;
             case 'monke':
                 func.sendAttachment('./szerb/monke.png', client, msg);
+                break;
+            case 'ugood':
+                func.sendAttachment('./szerb/ugood.jpg', client, msg);
                 break;
             case 'vicci':
                 func.sendAttachment('./szerb/vicci.jpg', client, msg);

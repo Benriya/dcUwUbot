@@ -22,16 +22,16 @@ function getWeatherData(fn) {
 export function getForecast(fn) {
     getWeatherData(function (weather) {
         let returnForecast = [];
-        for (let i = 0; i <= 6; i+=2) {
-            returnForecast.push(`${weather.list[i].dt_txt} időben a várható
-                               - Hőmérséklet: ${weather.list[i].main.temp} ºC
-                               - Amilyennek érződik: ${weather.list[i].main.feels_like} ºC
-                               - Páratartalom: ${weather.list[i].main.humidity}%
-                               - Az ég: ${weather.list[i].weather[0].description}
-                               - Végül a szél ereje: ${weather.list[i].wind.speed} km/h
-                               - és a széllökéseké: ${weather.list[i].wind.gust} km/h\n\n`)
+        let rainCast = ['09', '10', '11'];
+        let rain = false;
+        for (let i = 0; i <= 7; i++) {
+            returnForecast.push(`${weather.list[i].dt_txt.slice(10, 13)} órakkor:   
+                               - ${weather.list[i].weather[0].main}
+                               - ${weather.list[i].weather[0].description}\n\n`)
+
+            if (rainCast.includes(weather.list[i].weather[0].icon.slice(1, 2))) rain = true;
         }
-        fn(returnForecast);
+        fn(returnForecast, rain);
     });
 }
 
@@ -114,4 +114,11 @@ export function getChart(fn) {
     });
 
 }
+
+/*getWeatherData(function (weather) {
+    console.log(weather.list[0].sys);
+    console.log(weather.list[0].main);
+    console.log(weather.list[0].weather);
+    console.log(weather.list[0].clouds);
+});*/
 

@@ -151,7 +151,8 @@ export default {
                     '`!teszt + "kurzus":` Akik fel vannak iratkozva a kurzusra azokat megpingelem\n\n' +
                     '`!risus + "channel név":` Tipik risusing csak te nem használhatod ezt'},
             { Parancsok: '`!bullshit:` Ez bikaszar\n\n' +
-                    '`!punch:` Megcsaplak\n\n' },
+                    '`!punch:` Megcsaplak\n\n' +
+                    '`!ugood:` U good? no...'},
             { Parancsok: '`"bully"` a szövegben, akkor lespriccelem a másikat.\n\n' +
                     '`"no bully"` a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére.\n\n' +
                     '`Ha 3x beküldik ugyanazt, akkor megismétlem`\n\n' +
