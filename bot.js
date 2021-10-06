@@ -82,7 +82,7 @@ client.on('ready', () => {
 setInterval(async () => {
     let nowDate = new Date();
     if (nowDate.getMinutes() === 0 && nowDate.getHours() === 6) {
-        getForecast(function(weather, rain) {
+        await getForecast(function(weather, rain) {
             func.toDiscordMessageChannel(client, weatherChannelId,
                 'Mai napi időjárás jelentésünk következik Szegedről:\n' + weather);
             if (rain === true) {

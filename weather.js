@@ -22,14 +22,18 @@ function getWeatherData(fn) {
 export function getForecast(fn) {
     getWeatherData(function (weather) {
         let returnForecast = [];
-        let rainCast = ['09', '10', '11'];
         let rain = false;
-        for (let i = 0; i <= 7; i++) {
+        for (let i = 0; i <= 6; i+=2) {
             returnForecast.push(`${weather.list[i].dt_txt.slice(10, 13)} órakkor:   
-                               - ${weather.list[i].weather[0].main}
-                               - ${weather.list[i].weather[0].description}\n\n`)
+                               - Hőmérséklet: ${weather.list[i].main.temp} ºC
+                               - Amilyennek érződik: ${weather.list[i].main.feels_like} ºC
+                               - Páratartalom: ${weather.list[i].main.humidity}%
+                               - Az ég: ${weather.list[i].weather[0].description}
+                               - Végül a szél ereje: ${weather.list[i].wind.speed} km/h
+                               - és a széllökéseké: ${weather.list[i].wind.gust} km/h\n\n`)
 
-            if (rainCast.includes(weather.list[i].weather[0].icon.slice(1, 2))) rain = true;
+            if (weather.list[i].weather[0].description.includes('rain') ||
+                weather.list[i].weather[0].description.includes('storm')) rain = true;
         }
         fn(returnForecast, rain);
     });
