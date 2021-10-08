@@ -25,12 +25,12 @@ export function getForecast(fn) {
         let rain = false;
         for (let i = 0; i <= 6; i+=2) {
             returnForecast.push(`${weather.list[i].dt_txt.slice(10, 13)} órakkor:   
-                               - Hőmérséklet: ${weather.list[i].main.temp} ºC
-                               - Amilyennek érződik: ${weather.list[i].main.feels_like} ºC
-                               - Páratartalom: ${weather.list[i].main.humidity}%
-                               - Az ég: ${weather.list[i].weather[0].description}
-                               - Végül a szél ereje: ${weather.list[i].wind.speed} km/h
-                               - és a széllökéseké: ${weather.list[i].wind.gust} km/h\n\n`)
+                   - Hőmérséklet: ${weather.list[i].main.temp} ºC
+                   - Amilyennek érződik: ${weather.list[i].main.feels_like} ºC
+                   - Páratartalom: ${weather.list[i].main.humidity}%
+                   - Az ég: ${weather.list[i].weather[0].description}
+                   - Végül a szél ereje: ${weather.list[i].wind.speed} km/h
+                   - és a széllökéseké: ${weather.list[i].wind.gust} km/h\n\n`)
 
             if (weather.list[i].weather[0].description.includes('rain') ||
                 weather.list[i].weather[0].description.includes('storm')) rain = true;
