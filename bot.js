@@ -168,6 +168,10 @@ client.on('message', async msg => {
                 await msg.delete();
                 func.toDiscordMessage(client, msg, func.randomLongMessage(['<:monkayay:806119728359145512>', '<:harold:806119762764496949>', '<:sadcat:806119685145231391>'], Math.floor(Math.random() * 10 + 3)));
                 break;
+            case 'vonzalom':
+                await msg.delete();
+                func.toDiscordMessage(client, msg, func.randomLongMessage(['<:monkayay:806119728359145512>', '<:catblep:897797757539061780>', '<:kappa:897797802745270302>'], Math.floor(Math.random() * 10 + 3)));
+                break;
             case 'hess':
                 func.sendAttachment('./szerb/hess.gif', client, msg);
                 break;
