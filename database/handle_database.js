@@ -209,32 +209,4 @@ export default {
             });
         });
     },
-
-    increaseCigNig: (type) => {
-        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-            if (err) throw err;
-            let dbo = db.db("mydb");
-            let myQuery = { type: type };
-            let newValues = { $inc: {counter: 1} };
-            dbo.collection("CigNigList").updateOne(myQuery, newValues, function(err, res) {
-                if (err) throw err;
-                console.log('cignig: ' + type);
-                db.close();
-            });
-        });
-    },
-
-    getCigNig: () => {
-        return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true}, function (err, db) {
-                if (err) throw err;
-                let dbo = db.db("mydb");
-                dbo.collection('CigNigList').find({find: 'CigNig'}).toArray(function (err, result) {
-                    if (err) throw err;
-                    db.close();
-                    resolve(result);
-                });
-            });
-        });
-    },
 };

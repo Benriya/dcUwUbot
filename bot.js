@@ -418,35 +418,23 @@ client.on('message', async msg => {
                 break;
             case 'sub':
                 pinger = await func.checkIfPingerSub(nickname, author);
-                if ((messageChannel === suwuliId || nickname.toLowerCase() === 'kukacok') && nickname !== undefined && !pinger) {
-                    if (func.checkArrayIncludes(nickname, kurzusok)) {
+                if (messageChannel === suwuliId && nickname !== undefined && !pinger) {
                         database.subscribeForPing(nickname, author);
                         func.toDiscordMessage(client, msg, 'Feliratkozál teszt pingre: ' + nickname);
-                    } else {
-                        func.toDiscordMessage(client, msg, error.wrongTestPing());
-                    }
                 }
                 break;
             case 'unsub':
                 pinger = await func.checkIfPingerSub(nickname, author);
-                if ((messageChannel === suwuliId || nickname.toLowerCase() === 'kukacok') && nickname !== undefined && pinger) {
-                    if (func.checkArrayIncludes(nickname, kurzusok)) {
+                if (messageChannel === suwuliId && nickname !== undefined && pinger) {
                         database.unsubscribeForPing(nickname, author);
                         func.toDiscordMessage(client, msg, 'Leiratkoztál teszt pingről: ' + nickname);
-                    } else {
-                        func.toDiscordMessage(client, msg, error.wrongTestPing());
-                    }
                 }
                 break;
             case 'teszt':
                 pinger = await func.checkIfPingerSub(nickname, author);
-                if ((messageChannel === suwuliId || nickname.toLowerCase() === 'kukacok') && nickname !== undefined && pinger) {
-                    if (func.checkArrayIncludes(nickname, kurzusok)) {
+                if (messageChannel === suwuliId && nickname !== undefined && pinger) {
                         let pings = await func.getPingUsers(nickname);
                         func.toDiscordMessage(client, msg, pings);
-                    } else {
-                        func.toDiscordMessage(client, msg, error.wrongTestPing());
-                    }
                 }
                 break;
             case 'risus':
