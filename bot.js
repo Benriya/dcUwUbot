@@ -98,7 +98,9 @@ setInterval(async () => {
         });
     }
     if (func.rollTheDice()) {
-        func.toDiscordMessageChannel(client,func.drawOne(channels),'Dzsitt ' + func.drawOne(dzsitParticipants) + ' <:friedlaugh:886329158198759495>');
+        let channelNum = func.drawOne(channels);
+        let participant = func.drawOne(dzsitParticipants);
+        func.toDiscordMessageChannel(client, channels[channelNum],'Dzsitt ' + dzsitParticipants[participant] + ' <:friedlaugh:886329158198759495>');
     }
 
 },60 * 1000);
@@ -863,8 +865,6 @@ client.on('messageReactionAdd', async (reaction, user) => {
     } catch (e) {
      console.error(e);
     }
-
-    console.log(user);
 
     if (reaction.emoji.name === '📌'){
         await reaction.message.pin();
