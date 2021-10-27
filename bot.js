@@ -23,15 +23,18 @@ let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'd
 let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard'];
 //'expert', 'deathwish', 'usurper', 'mythical', 'godlike'
 let chestList = ['minor', 'small', 'normal', 'big', 'huge', 'gorgeous', 'giant', 'colossus', 'god'];
+let dzsitParticipants = ['<@251831600512368641>', '<@491660100990140436>', '<@518823389008232460>',
+                        '<@602525564217327637>', '<@279565175588388865>', '<@623899095224025088>',
+                        '<@614513037411352607>', '<@310497849274007553>'];
+let channels = ['671309309757358123', '667783025811259448', '839885997923237889', '706776570836156426'];
 let voters = [];
+
 //let winningNumbers = [];
 //let winners = [];
 let pinger;
 let lottoChannelId = '779395227688501298';
 let deleteChannelId = '740536932303634473';
 let weatherChannelId = '884880382095421550';
-let suwuliId = '706776570836156426';
-let kurzusok = ['mobilalk', 'webkert', 'nlp', 'infbizt', 'pythonprog', 'kukacok'];
 
 const PORT = process.env.PORT || 4040;
 const server = http.createServer((req, res) => {
@@ -94,6 +97,10 @@ setInterval(async () => {
             func.toDiscordMessageChannel(client, weatherChannelId,`Chart: ${chartUrl}`);
         });
     }
+    if (func.rollTheDice()) {
+        func.toDiscordMessageChannel(client,func.drawOne(channels),'Dzsitt ' + func.drawOne(dzsitParticipants) + ' <:friedlaugh:886329158198759495>');
+    }
+
 },60 * 1000);
 
 client.on('message', async msg => {
@@ -296,7 +303,7 @@ client.on('message', async msg => {
                     .setDescription('Nesztek itt vannak a parancsok pupákok');
 
                 await FieldsEmbed.build();
-                func.toDiscordMessage(client, msg, FieldsEmbed);
+                func.toDiscordMessage(client, msg, {embeds: [FieldsEmbed]});
                 break;
             case 'kivagy':
                 let image;
@@ -805,12 +812,12 @@ client.on('messageDelete', message => {
                         .setDescription(`${channel}`)
                         .addField('Message: ', messageContent, true)
                         .setTimestamp();
-                    func.toDiscordMessageChannel(client, deleteChannelId, pictureEmbed);
+                    func.toDiscordMessageChannel(client, deleteChannelId, {embeds: [pictureEmbed]});
                 }
             }
         }).catch(console.error);
     } else {
-        func.toDiscordMessageChannel(client, deleteChannelId, textEmbed);
+        func.toDiscordMessageChannel(client, deleteChannelId, {embeds: [textEmbed]});
     }
 });
 
@@ -859,14 +866,14 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
     if (reaction.emoji.name === '📌'){
         await reaction.message.pin();
-        const textEmbed = new Discord.MessageEmbed()
+        const textEmbedPin = new Discord.MessageEmbed()
             .setColor('#ff0015')
             .setTitle('Pinned Message')
             .setThumbnail(`${user.avatarURL()}`)
             .setAuthor(`${user.username}`)
             .addField('Message: ', reaction.message.url, true)
             .setTimestamp();
-        client.channels.cache.get(deleteChannelId).send(textEmbed);
+        func.toDiscordMessageChannel(client, deleteChannelId, {embeds: [textEmbedPin]});
     }
 });
 
@@ -909,7 +916,8 @@ function voteNickFilter(reaction, user) {
 <@602525564217327637> kurzi
 <@295485347138240513> swarci
 <@279565175588388865> karcsi
-<@310397550173880320> vazul
 <@239028474696826891> villanyos
 <@623899095224025088> medimadi
+<@614513037411352607> dontá
+<@310497849274007553> dawe
  */

@@ -30,7 +30,7 @@ function getEmbeds(hero) {
 }
 
 export default {
-    getChannel: (channel) => {
+    getChannel(channel) {
         switch (channel) {
             case 'lotto':
                 return '779395227688501298';
@@ -67,7 +67,7 @@ export default {
         }
     },
 
-    getCsicskawall: () => {
+    getCsicskawall() {
         return '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
             '      Bánhelyi Balázs\n' +
             '      **BigBlueButton**\n' +
@@ -78,6 +78,7 @@ export default {
             '      Hirling Dominik\n' +
             '      Jász Judit\n' +
             '      Katona Melinda\n' +
+            '      Kaposvári Dániel\n' +
             '      **Kulin Julia**\n' +
             '      **Makan Gergely**\n' +
             '      Márkus András\n' +
@@ -87,7 +88,7 @@ export default {
             '└───── •✧✧✧✧✧✧✧✧✧✧• ─────┘';
     },
 
-    getAranywall: () => {
+    getAranywall()  {
         return '┌──── •✧Wall Of Aranyember✧• ────┐\n' +
             '      Antal Gábor\n' +
             '      Balogh András\n' +
@@ -108,7 +109,7 @@ export default {
             '└────── •✧✧✧✧✧✧✧✧✧• ──────┘';
     },
 
-    getCommands: () => {
+    getCommands() {
         return [
             { Parancsok: '`!porn + "tematika":` Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n\n' +
                     '`!votemute "tag":` (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n\n' +
@@ -152,7 +153,8 @@ export default {
                     '`!risus + "channel név":` Tipik risusing csak te nem használhatod ezt'},
             { Parancsok: '`!bullshit:` Ez bikaszar\n\n' +
                     '`!punch:` Megcsaplak\n\n' +
-                    '`!ugood:` U good? no...'},
+                    '`!ugood:` U good? no...\n\n' +
+                    '`!vonzalom:` Cringe vonzalom emote-ok'},
             { Parancsok: '`"bully"` a szövegben, akkor lespriccelem a másikat.\n\n' +
                     '`"no bully"` a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére.\n\n' +
                     '`Ha 3x beküldik ugyanazt, akkor megismétlem`\n\n' +
@@ -164,7 +166,7 @@ export default {
         ];
     },
 
-    checkIfSame: (array) => {
+    checkIfSame(array) {
         if (array[0].author.bot || array[1].author.bot || array[2].author.bot) {
             return false;
         }
@@ -183,7 +185,7 @@ export default {
         });
     },
 
-    raceCheck: (message) => {
+    raceCheck(message) {
         let raceList = ['human', 'orc', 'goblin', 'dwarf', 'elf', 'troll', 'draenei', 'lizard', 'skeleton', 'satyr', 'gnome', 'worgen'];
         if (raceList.includes(message.toLowerCase())) {
             return message;
@@ -191,7 +193,7 @@ export default {
         return false;
     },
 
-    getRaceList: () => {
+    getRaceList()  {
         return [
             '**Human**: maxHp:70, regen:19, armor:10, def:5, str:3, int:3, agi:3, luck:3, gold:100',
             '**Orc**: maxHp:120, regen:4, armor:10, def:5, str:7, int:1, agi:3, luck:1, gold:100',
@@ -207,7 +209,7 @@ export default {
             '**Worgen**: maxHp:90, regen:13, armor:10, def:5, str:3, int:1, agi:5, luck:3, gold:100'];
     },
 
-    getRaceStats: (race) => {
+    getRaceStats(race) {
         let stats = [];
         switch (race) {
             case 'human':
@@ -250,7 +252,7 @@ export default {
         return stats;
     },
 
-    getEnemy: async (diff) => {
+    async getEnemy(diff) {
         let enemies = await database.getEnemy({diff: diff});
         return enemies[Math.floor(Math.random() * enemies.length)];
     },
@@ -258,7 +260,7 @@ export default {
         return database.listCharacter(id);
     },
 
-    getAllHero: async () => {
+    async getAllHero() {
         let returnArray = [];
         let heroes = await database.getEnemy({type: 'Player'});
         for (let i = 0; i < heroes.length; i++) {
@@ -274,7 +276,7 @@ export default {
         });
     },
 
-    showStr:(attacker, enemy, scale, mage) => {
+    showStr(attacker, enemy, scale, mage) {
         let strength, intellect;
         if (mage) {
             intellect = (attacker.intellect * 1.1) + attacker.intellect * 0.1;
@@ -304,7 +306,7 @@ export default {
         return [finalDmg, Math.floor(charMin), Math.floor(charMax+charMin)];
     },
 
-    getAdventures: () => {
+    getAdventures() {
         return [
             '**Critter**: lvl 1-3',
             '**Weak**: lvl 4-7',
@@ -319,7 +321,7 @@ export default {
         ]
     },
 
-    getChests: () => {
+    getChests() {
         return [
             'Gold, armor, xp:',
             '**Minor**: 200g',
@@ -335,7 +337,7 @@ export default {
         ]
     },
 
-    checkLevels: (level, experience) => {
+    checkLevels(level, experience) {
         let xp = 100;
         for (let i = 1; i <= 70; i++) {
             if (i === level) {
@@ -349,7 +351,7 @@ export default {
         return 0;
     },
 
-    setLottoNumbers: async (type = 'get') => {
+    async setLottoNumbers(type = 'get') {
         let returnArray = new Map();
         let lottok = await database.getLottoTips();
         if (type === 'get') {
@@ -367,7 +369,7 @@ export default {
 
     },
 
-    drawWinners: (array, winningNumbers) => {
+    drawWinners(array, winningNumbers) {
         let winners = [];
         array.forEach((value, key, map) =>{
             console.log(`m[${key}] = ${value}`);
@@ -380,12 +382,12 @@ export default {
         return winners;
     },
 
-    drawNumbers: () => {
+    drawNumbers() {
            // winningNumbers = [1, 1];
         return [Math.round(Math.random() * 6 + 1), Math.round(Math.random() * 6 + 1)];
     },
 
-    randomLongMessage: (array, random) => {
+    randomLongMessage(array, random) {
         let returnSzoveg = '';
 
         for (let i = 0; i < random; i++) {
@@ -394,7 +396,7 @@ export default {
         return returnSzoveg;
     },
 
-    retardinator: (sentence) => {
+    retardinator(sentence) {
         let splittedSentence = sentence.toLowerCase().split("");
         for (let i = 1; i < splittedSentence.length; i+=2) {
             splittedSentence[i] = splittedSentence[i].toUpperCase();
@@ -403,7 +405,7 @@ export default {
         return splittedSentence;
     },
 
-    sendAttachment: (image, client, msg) => {
+    sendAttachment(image, client, msg) {
         let attachment = new Discord.MessageAttachment(image);
         return client.channels.cache.get(msg.channel.id).send(attachment);
     },
@@ -416,11 +418,11 @@ export default {
         client.channels.cache.get(channelId).send(message);
     },
 
-    checkArrayIncludes: (message, params) => {
+    checkArrayIncludes(message, params) {
         return params.includes(message.toLowerCase());
     },
 
-    getPingUsers: async (nickname) => {
+    async getPingUsers(nickname) {
         let returnArray = [];
         let ping = await database.getAllSubscriber(nickname);
         for (let i = 0; i < ping.length; i++) {
@@ -430,8 +432,17 @@ export default {
         return returnArray;
     },
 
-    checkIfPingerSub: async (kurzus, author) => {
+    async checkIfPingerSub(kurzus, author) {
         let result = await database.getPinger(kurzus, author);
         return result !== null;
     },
+
+    rollTheDice() {
+        let dice = Math.floor(Math.random() * 100) + 1;
+        if (dice <= 5) return true;
+    },
+
+    drawOne(array) {
+        return Math.floor(Math.random() * array.length);
+    }
 };
