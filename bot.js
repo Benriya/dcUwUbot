@@ -772,55 +772,6 @@ client.on('message', async msg => {
     }
 });
 
-client.on('messageDelete', message => {
-    let channel = message.channel;
-    let messagePic = '';
-    let messageContent = '*none*';
-    if (message.cleanContent !== null) {
-        if (message.cleanContent.length > 0) {
-            messageContent = message.cleanContent;
-        }
-    }
-
-    const textEmbed = new Discord.MessageEmbed()
-        .setColor('#9b18bf')
-        .setTitle('Deleted Message')
-        .setThumbnail(`${message.author.avatarURL()}`)
-        .setAuthor(`${message.author.username}`)
-        .setDescription(`${channel}`)
-        .addField('Message: ', messageContent, true)
-        .setTimestamp();
-
-    let attachment = (message.attachments).array();
-    if (message.author.bot || message.channel.id === '704983142452428933' || message.channel.id === deleteChannelId) {
-
-    }
-
-    else if (message.attachments.size > 0) {
-        client.channels.cache.get("745317754256490567").messages.fetch({limit: 5}).then(messages => {
-            let lastMessages = messages.array();
-
-            for (let i = 0; i < lastMessages.length; i++) {
-                if(lastMessages[i].content.includes(attachment[0].id)) {
-                    messagePic = lastMessages[i].content.split(' ');
-                    const pictureEmbed = new Discord.MessageEmbed()
-                        .setColor('#9b18bf')
-                        .setTitle('Deleted Picture')
-                        .setThumbnail(`${message.author.avatarURL()}`)
-                        .setAuthor(`${message.author.username}`)
-                        .setImage(messagePic[0])
-                        .setDescription(`${channel}`)
-                        .addField('Message: ', messageContent, true)
-                        .setTimestamp();
-                    func.toDiscordMessageChannel(client, deleteChannelId, {embeds: [pictureEmbed]});
-                }
-            }
-        }).catch(console.error);
-    } else {
-        func.toDiscordMessageChannel(client, deleteChannelId, {embeds: [textEmbed]});
-    }
-});
-
 client.on('raw', packet => {
     // We don't want this to run on unrelated packets
     if (!['MESSAGE_REACTION_ADD', 'MESSAGE_REACTION_REMOVE'].includes(packet.t)) return;
@@ -846,6 +797,55 @@ client.on('raw', packet => {
     });
 });
 
+client.on('messageDelete', message => {
+    let channel = message.channel;
+    let messagePic = '';
+    let messageContent = '*none*';
+    if (message.cleanContent !== null) {
+        if (message.cleanContent.length > 0) {
+            messageContent = message.cleanContent;
+        }
+    } else {
+        return;
+    }
+
+    const textEmbed = new Discord.MessageEmbed()
+        .setColor('#9b18bf')
+        .setTitle('Deleted Message')
+        .setThumbnail(`${message.author.avatarURL()}`)
+        .setAuthor(`${message.author.username}`)
+        .setDescription(`${channel}`)
+        .addField('Message: ', messageContent, true)
+        .setTimestamp();
+
+    let attachment = (message.attachments).array();
+    if (message.author.bot || message.channel.id === '704983142452428933' || message.channel.id === deleteChannelId) {}
+
+    else if (message.attachments.size > 0) {
+        client.channels.cache.get("745317754256490567").messages.fetch({limit: 5}).then(messages => {
+            let lastMessages = messages.array();
+
+            for (let i = 0; i < lastMessages.length; i++) {
+                if(lastMessages[i].content.includes(attachment[0].id)) {
+                    messagePic = lastMessages[i].content.split(' ');
+                    const pictureEmbed = new Discord.MessageEmbed()
+                        .setColor('#9b18bf')
+                        .setTitle('Deleted Picture')
+                        .setThumbnail(`${message.author.avatarURL()}`)
+                        .setAuthor(`${message.author.username}`)
+                        .setImage(messagePic[0])
+                        .setDescription(`${channel}`)
+                        .addField('Message: ', messageContent, true)
+                        .setTimestamp();
+                    func.toDiscordMessageChannel(client, deleteChannelId, pictureEmbed);
+                }
+            }
+        }).catch(console.error);
+    } else {
+        func.toDiscordMessageChannel(client, deleteChannelId, textEmbed);
+    }
+});
+
 client.on('messageReactionAdd', async (reaction, user) => {
     try{
         if (reaction === undefined) {
@@ -864,6 +864,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
      console.error(e);
     }
 
+    console.log(user);
+
     if (reaction.emoji.name === '📌'){
         await reaction.message.pin();
         const textEmbedPin = new Discord.MessageEmbed()
@@ -873,7 +875,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
             .setAuthor(`${user.username}`)
             .addField('Message: ', reaction.message.url, true)
             .setTimestamp();
-        func.toDiscordMessageChannel(client, deleteChannelId, {embeds: [textEmbedPin]});
+        func.toDiscordMessageChannel(client, deleteChannelId, textEmbedPin);
     }
 });
 
