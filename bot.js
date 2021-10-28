@@ -150,7 +150,7 @@ client.on('message', async msg => {
         let sentence = msg.content.slice(5);
         let nickname = args[1];
 
-        console.log(cmd.toLocaleLowerCase());
+        console.log(Date() + ": " + cmd.toLocaleLowerCase());
 
         if(cmd.toLocaleLowerCase() !== 'kivagy' && cmd.toLocaleLowerCase() !== 'votenick' && cmd.toLocaleLowerCase() !== 'votemute') {
             if (sentence !== undefined) {
