@@ -452,6 +452,10 @@ client.on('message', async msg => {
                     func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${func.getChannel(args[1])}>`);
                 }
                 break;
+            case 'aztakurva':
+                await msg.delete();
+                func.toDiscordMessage(client, msg, "<:react:905522849014485093> 📢  🇦🇿🇹🇦 🇰🇺🇷🇻🇦");
+
         }
     }
 
