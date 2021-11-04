@@ -184,6 +184,9 @@ client.on('message', async msg => {
             case 'hess':
                 func.sendAttachment('./szerb/hess.gif', client, msg);
                 break;
+            case 'akurva':
+                func.sendAttachment('./szerb/akurva.mp4', client, msg);
+                break;
             case 'rule':
                 func.sendAttachment('./rule.png', client, msg);
                 break;

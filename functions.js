@@ -154,7 +154,9 @@ export default {
             { Parancsok: '`!bullshit:` Ez bikaszar\n\n' +
                     '`!punch:` Megcsaplak\n\n' +
                     '`!ugood:` U good? no...\n\n' +
-                    '`!vonzalom:` Cringe vonzalom emote-ok'},
+                    '`!vonzalom:` Cringe vonzalom emote-ok\n\n' +
+                    '`!aztakurva:` Tamás aztakurva aranyköpése\n\n' +
+                    '`!akurva:` A kurva anyád\n\n'},
             { Parancsok: '`"bully"` a szövegben, akkor lespriccelem a másikat.\n\n' +
                     '`"no bully"` a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére.\n\n' +
                     '`Ha 3x beküldik ugyanazt, akkor megismétlem`\n\n' +
