@@ -97,7 +97,7 @@ setInterval(async () => {
             func.toDiscordMessageChannel(client, weatherChannelId,`Chart: ${chartUrl}`);
         });
     }
-    if (func.rollTheDice() && nowDate.getMinutes() === 0) {
+    if (func.rollTheDice(5) && nowDate.getMinutes() === 0) {
         let channelNum = func.drawOne(channels);
         let participant = func.drawOne(dzsitParticipants);
         func.toDiscordMessageChannel(client, channels[channelNum],'Dzsitt ' + dzsitParticipants[participant] + ' <:friedlaugh:886329158198759495>');
@@ -717,7 +717,8 @@ client.on('message', async msg => {
     }
 
     if (msg.content.toLowerCase() === 'morning' || msg.content.toLowerCase() === 'morning gang') {
-        func.toDiscordMessage(client, msg, 'Jó reggelt neked is <:tramy:742411354291568840>');
+        let answer = func.rollTheDice(20) ? 'Jó reggelt a faszom <:cuckruce:905801596238200852>' : 'Jó reggelt neked is <:pepeBlush:814526168468160532>';
+        func.toDiscordMessage(client, msg, answer);
     }
 
     if (author === '376439826549047296' && msg.content.toLowerCase() === 'tap') {

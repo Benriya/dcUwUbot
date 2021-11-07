@@ -439,9 +439,9 @@ export default {
         return result !== null;
     },
 
-    rollTheDice() {
+    rollTheDice(luck) {
         let dice = Math.floor(Math.random() * 100) + 1;
-        if (dice <= 5) return true;
+        if (dice <= luck) return true;
     },
 
     drawOne(array) {
