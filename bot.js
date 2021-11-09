@@ -731,9 +731,9 @@ client.on('message', async msg => {
         func.toDiscordMessage(client, msg, 'Baszadék');
     }
 
-    if (msg.content.toLowerCase() === '<:medishrug:788463541107163137>') {
+    if (msg.content.toLowerCase().includes('medishrug')) {
         func.toDiscordMessage(client, msg, '<:madishrug:788328467485032458>');
-    } else if (msg.content.toLowerCase() === '<:madishrug:788463507082575893>') {
+    } else if (msg.content.toLowerCase().includes('madishrug')) {
         func.toDiscordMessage(client, msg, '<:medishrug:788328451550871552>');
     }
 
@@ -747,7 +747,7 @@ client.on('message', async msg => {
     }
 
     if (msg.content.toLowerCase().includes('brc')) {
-        await msg.react('767665863649787924');
+        await msg.react('907560400722231328');
     }
 
     if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
