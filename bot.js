@@ -25,7 +25,7 @@ let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard'];
 let chestList = ['minor', 'small', 'normal', 'big', 'huge', 'gorgeous', 'giant', 'colossus', 'god'];
 let dzsitParticipants = ['<@251831600512368641>', '<@491660100990140436>', '<@518823389008232460>',
                         '<@602525564217327637>', '<@279565175588388865>', '<@623899095224025088>',
-                        '<@614513037411352607>', '<@310497849274007553>'];
+                        '<@310497849274007553>', '<@295485347138240513>'];
 let channels = ['671309309757358123', '667783025811259448', '839885997923237889', '706776570836156426'];
 let voters = [];
 
@@ -97,7 +97,7 @@ setInterval(async () => {
             func.toDiscordMessageChannel(client, weatherChannelId,`Chart: ${chartUrl}`);
         });
     }
-    if (func.rollTheDice(5) && nowDate.getMinutes() === 0) {
+    if (func.rollTheDice(4) && nowDate.getMinutes() === 0) {
         let channelNum = func.drawOne(channels);
         let participant = func.drawOne(dzsitParticipants);
         func.toDiscordMessageChannel(client, channels[channelNum],'Dzsitt ' + dzsitParticipants[participant] + ' <:friedlaugh:886329158198759495>');
