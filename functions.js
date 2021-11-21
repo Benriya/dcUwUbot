@@ -1,5 +1,6 @@
 import database from './database/handle_database.js';
 import Discord from 'discord.js';
+import Canvas from "canvas";
 
 function getLottoNumbers(array) {
     let returnArray = [];
@@ -18,7 +19,6 @@ function checkIfMessageContainsArrayElement(message, array) {
     }
 }
 
-
 function getEmbeds(hero) {
     return new Discord.MessageEmbed()
         .setColor('#2a5fff')
@@ -27,6 +27,10 @@ function getEmbeds(hero) {
             `${hero.race}`, true)
         .addField('Leírás: ',
             `*${hero.description}*`, true);
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
 }
 
 export default {
@@ -446,5 +450,21 @@ export default {
 
     drawOne(array) {
         return Math.floor(Math.random() * array.length);
-    }
+    },
+
+    async texasKingsMeme (string) {
+        string = replaceAll(string, ' ', '\n');
+        //string = string.replaceAll(' ', '\n');
+        const canvas = Canvas.createCanvas(500, 600);
+        const context = canvas.getContext('2d');
+        const img = await Canvas.loadImage('memes/wallpaper.jpeg');
+
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        context.font = '25px sans-serif';
+        context.fillStyle = '#000000';
+        context.fillText(string, canvas.width / 2.7, canvas.height / 8);
+
+        return canvas.toBuffer();
+    },
+
 };

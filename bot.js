@@ -8,7 +8,7 @@ import http from 'http';
 import PornSearch from 'pornsearch';
 import {song} from './songs.js';
 import func from './functions.js';
-import Discord from 'discord.js';
+import Discord, {MessageAttachment} from 'discord.js';
 import database from './database/handle_database.js';
 import fs from 'fs';
 import { Errors } from './Throws/errors.js';
@@ -17,6 +17,7 @@ import {Hero} from "./dungenowos/Hero.js";
 import {Monster} from "./dungenowos/Monster.js";
 import {Chest} from "./dungenowos/chest.js";
 import {getChart, getForecast} from "./weather.js"
+import Canvas from "canvas";
 
 const question = JSON.parse(fs.readFileSync('./dungenowos/fight.json', 'utf8'));
 let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense']
@@ -165,6 +166,13 @@ client.on('message', async msg => {
             }
         }
         switch (cmd.toLocaleLowerCase()) {
+            case 'mem':
+                const picture = func.texasKingsMeme(sentence);
+
+                const attachment = new MessageAttachment(await picture, 'memes/profile-image.png');
+
+                func.sendAttachment(attachment.attachment, client, msg);
+                break;
             case 'praise':
                 func.toDiscordMessage(client, msg, nickname + '<:head:767421798786138154>\n' + '<:hand:767421873360601168>' + '<:face:767421929366749184>');
                 break;
