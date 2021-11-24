@@ -95,6 +95,11 @@ export class Errors {
         return this.getReply(this.message);
     }
 
+    noSuchMeme() {
+        this.message = 'Nincs ilyen meme template! (texas, peter)';
+        return this.getReply(this.message);
+    }
+
     wrongTestPing() {
         this.message = 'Teszttel rendelkező kurzust adj meg!';
         return this.getReply(this.message);

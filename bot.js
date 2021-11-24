@@ -29,7 +29,11 @@ let dzsitParticipants = ['<@251831600512368641>', '<@491660100990140436>', '<@51
                         '<@310497849274007553>', '<@295485347138240513>'];
 let channels = ['671309309757358123', '667783025811259448', '839885997923237889', '706776570836156426'];
 let voters = [];
-
+const memes = { texas: {x:500, y:600, color:'#000000', Cx: 185, Cy: 70, stroke: '#ffffff',
+                        font: '25px sans-serif', link:'memes/texas.jpeg', special: true},
+                peter: {x:600, y:500, color:'#ffffff', Cx: 150, Cy: 230, stroke: '#000000',
+                        font: '25px sans-serif', link:'memes/peter.png', special: false}
+                }
 //let winningNumbers = [];
 //let winners = [];
 let pinger;
@@ -167,7 +171,17 @@ client.on('message', async msg => {
         }
         switch (cmd.toLocaleLowerCase()) {
             case 'mem':
-                const picture = func.texasKingsMeme(sentence);
+                let memeName;
+                if (func.isSimilar(nickname, 'texas') > 0.6) {
+                    memeName = memes.texas;
+                } else if (func.isSimilar(nickname, 'peter') > 0.6) {
+                    memeName = memes.peter;
+                } else {
+                    func.toDiscordMessage(client, msg,error.noSuchMeme());
+                    return
+                }
+                sentence = sentence.replace(nickname, '');
+                const picture = func.memeChoose(sentence, memeName);
 
                 const attachment = new MessageAttachment(await picture, 'memes/profile-image.png');
 
@@ -724,18 +738,14 @@ client.on('message', async msg => {
         }
     }
 
-    if (msg.content.toLowerCase() === 'morning' || msg.content.toLowerCase() === 'morning gang') {
+    if (func.isSimilar(msg.content.toLowerCase(), 'morning gang') > 0.7) {
         let answer = func.rollTheDice(20) ? 'Jó reggelt a faszom <:cuckruce:905801596238200852>' : 'Jó reggelt neked is <:pepeBlush:814526168468160532>';
         func.toDiscordMessage(client, msg, answer);
     }
 
-    if (author === '376439826549047296' && msg.content.toLowerCase() === 'tap') {
-        func.sendAttachment('./szerb/ninjatap.png', client, msg);
-    }
-
-    if (msg.content.toLowerCase() === 'baszadék') {
+    if (func.isSimilar(msg.content.toLowerCase(), 'baszadék') > 0.7) {
         func.toDiscordMessage(client, msg, 'Szopadék');
-    } else if (msg.content.toLowerCase() === 'szopadék') {
+    } else if (func.isSimilar(msg.content.toLowerCase(), 'szopadék') > 0.7) {
         func.toDiscordMessage(client, msg, 'Baszadék');
     }
 
@@ -758,11 +768,11 @@ client.on('message', async msg => {
         await msg.react('907560400722231328');
     }
 
-    if (msg.content.toLowerCase().includes('megcsap') || msg.content.toLowerCase().includes('paskol')) {
+    if (func.isSimilar(msg.content.toLowerCase(), 'megcsap') > 0.8) {
         func.toDiscordMessage(client, msg, '<a:uwu_flotespanking:677984852963885075>');
     }
 
-    if (msg.content.toLocaleLowerCase().includes('nem mered')) {
+    if (func.isSimilar(msg.content.toLowerCase(), 'nem mered') > 0.7) {
         func.toDiscordMessage(client, msg, 'hang vaaaagy');
     }
 
@@ -775,10 +785,6 @@ client.on('message', async msg => {
         if (randomNumber === 4) {
             func.toDiscordMessage(client, msg, '"k" legalább csináld rendesen');
         }
-    }
-
-    if (msg.content.toLocaleLowerCase().includes('bully')) {
-        func.toDiscordMessage(client, msg, '<:SprayBottle:836572356004282418>');
     }
 
     try {

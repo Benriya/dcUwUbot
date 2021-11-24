@@ -1,6 +1,7 @@
 import database from './database/handle_database.js';
 import Discord from 'discord.js';
 import Canvas from "canvas";
+import stringSimilarity from "string-similarity";
 
 function getLottoNumbers(array) {
     let returnArray = [];
@@ -452,19 +453,25 @@ export default {
         return Math.floor(Math.random() * array.length);
     },
 
-    async texasKingsMeme (string) {
-        string = replaceAll(string, ' ', '\n');
-        //string = string.replaceAll(' ', '\n');
-        const canvas = Canvas.createCanvas(500, 600);
+    async memeChoose(sentence, memeName) {
+        if (memeName.special) sentence = replaceAll(sentence, ' ', '\n');
+        const canvas = Canvas.createCanvas(memeName.x, memeName.y);
         const context = canvas.getContext('2d');
-        const img = await Canvas.loadImage('memes/wallpaper.jpeg');
+        const img = await Canvas.loadImage(memeName.link);
 
         context.drawImage(img, 0, 0, canvas.width, canvas.height);
-        context.font = '25px sans-serif';
-        context.fillStyle = '#000000';
-        context.fillText(string, canvas.width / 2.7, canvas.height / 8);
+        context.font = memeName.font;
+        context.strokeStyle = memeName.stroke;
+        context.lineWidth = 4;
+        context.strokeText(sentence, memeName.Cx, memeName.Cy);
+        context.fillStyle = memeName.color;
+        context.fillText(sentence, memeName.Cx, memeName.Cy);
 
         return canvas.toBuffer();
     },
+
+    isSimilar(input, expected) {
+        return stringSimilarity.compareTwoStrings(input, expected);
+    }
 
 };

@@ -23,6 +23,7 @@
     "pouchdb": "^7.2.2",
     "quickchart-js": "^1.4.1",
     "request": "^2.88.2",
+    "string-similarity": "^4.0.4",
     "winston": "^3.2.1"
   },
   "type": "module",
