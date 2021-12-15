@@ -787,6 +787,10 @@ client.on('message', async msg => {
         }
     }
 
+    if (func.isSimilar(msg.content.toLowerCase(), 'u u uá uá') > 0.7) {
+        func.toDiscordMessage(client, msg, '<a:spongebob_dansen:920612079751294986>');
+    }
+
     try {
         if (firstMention.user.username === 'Pearly') {
             func.toDiscordMessage(client, msg, 'Szeretnél valamit?');
