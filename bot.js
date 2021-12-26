@@ -102,7 +102,7 @@ setInterval(async () => {
             func.toDiscordMessageChannel(client, weatherChannelId,`Chart: ${chartUrl}`);
         });
     }
-    if (func.rollTheDice(4) && nowDate.getMinutes() === 0) {
+    if (func.rollTheDice(2) && nowDate.getMinutes() === 0) {
         let channelNum = func.drawOne(channels);
         let participant = func.drawOne(dzsitParticipants);
         func.toDiscordMessageChannel(client, channels[channelNum],'Dzsitt ' + dzsitParticipants[participant] + ' <:friedlaugh:886329158198759495>');
