@@ -917,7 +917,7 @@ function voteMuteFilter(reaction, user) {
     }else {
         console.log(reaction.emoji.name);
     }
-    if (voters.length === 4) {
+    if (voters.length === 3) {
         voters = [];
         return true;
     }
@@ -930,7 +930,7 @@ function voteNickFilter(reaction, user) {
             console.log('pushed');
         }
     }
-    if (voters.length === 5) {
+    if (voters.length === 4) {
         voters = [];
         return true;
     }

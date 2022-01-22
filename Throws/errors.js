@@ -100,8 +100,4 @@ export class Errors {
         return this.getReply(this.message);
     }
 
-    wrongTestPing() {
-        this.message = 'Teszttel rendelkező kurzust adj meg!';
-        return this.getReply(this.message);
-    }
 }
