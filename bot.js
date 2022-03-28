@@ -17,29 +17,28 @@ import {Hero} from "./dungenowos/Hero.js";
 import {Monster} from "./dungenowos/Monster.js";
 import {Chest} from "./dungenowos/chest.js";
 import {getChart, getForecast} from "./weather.js"
-import Canvas from "canvas";
 
 const question = JSON.parse(fs.readFileSync('./dungenowos/fight.json', 'utf8'));
-let statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense']
-let adventureList = ['critter', 'weak', 'easy', 'normal', 'hard'];
+const statList = ['strength', 'intellect', 'agility', 'luck', 'maxhp', 'regen', 'defense']
+const adventureList = ['critter', 'weak', 'easy', 'normal', 'hard'];
 //'expert', 'deathwish', 'usurper', 'mythical', 'godlike'
-let chestList = ['minor', 'small', 'normal', 'big', 'huge', 'gorgeous', 'giant', 'colossus', 'god'];
-let dzsitParticipants = ['<@251831600512368641>', '<@491660100990140436>', '<@518823389008232460>',
+const chestList = ['minor', 'small', 'normal', 'big', 'huge', 'gorgeous', 'giant', 'colossus', 'god'];
+const dzsitParticipants = ['<@251831600512368641>', '<@491660100990140436>', '<@518823389008232460>',
                         '<@602525564217327637>', '<@279565175588388865>', '<@623899095224025088>',
                         '<@310497849274007553>', '<@295485347138240513>'];
-let channels = ['671309309757358123', '667783025811259448', '839885997923237889', '706776570836156426'];
+const dzsittChannels = ['671309309757358123', '667783025811259448', '839885997923237889', '706776570836156426'];
+const noSpamChannels = ['813842740210958446', '841654691225010206', '846424723131072530', '902900685417373737'];
+const listCheck = ['Kys', 'Flote kussolj', 'Jo reggelt faszom', 'Szakdoge mizu', 'Zv mizu', 'Swarci old', 'geci szerb', 'Nem dolgoztam ma', 'Flote mosogatógép szerelő'];
 let voters = [];
 const memes = { texas: {x:500, y:600, color:'#000000', Cx: 185, Cy: 70, stroke: '#ffffff',
                         font: '25px sans-serif', link:'memes/texas.jpeg', special: true},
                 peter: {x:600, y:500, color:'#ffffff', Cx: 150, Cy: 230, stroke: '#000000',
                         font: '25px sans-serif', link:'memes/peter.png', special: false}
                 }
-//let winningNumbers = [];
-//let winners = [];
 let pinger;
-let lottoChannelId = '779395227688501298';
-let deleteChannelId = '740536932303634473';
-let weatherChannelId = '884880382095421550';
+const lottoChannelId = '779395227688501298';
+const deleteChannelId = '740536932303634473';
+const weatherChannelId = '884880382095421550';
 
 const PORT = process.env.PORT || 4040;
 const server = http.createServer((req, res) => {
@@ -56,40 +55,10 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-/*setInterval(async () => {
-    let nowDate = new Date();
-    if (nowDate.getMinutes() === 0 && nowDate.getHours() % 6 === 0) {
-        func.toDiscordMessageChannel(client, lottoChannelId, '***Lotto***');
-        let checkNumbers = await func.setLottoNumbers();
-        let getNumbers = await func.setLottoNumbers('draw');
-        func.toDiscordMessageChannel(client, lottoChannelId, checkNumbers);
-        winningNumbers = func.drawNumbers();
-        func.toDiscordMessageChannel(client, lottoChannelId, 'Nyertes számok: ' + winningNumbers);
-        winners = func.drawWinners(getNumbers, winningNumbers);
-
-        const list = client.guilds.cache.get("661569830469632007");
-        let nyertes = list.roles.cache.get('779370085487083520');
-        list.members.cache.array().forEach(member => {
-            if (member.roles.cache.has('779370085487083520')) {
-                member.roles.remove('779370085487083520');
-            }
-            for (let i = 0; i < client.users.cache.array().length; i++) {
-                if (member.user.username === winners[i]) {
-                    member.roles.add(nyertes);
-                    func.toDiscordMessageChannel(client, lottoChannelId, 'Nyertes: ' + '<@' + member.user.id + '>');
-                }
-            }
-        });
-        winners = [];
-        winningNumbers = [];
-        await database.deleteLottoTips();
-        func.toDiscordMessageChannel(client, lottoChannelId, 'Új hét indult az uwuLottón, tegyétek meg szavazataitokat 🙂');
-    }
-},60 * 1000);*/
-
 setInterval(async () => {
     let nowDate = new Date();
     if (nowDate.getMinutes() === 0 && nowDate.getHours() === 6) {
+        database.resetList();
         await getForecast(function(weather, rain) {
             func.toDiscordMessageChannel(client, weatherChannelId,
                 'Mai napi időjárás jelentésünk következik Szegedről:\n' + weather);
@@ -103,9 +72,9 @@ setInterval(async () => {
         });
     }
     if (func.rollTheDice(2) && nowDate.getMinutes() === 0) {
-        let channelNum = func.drawOne(channels);
+        let channelNum = func.drawOne(dzsittChannels);
         let participant = func.drawOne(dzsitParticipants);
-        func.toDiscordMessageChannel(client, channels[channelNum],'Dzsitt ' + dzsitParticipants[participant] + ' <:friedlaugh:886329158198759495>');
+        func.toDiscordMessageChannel(client, dzsittChannels[channelNum],'Dzsitt ' + dzsitParticipants[participant] + ' <:friedlaugh:886329158198759495>');
     }
 
 },60 * 1000);
@@ -127,14 +96,24 @@ client.on('message', async msg => {
         func.toDiscordMessageChannel(client, '745317754256490567', `${attachment[0].proxyURL} id: ${attachment[0].id}`);
     }
 
-    if ((messageChannel === '813842740210958446' ||
-        messageChannel === '841654691225010206' ||
-        messageChannel === '846424723131072530')
-        && msg.attachments.size === 0) {
+    if (noSpamChannels.includes(messageChannel) && msg.attachments.size === 0) {
         await msg.delete();
         return;
     }
-
+    /***
+     *  TODO kivinni functionsbe
+     */
+    msg.channel.messages.fetch({limit: 1}).then(async message => {
+        const msgContent = message.first().content;
+        for (let expected in listCheck) {
+            if (func.isSimilar(msgContent, listCheck[expected]) >= 0.5) {
+                await database.updateList(listCheck[expected]);
+            }
+        }
+    })
+    /***
+     *  TODO kivinni functionsbe
+     */
     msg.channel.messages.fetch({limit: 3}).then(messages => {
         let lastMessage = messages.first();
         let lastMessages = messages.array();
@@ -279,26 +258,28 @@ client.on('message', async msg => {
                 await msg.delete();
                 func.sendAttachment('./szerb/nemtudom.png', client, msg);
                 break;
+            /***
+             *  TODO kivinni functionsbe
+             */
+            case 'list':
+                await msg.delete();
+                let listSend = '';
+                const checkList = await database.getList();
+                for (let data in checkList) {
+                    listSend += checkList[data].Line;
+                    listSend += checkList[data].Checked ? ' ✅\n\n' : ' ❌\n\n';
+                }
+
+                func.toDiscordMessage(client, msg, listSend);
+                break;
             case 'kezelhetetlen':
                 let files = fs.readdirSync('./slap');
                 let chosenFile = files[Math.floor(Math.random() * files.length)];
                 func.sendAttachment('./slap/' + chosenFile, client, msg);
                 break;
             case 'porn':
-                let Searcher;
                 if (messageChannel === pornChannel) {
-                    Searcher = new PornSearch(sentence);
-                    Searcher.gifs()
-                        .then(gifs => {
-                            let random = Math.floor(Math.random() * gifs.length);
-                            func.toDiscordMessage(client, msg, gifs[random].webm);
-                            func.toDiscordMessage(client, msg, gifs[random].title);
-                        }).catch(() => {
-                        func.toDiscordMessage(client, msg, error.noResult());
-                        console.log('nothing found');
-                    });
-                } else {
-                    func.toDiscordMessage(client, msg, error.wrongChannel());
+                    func.toDiscordMessage(client, msg, 'Sry, átdolgozás alatt...');
                 }
                 break;
             case '!help':
@@ -353,24 +334,6 @@ client.on('message', async msg => {
                 let aranywall = func.getAranywall();
                 func.toDiscordMessage(client, msg, aranywall);
                 break;
-            case 'chad':
-                await msg.delete();
-                if (args[1] !== undefined) {
-                    func.toDiscordMessage(client, msg, args[1] + '\n<:chad:827883783742029826>');
-                }
-                break;
-            case 'virgin':
-                await msg.delete();
-                if (args[1] !== undefined) {
-                    func.toDiscordMessage(client, msg, args[1] + '\n<:virgin:827883771859828756>');
-                }
-                break;
-            case 'flex':
-                await msg.delete();
-                if (args[1] !== undefined && args[2] !== undefined) {
-                    func.toDiscordMessage(client, msg, args[1] + '     ' + args[2] + '\n<:chad:827883783742029826>     <:virgin:827883771859828756>');
-                }
-                break;
             case 'geci':
                 await msg.delete();
                 func.toDiscordMessage(client, msg, 'oh igen' + sentence);
@@ -381,41 +344,6 @@ client.on('message', async msg => {
                 func.toDiscordMessage(client, msg, '<a:retard:788703547335901184>');
                 func.toDiscordMessage(client, msg, func.retardinator(sentence));
                 func.toDiscordMessage(client, msg, '<a:retard:788703547335901184>');
-                break;
-            case 'lotto':
-                if (messageChannel === lottoChannelId) {
-                    let tip1 = parseInt(args[1]);
-                    let tip2 = parseInt(args[2]);
-                    let tips = `${tip1} ${tip2}`;
-
-                    if (!isNaN(tip1) && !isNaN(tip2) && (0 < tip1) && (tip1 < 8) && (0 < tip2) && (tip2 < 8)) {
-                        if (args[3] === undefined) {
-                            let exist = await database.getLotto(author);
-                            if (exist !== null) {
-                                func.toDiscordMessage(client, msg, error.alreadyTipped());
-                            } else {
-                                await database.createLottoTip(msg.author.username, author, tips);
-                                func.toDiscordMessage(client, msg,`Tipped mentve: ${tips}`);
-							}
-                        } else if (args[3].toLowerCase() === 'change') {
-                            await database.updateLottoTip(msg.author.username, author, tips);
-                            func.toDiscordMessage(client, msg,`Tipped mentve: ${tips}`);
-                        } else {
-                            func.toDiscordMessage(client, msg,error.badTipForLotto());
-                        }
-                    } else {
-                        func.toDiscordMessage(client, msg, error.badTipForLotto());
-                    }
-                } else {
-                    func.toDiscordMessage(client, msg, error.wrongChannel());
-                }
-                break;
-            case 'tippek':
-                if (messageChannel === lottoChannelId) {
-                    func.toDiscordMessage(client, msg, await func.setLottoNumbers());
-                } else {
-                    func.toDiscordMessage(client, msg, error.wrongChannel());
-                }
                 break;
             case 'votemute':
                 await msg.react('👍');
@@ -483,8 +411,10 @@ client.on('message', async msg => {
 
         }
     }
-
-    if(msg.attachments.size === 0) {
+    /***
+     *  TODO Jobbra
+     */
+    /*if(msg.attachments.size === 0) {
         if (song.toLowerCase().includes(msg.content.toLowerCase())) {
             const startSong = msg.content.toLowerCase();
             const lowerCase = song.toLowerCase();
@@ -496,7 +426,7 @@ client.on('message', async msg => {
                 }
             }
         }
-    }
+    }*/
 
 //RPG-project
     if (messageChannel === '796405215279972353') {

@@ -67,7 +67,7 @@ export default {
             if (err) throw err;
             let dbo = db.db("mydb");
             let myQuery = { id: char.id };
-            let newValues = { $set: {level: char.level+1, hp: char.maxHp, maxHp: char.maxHp+20, armor: char.armor+50, talent: char.talent+3, experience: char.experience-xp } };
+            let newValues = { $set: { level: char.level+1, hp: char.maxHp, maxHp: char.maxHp+20, armor: char.armor+50, talent: char.talent+3, experience: char.experience-xp } };
             dbo.collection("Characters").updateOne(myQuery, newValues, function(err, res) {
                 if (err) throw err;
                 console.log('levelup');
@@ -85,75 +85,6 @@ export default {
             dbo.collection("Characters").updateOne(myQuery, newValues, function(err, res) {
                 if (err) throw err;
                 console.log('updateHero');
-                db.close();
-            });
-        });
-    },
-
-    createLottoTip: (name, id, tipp) => {
-        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-            if (err) throw err;
-            let dbo = db.db("mydb");
-            let myobj = {name: name, id: id, tipp: tipp, type: 'lotto'};
-            dbo.collection("Lotto").insertOne(myobj, function (err, res) {
-                if (err) throw err;
-                console.log("1 document inserted");
-                db.close();
-            });
-        });
-    },
-
-    updateLottoTip: (name, id, tipp) => {
-        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-            if (err) throw err;
-            let dbo = db.db("mydb");
-            let myQuery = { id: id };
-            let newValues = { $set: {tipp: tipp}};
-            dbo.collection("Lotto").updateOne(myQuery, newValues, function (err, res) {
-                if (err) throw err;
-                console.log("1 document inserted");
-                db.close();
-            });
-        });
-    },
-
-    getLottoTips: () => {
-        return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-                if (err) throw err;
-                let dbo = db.db("mydb");
-                dbo.collection("Lotto").find({type: 'lotto'}).toArray(function (err, result) {
-                    if (err) throw err;
-                    db.close();
-                    resolve(result);
-                });
-            });
-        });
-    },
-
-    getLotto: (id) => {
-        return new Promise(function (resolve, reject) {
-            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-                if (err) throw err;
-                let dbo = db.db("mydb");
-                dbo.collection("Lotto").findOne({id: id}, function (err, result) {
-                    if (err) throw err;
-                    console.log("1 document inserted");
-                    db.close();
-                    resolve(result);
-                });
-            });
-        });
-    },
-
-    deleteLottoTips: () => {
-        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
-            if (err) throw err;
-            let dbo = db.db("mydb");
-            let myQuery = { type: 'lotto' };
-            dbo.collection("Lotto").deleteMany(myQuery, function (err, obj) {
-                if (err) throw err;
-                console.log(obj.result.n + " document(s) deleted");
                 db.close();
             });
         });
@@ -206,6 +137,44 @@ export default {
                     db.close();
                     resolve(result);
                 });
+            });
+        });
+    },
+
+    getList: () => {
+        return new Promise(function (resolve, reject) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                dbo.collection("List").find().toArray(function (err, result) {
+                    if (err) throw err;
+                    db.close();
+                    resolve(result);
+                });
+            });
+        });
+    },
+
+    updateList: (listPart) => {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            let myQuery = { Line: listPart };
+            let newValues = { $set: { Checked: true } };
+            dbo.collection("List").updateOne(myQuery, newValues, function(err, res) {
+                if (err) throw err;
+                db.close();
+            });
+        });
+    },
+
+    resetList: () => {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            dbo.collection("List").updateMany({}, {Line: false}, function(err, res) {
+                if (err) throw err;
+                db.close();
             });
         });
     },

@@ -3,23 +3,6 @@ import Discord from 'discord.js';
 import Canvas from "canvas";
 import stringSimilarity from "string-similarity";
 
-function getLottoNumbers(array) {
-    let returnArray = [];
-    array.forEach((value, key, map) =>{
-        returnArray.push(`[${key}] = ${value}`);
-    });
-
-    return returnArray;
-}
-
-function checkIfMessageContainsArrayElement(message, array) {
-    for (let i = 0; i < array.length; i++) {
-        if (message.includes(array[i])) {
-            return true;
-        }
-    }
-}
-
 function getEmbeds(hero) {
     return new Discord.MessageEmbed()
         .setColor('#2a5fff')
@@ -169,7 +152,8 @@ export default {
                     '`medishug-ra madishrugot küldök és fordítva`\n\n' +
                     '`brc van a szövegben brc-t reactolok`\n\n' +
                     '`maroti, maróti, dimat van a szövegben marótit reactolok`\n\n' +
-                    '`megcsap, nem mered, nem leszek-re is reactolok`'},
+                    '`megcsap, nem mered, nem leszek-re is reactolok`\n\n' +
+                    '`list:`, Megtekintheted a napi kötelező szövegek listája hogy halad.'},
         ];
     },
 
@@ -263,6 +247,7 @@ export default {
         let enemies = await database.getEnemy({diff: diff});
         return enemies[Math.floor(Math.random() * enemies.length)];
     },
+
     getCharacter: async (id) => {
         return database.listCharacter(id);
     },
@@ -472,6 +457,5 @@ export default {
 
     isSimilar(input, expected) {
         return stringSimilarity.compareTwoStrings(input, expected);
-    }
-
+    },
 };
