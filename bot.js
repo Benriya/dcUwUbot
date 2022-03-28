@@ -245,6 +245,9 @@ client.on('message', async msg => {
             case 'kurva':
                 func.sendAttachment('./szerb/kurvaaaa.mp3', client, msg);
                 break;
+            case 'kussoljmár':
+                func.sendAttachment('./szerb/kussoljmar.mp3', client, msg);
+                break;
             case 'springboot':
                 func.sendAttachment('./szerb/springbooooot.mp4', client, msg);
                 break;
