@@ -5,7 +5,6 @@ import dotenv from 'dotenv'
 dotenv.config();
 
 import http from 'http';
-import PornSearch from 'pornsearch';
 import {song} from './songs.js';
 import func from './functions.js';
 import Discord, {MessageAttachment} from 'discord.js';
@@ -28,7 +27,7 @@ const dzsitParticipants = ['<@251831600512368641>', '<@491660100990140436>', '<@
                         '<@310497849274007553>', '<@295485347138240513>'];
 const dzsittChannels = ['671309309757358123', '667783025811259448', '839885997923237889', '706776570836156426'];
 const noSpamChannels = ['813842740210958446', '841654691225010206', '846424723131072530', '902900685417373737'];
-const listCheck = ['Kys', 'Flote kussolj', 'Jo reggelt faszom', 'Szakdoge mizu', 'Zv mizu', 'Swarci old', 'geci szerb', 'Nem dolgoztam ma', 'Flote mosogatógép szerelő'];
+const listCheck = ['Kys', 'Flote kussolj', 'Jo reggelt faszom', 'Szakdoge mizu', 'Zv mizu', 'Swarci old', 'Geci szerb', 'Nem dolgoztam ma', 'Flote mosogatógép szerelő'];
 let voters = [];
 const memes = { texas: {x:500, y:600, color:'#000000', Cx: 185, Cy: 70, stroke: '#ffffff',
                         font: '25px sans-serif', link:'memes/texas.jpeg', special: true},
@@ -58,7 +57,6 @@ client.on('ready', () => {
 setInterval(async () => {
     let nowDate = new Date();
     if (nowDate.getMinutes() === 0 && nowDate.getHours() === 6) {
-        database.resetList();
         await getForecast(function(weather, rain) {
             func.toDiscordMessageChannel(client, weatherChannelId,
                 'Mai napi időjárás jelentésünk következik Szegedről:\n' + weather);
@@ -70,6 +68,7 @@ setInterval(async () => {
         await getChart(function (chartUrl) {
             func.toDiscordMessageChannel(client, weatherChannelId,`Chart: ${chartUrl}`);
         });
+        await database.resetList();
     }
     if (func.rollTheDice(2) && nowDate.getMinutes() === 0) {
         let channelNum = func.drawOne(dzsittChannels);
@@ -149,6 +148,9 @@ client.on('message', async msg => {
             }
         }
         switch (cmd.toLocaleLowerCase()) {
+            case 'dsa':
+                await database.resetList();
+                break;
             case 'mem':
                 let memeName;
                 if (func.isSimilar(nickname, 'texas') > 0.6) {

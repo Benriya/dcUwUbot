@@ -172,7 +172,9 @@ export default {
         MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, db) {
             if (err) throw err;
             let dbo = db.db("mydb");
-            dbo.collection("List").updateMany({}, {Line: false}, function(err, res) {
+            let myQuery = {Checked: true};
+            let newValues = { $set: { Checked: false } };
+            dbo.collection("List").updateMany(myQuery, newValues, function(err, res) {
                 if (err) throw err;
                 db.close();
             });
