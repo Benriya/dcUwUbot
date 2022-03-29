@@ -99,8 +99,7 @@ export default {
 
     getCommands() {
         return [
-            { Parancsok: '`!porn + "tematika":` Küldök egy pornó képet a channelre, olyan témában amit a "tematika" helyett írsz be " jelek nélkül (csak 18+ channelre használd). \n\n' +
-                    '`!votemute "tag":` (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n\n' +
+            { Parancsok: '`!votemute "tag":` (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n\n' +
                     '`!votenick "nicknév" "tag:` nicknév helyére beírod a kívánt nevet, és tageled akinek a nevét meg akarod változtatni, ehhez 6 szavazat kell, hogy sikeres legyen.\n\n' +
                     '`!praise + "emote" vagy "szöveg":` isteni magaslatba emelem azt amit megadtál\n\n' +
                     '`!kivagy + "tag":` megmondja hogy te ki is vagy valójában. \n\n' +
@@ -111,8 +110,7 @@ export default {
                     '`!geci + "valami":` meg dingi-dongizom\n\n' +
                     '`!mock + "valami":` retard spongyabobként beszélek\n\n' +
                     '`!kurai:` elküldöm karcsi által szeretett vicces reagálást\n\n' +
-                    '`!lotto "szám" "szám":` a lottowo channelen tippelhetsz meg 2db 1 jegyű egész számot, és ha a sorsoláson a tiedet húzom, akkor nyersz :)\n\n' +
-                    '`!tippek:` kilistázza milyen tippek voltak eddig\n\n' +
+                    '`list:`, Megtekintheted a napi kötelező szövegek listája hogy halad.\n\n' +
                     '`!pisti/!szepi/!inevitable:` pisti az elkerülhetetlen\n\n' +
                     '`!medikiakad:` prezentálim mi van akkor, ha MediMadi kiakad'},
             { Parancsok: '`!chad + emote:` chad alakban mutatom az emote-ot\n\n' +
@@ -152,8 +150,7 @@ export default {
                     '`medishug-ra madishrugot küldök és fordítva`\n\n' +
                     '`brc van a szövegben brc-t reactolok`\n\n' +
                     '`maroti, maróti, dimat van a szövegben marótit reactolok`\n\n' +
-                    '`megcsap, nem mered, nem leszek-re is reactolok`\n\n' +
-                    '`list:`, Megtekintheted a napi kötelező szövegek listája hogy halad.'},
+                    '`megcsap, nem mered, nem leszek-re is reactolok`'},
         ];
     },
 
@@ -458,4 +455,16 @@ export default {
     isSimilar(input, expected) {
         return stringSimilarity.compareTwoStrings(input, expected);
     },
+
+    async sendList() {
+        const checkList = await database.getList();
+        const embed = new Discord.MessageEmbed()
+            .setColor('#2a5fff')
+            .setTitle('UwU TODO list:');
+        for (let data in checkList) {
+            embed.addField(checkList[data].Line, checkList[data].Checked ? ' ✅' : ' ❌', true);
+        }
+
+        return embed;
+    }
 };

@@ -57,6 +57,8 @@ client.on('ready', () => {
 setInterval(async () => {
     let nowDate = new Date();
     if (nowDate.getMinutes() === 0 && nowDate.getHours() === 6) {
+        const listEmbed = await func.sendList();
+        func.toDiscordMessageChannel(client, '671309309757358123', listEmbed);
         await getForecast(function(weather, rain) {
             func.toDiscordMessageChannel(client, weatherChannelId,
                 'Mai napi időjárás jelentésünk következik Szegedről:\n' + weather);
@@ -263,19 +265,10 @@ client.on('message', async msg => {
                 await msg.delete();
                 func.sendAttachment('./szerb/nemtudom.png', client, msg);
                 break;
-            /***
-             *  TODO kivinni functionsbe
-             */
             case 'list':
                 await msg.delete();
-                let listSend = '';
-                const checkList = await database.getList();
-                for (let data in checkList) {
-                    listSend += checkList[data].Line;
-                    listSend += checkList[data].Checked ? ' ✅\n\n' : ' ❌\n\n';
-                }
-
-                func.toDiscordMessage(client, msg, listSend);
+                const listEmbed = await func.sendList();
+                func.toDiscordMessage(client, msg, listEmbed);
                 break;
             case 'kezelhetetlen':
                 let files = fs.readdirSync('./slap');
