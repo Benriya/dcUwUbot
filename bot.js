@@ -111,6 +111,9 @@ client.on('message', async msg => {
                 await database.updateList(listCheck[expected]);
             }
         }
+        if (msgContent.includes('facebook.com') || msgContent.includes('fb.com')) {
+            func.sendAttachment('./szerb/lost_face.png', client, msg);
+        }
     })
     /***
      *  TODO kivinni functionsbe
