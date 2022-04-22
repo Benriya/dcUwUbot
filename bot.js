@@ -111,9 +111,6 @@ client.on('message', async msg => {
                 await database.updateList(listCheck[expected]);
             }
         }
-        if (msgContent.includes('facebook.com') || msgContent.includes('fb.com')) {
-            func.sendAttachment('./szerb/lost_face.png', client, msg);
-        }
     })
     /***
      *  TODO kivinni functionsbe
@@ -720,6 +717,14 @@ client.on('message', async msg => {
 
     if (func.isSimilar(msg.content.toLowerCase(), 'u u uá uá') > 0.7) {
         func.toDiscordMessage(client, msg, '<a:spongebob_dansen:920612079751294986>');
+    }
+
+    if (msg.content.includes('facebook.com') || msg.content.includes('fb.watch')) {
+        func.sendAttachment('./szerb/lost_face.png', client, msg);
+    }
+
+    if (func.isSimilar(msg.content.toLowerCase(), 'komédia arany') > 0.7) {
+        func.sendAttachment('./szerb/komedi.png', client, msg);
     }
 
     try {
