@@ -116,13 +116,4 @@ export function getChart(fn) {
         let url = await chart.getShortUrl()
         fn(url);
     });
-
 }
-
-/*getWeatherData(function (weather) {
-    console.log(weather.list[0].sys);
-    console.log(weather.list[0].main);
-    console.log(weather.list[0].weather);
-    console.log(weather.list[0].clouds);
-});*/
-

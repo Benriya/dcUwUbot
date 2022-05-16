@@ -34,8 +34,7 @@ const memes = { texas: {x:500, y:600, color:'#000000', Cx: 185, Cy: 70, stroke: 
                 peter: {x:600, y:500, color:'#ffffff', Cx: 150, Cy: 230, stroke: '#000000',
                         font: '25px sans-serif', link:'memes/peter.png', special: false}
                 }
-let pinger;
-const lottoChannelId = '779395227688501298';
+let pinger, HUF;
 const deleteChannelId = '740536932303634473';
 const weatherChannelId = '884880382095421550';
 
@@ -56,6 +55,7 @@ client.on('ready', () => {
 
 setInterval(async () => {
     let nowDate = new Date();
+
     if (nowDate.getMinutes() === 0 && nowDate.getHours() === 6) {
         const listEmbed = await func.sendList();
         func.toDiscordMessageChannel(client, '671309309757358123', listEmbed);
@@ -72,17 +72,24 @@ setInterval(async () => {
         });
         await database.resetList();
     }
+
     if (func.rollTheDice(2) && nowDate.getMinutes() === 0) {
         let channelNum = func.drawOne(dzsittChannels);
         let participant = func.drawOne(dzsitParticipants);
         func.toDiscordMessageChannel(client, dzsittChannels[channelNum],'Dzsitt ' + dzsitParticipants[participant] + ' <:friedlaugh:886329158198759495>');
     }
 
+    if (nowDate.getMinutes() === 0) {
+        const exchange = await func.requestEur();
+        const index = exchange.indexOf('rate');
+        HUF = exchange.slice(index + 7, index + 13);
+    }
+
 },60 * 1000);
 
 client.on('message', async msg => {
     if (msg === undefined) return;
-    await client.user.setActivity("The truth | !!help");
+    await client.user.setActivity(`1 Euro = ${HUF} Ft`);
     if (msg.author.bot) return;
 
     let author = msg.author.id;
@@ -150,9 +157,6 @@ client.on('message', async msg => {
             }
         }
         switch (cmd.toLocaleLowerCase()) {
-            case 'dsa':
-                await database.resetList();
-                break;
             case 'mem':
                 let memeName;
                 if (func.isSimilar(nickname, 'texas') > 0.6) {

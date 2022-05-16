@@ -2,6 +2,7 @@ import database from './database/handle_database.js';
 import Discord from 'discord.js';
 import Canvas from "canvas";
 import stringSimilarity from "string-similarity";
+import fetch, {Headers} from "node-fetch";
 
 function getEmbeds(hero) {
     return new Discord.MessageEmbed()
@@ -466,5 +467,23 @@ export default {
         }
 
         return embed;
+    },
+
+    async requestEur() {
+        let exchange;
+        const myHeaders = new Headers();
+        myHeaders.append("apikey", "Qw6pWyCErTt9WomOVyTWpxeNjZUVCxFX");
+
+        const requestOptions = {
+            method: 'GET',
+            redirect: 'follow',
+            headers: myHeaders
+        };
+
+        await fetch("https://api.apilayer.com/exchangerates_data/convert?to=HUF&from=EUR&amount=1", requestOptions)
+            .then(response => response.text())
+            .then(result => exchange = result)
+            .catch(error => console.log('error', error));
+        return exchange;
     }
 };
