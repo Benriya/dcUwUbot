@@ -1,5 +1,5 @@
 import func from "../utility/functions.js";
-import { likingReplies, channelIds } from "../utility/models.js";
+import { channelIds } from "../utility/models.js";
 
 export async function loadReply(client, msg, messageChannel, firstMention) {
     const attachment = (msg.attachments).array();
@@ -14,10 +14,6 @@ export async function loadReply(client, msg, messageChannel, firstMention) {
     if (channelIds.noSpamChannels.includes(messageChannel) && msg.attachments.size === 0) {
         await msg.delete();
         return;
-    }
-
-    if (likingReplies.includes(msg.content.toLowerCase())) {
-        msg.reply('Tetszésedet/nem tetszésedet reakció formájában fejezd ki, így a spam is mértéke is csökken.')
     }
 
     if (func.isSimilar(msg.content.toLowerCase(), 'morning gang') > 0.7) {

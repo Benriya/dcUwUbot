@@ -1,5 +1,5 @@
 import func from "../utility/functions.js";
-import {HUF} from "../utility/models.js";
+import {modifyHUF} from "../utility/models.js";
 
 export async function loadAdmin(client, msg, messageChannel) {
     if (msg.content.substring(0, 1) === '.' && (messageChannel === '704983142452428933' || messageChannel === '786140249809354793')) {
@@ -32,7 +32,7 @@ export async function loadAdmin(client, msg, messageChannel) {
             case 'eur':
                 const exchange = await func.requestEur();
                 const index = exchange.indexOf('rate');
-                HUF = exchange.slice(index + 7, index + 13);
+                modifyHUF(exchange.slice(index + 7, index + 13));
                 break;
             case 'sup':
                 func.toDiscordMessageChannel(client, channelId, '<:surp:708969952354500658>');

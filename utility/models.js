@@ -8,8 +8,6 @@ export const listCheck = [
     'Zv mizu', 'Swarci old', 'Geci szerb', 'Nem dolgoztam ma', 'Flote mosogatógép szerelő'
 ];
 
-export const likingReplies = ['naez', 'yes', 'no', 'this', 'ja', 'igen', 'nem'];
-
 export const channelIds = {
     pornChannelId: '667779656363278367',
     weatherChannelId: '884880382095421550',
@@ -20,3 +18,4 @@ export const channelIds = {
 
 export let voters = [];
 export let pinger, HUF;
+export function modifyHUF( value ) { HUF = value; }
