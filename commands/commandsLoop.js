@@ -1,7 +1,7 @@
-import func from "../utility/functions";
-import {getChart, getForecast} from "../utility/weather";
-import database from "../database/handle_database";
-import {channelIds, dzsitParticipants, HUF} from "../utility/models";
+import func from "../utility/functions.js";
+import {getChart, getForecast} from "../utility/weather.js";
+import database from "../database/handle_database.js";
+import {channelIds, dzsitParticipants, HUF} from "../utility/models.js";
 
 export async function loadLoop(client) {
     setInterval(async () => {

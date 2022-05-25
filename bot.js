@@ -5,11 +5,11 @@ import http from 'http';
 import func from './utility/functions.js';
 import Discord from 'discord.js';
 import database from './database/handle_database.js';
-import {channelIds, listCheck} from "./utility/models";
-import {loadCommon} from "./commands/commandsCommon";
-import {loadAdmin} from "./commands/commandsAdmin";
-import {loadReply} from "./commands/commandsReply";
-import {loadLoop} from "./commands/commandsLoop";
+import {channelIds, listCheck} from "./utility/models.js";
+import {loadCommon} from "./commands/commandsCommon.js";
+import {loadAdmin} from "./commands/commandsAdmin.js";
+import {loadReply} from "./commands/commandsReply.js";
+import {loadLoop} from "./commands/commandsLoop.js";
 
 const PORT = process.env.PORT || 4040;
 const server = http.createServer((req, res) => {

@@ -1,5 +1,5 @@
-import func from "../utility/functions";
-import {HUF} from "../utility/models";
+import func from "../utility/functions.js";
+import {HUF} from "../utility/models.js";
 
 export async function loadAdmin(client, msg, messageChannel) {
     if (msg.content.substring(0, 1) === '.' && (messageChannel === '704983142452428933' || messageChannel === '786140249809354793')) {

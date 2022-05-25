@@ -1,5 +1,5 @@
-import func from "../utility/functions";
-import { likingReplies, channelIds } from "../utility/models";
+import func from "../utility/functions.js";
+import { likingReplies, channelIds } from "../utility/models.js";
 
 export async function loadReply(client, msg, messageChannel, firstMention) {
     const attachment = (msg.attachments).array();

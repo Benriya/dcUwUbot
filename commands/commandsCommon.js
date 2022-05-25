@@ -1,8 +1,8 @@
-import func from "../utility/functions";
-import {pinger, HUF} from "../utility/models";
+import func from "../utility/functions.js";
+import {pinger, HUF} from "../utility/models.js";
 import Pagination from "discord-paginationembed";
-import database from "../database/handle_database";
-import {Errors} from "../Throws/errors"
+import database from "../database/handle_database.js";
+import {Errors} from "../Throws/errors.js"
 
 export async function loadCommon(client, msg, firstMention) {
     if (msg === undefined) return;

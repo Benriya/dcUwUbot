@@ -2,7 +2,7 @@ import database from '../database/handle_database.js';
 import Discord from 'discord.js';
 import stringSimilarity from "string-similarity";
 import fetch, {Headers} from "node-fetch";
-import {voters} from "./models";
+import {voters} from "./models.js";
 
 export default {
     getChannel(channel) {
