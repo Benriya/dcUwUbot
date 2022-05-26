@@ -29,6 +29,8 @@ client.on('ready', () => {
 loadLoop(client);
 
 client.on('message', async msg => {
+    if (msg === undefined) return;
+    if (msg.author.bot) return;
     msg.channel.messages.fetch({limit: 3}).then(async messages => {
         const lastMessage = messages.first();
         const lastMessages = messages.array();
@@ -78,7 +80,7 @@ client.on('raw', packet => {
 });
 
 client.on('messageDelete', message => {
-    let channel = message.channel;
+    const channel = message.channel;
     let messagePic = '';
     let messageContent = '*none*';
     if (message.cleanContent !== null) {

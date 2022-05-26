@@ -5,9 +5,6 @@ import database from "../database/handle_database.js";
 import {Errors} from "../Throws/errors.js"
 
 export async function loadCommon(client, msg, firstMention) {
-    if (msg === undefined) return;
-    if (msg.author.bot) return;
-
     const error = new Errors();
     const author = msg.author.id;
     const args = msg.content.substring(1).split(' ');
