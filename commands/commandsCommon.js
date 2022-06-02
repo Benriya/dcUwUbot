@@ -244,6 +244,9 @@ export async function loadCommon(client, msg, firstMention) {
         case 'aztakurva':
             await msg.delete();
             func.toDiscordMessage(client, msg, "<:react:905522849014485093> 📢  🇦 🇿 🇹 🇦   🇰 🇺 🇷 🇻 🇦");
+        case 'mav':
+            func.sendAttachment('./szerb/mav.jpeg', client, msg);
+            break;
 
     }
 }
