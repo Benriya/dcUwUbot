@@ -58,11 +58,11 @@ export function getChart(fn) {
                 data: {
                     labels: dateArray,
                     datasets: [{ label: 'Hőmérséklet',
-                        fill: false,
+                        fill: true,
                         lineTension: 0.4,
                         radius: 5,
-                        backgroundColor: ['rgb(255,52,52)'],
-                        borderColor: ['rgb(255,26,26)'],
+                        backgroundColor: ['rgb(0,13,255)'],
+                        borderColor: ['rgb(0,13,255)'],
                         data: temperatureArray }]
                 },
                 options: {
