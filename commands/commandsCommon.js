@@ -5,7 +5,6 @@ import database from "../database/handle_database.js";
 import {Errors} from "../Throws/errors.js"
 
 export async function loadCommon(client, msg, firstMention) {
-    const error = new Errors();
     const author = msg.author.id;
     const args = msg.content.substring(1).split(' ');
     const cmd = args[0];
@@ -181,7 +180,7 @@ export async function loadCommon(client, msg, firstMention) {
             func.toDiscordMessage(client, msg, func.retardinator(sentence));
             func.toDiscordMessage(client, msg, '<a:retard:788703547335901184>');
             break;
-        case 'votemute':
+        /*case 'votemute':
             await msg.react('👍');
             msg.awaitReactions(func.voteMuteFilter, { max: 1, time: 10000, errors: ['time']})
                 .then(async () => {
@@ -213,7 +212,7 @@ export async function loadCommon(client, msg, firstMention) {
                 func.toDiscordMessage(client, msg, error.deniedVote());
                 console.log(r);
             });
-            break;
+            break;*/
         case 'sub':
             pinger = await func.checkIfPingerSub(nickname, author);
             if (nickname !== undefined && !pinger) {

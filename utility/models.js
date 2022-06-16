@@ -4,8 +4,8 @@ export const dzsitParticipants = [
     '<@310497849274007553>', '<@295485347138240513>'
 ];
 export const listCheck = [
-    'Kys', 'Flote kussolj', 'Jo reggelt faszom', 'Szakdoge mizu',
-    'Zv mizu', 'Swarci old', 'Geci szerb', 'Nem dolgoztam ma', 'Flote mosogatógép szerelő'
+    'Kys', 'Flote kussolj', 'Jo reggelt faszom', 'Swarci old',
+    'Geci szerb', 'Nem dolgoztam ma', 'Szappanadagoló kész', 'Balaton when'
 ];
 
 export const channelIds = {
