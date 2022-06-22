@@ -140,8 +140,8 @@ export default {
         if (array[0].author.username !== array[1].author.username &&
             array[1].author.username !== array[2].author.username &&
             array[0].author.username !== array[2].author.username &&
-            array[0].content.username === array[1].content.username &&
-            array[1].content.username === array[2].content.username) {
+            array[0].content === array[1].content &&
+            array[1].content === array[2].content) {
             return true;
         }
     },
