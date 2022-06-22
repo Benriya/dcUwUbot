@@ -21,19 +21,19 @@ server.listen(PORT, () => {
     console.log(`Our app is running on port ${ PORT }`);
 });
 
-const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-loadLoop(client);
+loadLoop(client).catch(e => console.log(e));
 
-client.on('message', async msg => {
+client.on('messageCreate', async msg => {
     if (msg === undefined) return;
     if (msg.author.bot) return;
     msg.channel.messages.fetch({limit: 3}).then(async messages => {
         const lastMessage = messages.first();
-        const lastMessages = messages.array();
+        const lastMessages = [...messages.values()];
         const messageChannel = msg.channel.id;
         const firstMention = msg.mentions.members.first();
 
@@ -95,18 +95,18 @@ client.on('messageDelete', message => {
         .setColor('#9b18bf')
         .setTitle('Deleted Message')
         .setThumbnail(`${message.author.avatarURL()}`)
-        .setAuthor(`${message.author.username}`)
+        .setAuthor({name: `${message.author.username}`})
         .setDescription(`${channel}`)
         .addField('Message: ', messageContent, true)
         .setTimestamp();
 
-    const attachment = (message.attachments).array();
+    const attachment = [...message.attachments.values()];
 
     if (message.author.bot || message.channel.id === '704983142452428933' ||
         message.channel.id === channelIds.deleteChannelId) {}
     else if (message.attachments.size > 0) {
         client.channels.cache.get("745317754256490567").messages.fetch({limit: 5}).then(messages => {
-            let lastMessages = messages.array();
+            let lastMessages = [...messages.values()];
 
             for (let i = 0; i < lastMessages.length; i++) {
                 if(lastMessages[i].content.includes(attachment[0].id)) {
@@ -115,17 +115,17 @@ client.on('messageDelete', message => {
                         .setColor('#9b18bf')
                         .setTitle('Deleted Picture')
                         .setThumbnail(`${message.author.avatarURL()}`)
-                        .setAuthor(`${message.author.username}`)
+                        .setAuthor({name: `${message.author.username}`})
                         .setImage(messagePic[0])
                         .setDescription(`${channel}`)
                         .addField('Message: ', messageContent, true)
                         .setTimestamp();
-                    func.toDiscordMessageChannel(client, channelIds.deleteChannelId, pictureEmbed);
+                    func.toDiscordMessageChannel(client, channelIds.deleteChannelId, {embeds: [pictureEmbed]});
                 }
             }
         }).catch(console.error);
     } else {
-        func.toDiscordMessageChannel(client, channelIds.deleteChannelId, textEmbed);
+        func.toDiscordMessageChannel(client, channelIds.deleteChannelId, {embeds: [textEmbed]});
     }
 });
 
@@ -153,10 +153,10 @@ client.on('messageReactionAdd', async (reaction, user) => {
             .setColor('#ff0015')
             .setTitle('Pinned Message')
             .setThumbnail(`${user.avatarURL()}`)
-            .setAuthor(`${user.username}`)
+            .setAuthor({name: `${user.username}`})
             .addField('Message: ', reaction.message.url, true)
             .setTimestamp();
-        func.toDiscordMessageChannel(client, channelIds.deleteChannelId, textEmbedPin);
+        func.toDiscordMessageChannel(client, channelIds.deleteChannelId, {embeds: [textEmbedPin]});
     }
 });
 

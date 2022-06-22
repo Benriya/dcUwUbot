@@ -2,13 +2,13 @@ import func from "../utility/functions.js";
 import { channelIds } from "../utility/models.js";
 
 export async function loadReply(client, msg, messageChannel, firstMention) {
-    const attachment = (msg.attachments).array();
+    const attachment = [...msg.attachments.values()];
     if (msg.attachments.size > 0) {
         func.toDiscordMessageChannel(client, '745317754256490567', `${attachment[0].proxyURL} id: ${attachment[0].id}`);
     }
 
     if (msg.content === 'ping') {
-        await msg.reply('Pong!');
+        await msg.reply({ content: 'Pong!', allowedMentions: { repliedUser: true }})
     }
 
     if (channelIds.noSpamChannels.includes(messageChannel) && msg.attachments.size === 0) {
@@ -78,7 +78,7 @@ export async function loadReply(client, msg, messageChannel, firstMention) {
 
     try {
         if (firstMention.user.username === 'Pearly') {
-            func.toDiscordMessage(client, msg, 'Szeretnél valamit?');
+            msg.reply({content: 'Szeretnél valamit?', allowedMentions: {repliedUser: false}})
         }
     }catch (e) {
 

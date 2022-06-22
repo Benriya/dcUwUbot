@@ -137,11 +137,11 @@ export default {
         if (array[0].author.bot || array[1].author.bot || array[2].author.bot) {
             return false;
         }
-        if (array[0].author !== array[1].author &&
-            array[1].author !== array[2].author &&
-            array[0].author !== array[2].author &&
-            array[0].content === array[1].content &&
-            array[1].content === array[2].content) {
+        if (array[0].author.username !== array[1].author.username &&
+            array[1].author.username !== array[2].author.username &&
+            array[0].author.username !== array[2].author.username &&
+            array[0].content.username === array[1].content.username &&
+            array[1].content.username === array[2].content.username) {
             return true;
         }
     },

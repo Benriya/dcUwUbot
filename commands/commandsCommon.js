@@ -2,7 +2,6 @@ import func from "../utility/functions.js";
 import {pinger, HUF} from "../utility/models.js";
 import Pagination from "discord-paginationembed";
 import database from "../database/handle_database.js";
-import {Errors} from "../Throws/errors.js"
 
 export async function loadCommon(client, msg, firstMention) {
     const author = msg.author.id;
@@ -132,11 +131,7 @@ export async function loadCommon(client, msg, firstMention) {
                 .setFunctionEmojis({
                     '🔄': (user, instance) => {
                         const field = instance.embed.fields[0];
-
-                        if (field.name === 'Parancsok')
-                            field.name = 'Ninja egy fasszopó, Kuba meg a fasz';
-                        else
-                            field.name = 'Parancsok';
+                        field.name = 'Parancsok';
                     }
                 })
                 .setEmojisFunctionAfterNavigation(false);
