@@ -1,9 +1,12 @@
 import func from "../utility/functions.js";
-import {pinger, HUF} from "../utility/models.js";
+import {pinger, HUF, szerbs, UwU} from "../utility/models.js";
 import Pagination from "discord-paginationembed";
 import database from "../database/handle_database.js";
+import { cli } from "winston/lib/winston/config/index.js";
+import { Errors } from "../Throws/errors.js";
 
 export async function loadCommon(client, msg, firstMention) {
+    const err = new Errors();
     const author = msg.author.id;
     const args = msg.content.substring(1).split(' ');
     const cmd = args[0];
@@ -117,7 +120,7 @@ export async function loadCommon(client, msg, firstMention) {
             func.toDiscordMessage(client, msg, listEmbed);
             break;
         case '!help':
-            let commands = func.getCommands();
+            /*let commands = func.getCommands();
             let FieldsEmbed = new Pagination.FieldsEmbed()
                 .setArray(commands)
                 .setAuthorizedUsers([msg.author.id])
@@ -128,12 +131,6 @@ export async function loadCommon(client, msg, firstMention) {
                 .formatField('Parancsok', i => i.Parancsok)
                 .setTimeout(600000000)
                 .setDeleteOnTimeout(false)
-                .setFunctionEmojis({
-                    '🔄': (user, instance) => {
-                        const field = instance.embed.fields[0];
-                        field.name = 'Parancsok';
-                    }
-                })
                 .setEmojisFunctionAfterNavigation(false);
 
             FieldsEmbed.embed
@@ -141,15 +138,16 @@ export async function loadCommon(client, msg, firstMention) {
                 .setDescription('Nesztek itt vannak a parancsok pupákok');
 
             await FieldsEmbed.build();
-            func.toDiscordMessage(client, msg, {embeds: [FieldsEmbed]});
+            func.toDiscordMessage(client, msg, {embeds: [FieldsEmbed]});*/
+            msg.reply({embeds: [err.underConstruction()]});
             break;
         case 'kivagy':
             let image;
 
-            if (firstMention.id === '518823389008232460' || firstMention.id === '602525564217327637' || firstMention.id === '623899095224025088' || firstMention.id ==='491660100990140436') {
+            if (szerbs.includes(firstMention.id)) {
                 image = './szerb/szerb_1.jpg';
             }
-            else if (firstMention.id === '376439826549047296'){
+            else if (firstMention.id === UwU.Ninja){
                 image = './szerb/TAP.png';
             }else {
                 image = './szerb/szerb_0.jpg';
@@ -231,9 +229,7 @@ export async function loadCommon(client, msg, firstMention) {
             break;
         case 'risus':
             await msg.delete();
-            if (author === '310497849274007553'|| author === '318072258465628161' || author === '602525564217327637') { //Dawe24 || Kuroko || Kruzor57
-                func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${func.getChannel(args[1])}>`);
-            }
+            func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${func.getChannel(args[1])}>`);
             break;
         case 'aztakurva':
             await msg.delete();

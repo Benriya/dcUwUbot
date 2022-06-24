@@ -1,8 +1,8 @@
 import func from "../utility/functions.js";
-import {modifyHUF} from "../utility/models.js";
+import {channelIds, modifyHUF} from "../utility/models.js";
 
 export async function loadAdmin(client, msg, messageChannel) {
-    if (msg.content.substring(0, 1) === '.' && (messageChannel === '704983142452428933' || messageChannel === '786140249809354793')) {
+    if (msg.content.substring(0, 1) === '.' && (messageChannel === channelIds.adminId || messageChannel === channelIds.botId)) {
         let args = msg.content.substring(1).split(' ');
         let cmd = args[0];
         let channel = args[1];
@@ -11,19 +11,8 @@ export async function loadAdmin(client, msg, messageChannel) {
         await msg.delete();
         let sentence = msg.content.slice(5);
         switch (cmd.toLocaleLowerCase()) {
-            case 'help':
-                func.toDiscordMessage(client, msg, 'Elérhető kommandok:\n ".say" + "channel név" + "szöveg" -> az adott channel-re a szöveget kiírja\n' +
-                    'elérhető channelek: "lotto", "altalanowos", "18", "kuwuka",  "owoff" (ezt nem kötelező kiírni), "so", "mowozi", "muwusic", "suwuli", "jatekowos"\n' +
-                    'tagelni tudsz embert, ha beírod az id-ját ide: <@*id*>\n' +
-                    'channel-t "tagelni" hasonlóan, az id-jával: <#*id*>\n' +
-                    '.sup <:surp:708969952354500658>\n.tri <:trigger:708979797895938168>\n.cute <:cute:735574079851200582>\n' +
-                    '.on_no <:oh_no:735574451088785498>\n.gimme <:gimme:744540992430145586>\n.simp <:simp:744540966215483442>\n' +
-                    '.burn <:burn:744540895478808626>\n.ew <:ew:744540932967235674>\n.nameselj <:marotihaha:759804122139983873>\n' +
-                    '.hmm <:pepehmm:780723259355824128>\n.dayum <:dayum:785148917326675998>\n.fuck <a:yourmom:787410945541537842>\n' +
-                    '.kikerdezte <a:whoasked:719267371029889168>');
-                break;
             case 'say':
-                if (channelId === '667783025811259448') {
+                if (channelId === channelIds.owoffId) {
                     func.toDiscordMessageChannel(client, channelId, sentence);
                 } else {
                     func.toDiscordMessageChannel(client, channelId, sentence.slice(channel.length + 1));

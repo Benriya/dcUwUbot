@@ -2,135 +2,53 @@ import database from '../database/handle_database.js';
 import Discord from 'discord.js';
 import stringSimilarity from "string-similarity";
 import fetch, {Headers} from "node-fetch";
-import {voters} from "./models.js";
+import {aranywallText, channelIds, csicskawallText, helpList, voters} from "./models.js";
 
 export default {
     getChannel(channel) {
-        switch (channel) {
-            case 'lotto':
-                return '779395227688501298';
-            
+        switch (channel) {            
             case 'altalanowos':
-                return '661569831111491618';
+                return channelIds.altalanowosId;
             
             case '18':
-                return '667779656363278367';
+                return channelIds.pluwusId;
             
             case 'kuwuka':
-                return '671309309757358123';
+                return channelIds.kuwukaId;
             
             case 'owoff':
-                return '667783025811259448';
+                return channelIds.owoffId;
             
             case 'so':
-                return '839885997923237889'
+                return channelIds.sowogodorId;
             
             case 'mowozi':
-                return '699657394506170469';
+                return channelIds.mowoziId;
             
             case 'muwusic':
-                return '776803915898552320';
+                return channelIds.muwusicId;
             
             case 'suwuli':
-                return '706776570836156426';
+                return channelIds.suwuliId;
             
             case 'jatekowos':
-                return '713415837356392508';
+                return channelIds.jatekowosId;
             
             default:
-                return '667783025811259448';
+                return channelIds.owoffId;
         }
     },
 
     getCsicskawall() {
-        return '┌───── •✧Wall Of Csicska✧• ─────┐\n' +
-            '      Bánhelyi Balázs\n' +
-            '      **BigBlueButton**\n' +
-            '      ***C s e n d e s  T i b o r***\n' +
-            '      Csókás Eszter\n' +
-            '      Gazdag-Tóth Boglárka Dr.\n' +
-            '      Gingl Zoltán\n' +
-            '      Hirling Dominik\n' +
-            '      Jász Judit\n' +
-            '      Katona Melinda\n' +
-            '      Kaposvári Dániel\n' +
-            '      **Kulin Julia**\n' +
-            '      **Makan Gergely**\n' +
-            '      Márkus András\n' +
-            '      Pletl Szilveszter Dr.\n' +
-            '      London András\n' +
-            '      Vida Ágnes\n' +
-            '└───── •✧✧✧✧✧✧✧✧✧✧• ─────┘';
+        return csicskawallText;
     },
 
     getAranywall()  {
-        return '┌──── •✧Wall Of Aranyember✧• ────┐\n' +
-            '      Antal Gábor\n' +
-            '      Balogh András\n' +
-            '      Cservenák Bence\n' +
-            '      Gazdag Zsolt\n' +
-            '      Győrffy Lajos\n' +
-            '      Heinc Emília\n' +
-            '      Kátai Kamilla\n' +
-            '      Kardos Péter\n' +
-            '      Kardos Péter Dr.\n' +
-            '      Fülöp Vanda\n' +
-            '      Keleti Márton\n' +
-            '      Kicsi András\n' +
-            '      Kunos Ádám\n' +
-            '      ***Maróti Miklós***\n' +
-            '      Szabó Tamás\n' +
-            '      Szabolcs Iván\n' +
-            '└────── •✧✧✧✧✧✧✧✧✧• ──────┘';
+        return aranywallText;
     },
 
     getCommands() {
-        return [
-            { Parancsok: '`!votemute "tag":` (tag helyére tageld meg akit muteolni akarsz 30 sec-re aposztrófok nélkül), meg kell szavazni, 3 szavazat után érvényes. Admint, és botot nem muteolhatsz! \n\n' +
-                    '`!votenick "nicknév" "tag:` nicknév helyére beírod a kívánt nevet, és tageled akinek a nevét meg akarod változtatni, ehhez 6 szavazat kell, hogy sikeres legyen.\n\n' +
-                    '`!praise + "emote" vagy "szöveg":` isteni magaslatba emelem azt amit megadtál\n\n' +
-                    '`!kivagy + "tag":` megmondja hogy te ki is vagy valójában. \n\n' +
-                    '`!csicskawall:` kilistázom a csicska tanárokat\n\n' +
-                    '`!aranywall:` kilistázom aranyember tanárokat'},
-            { Parancsok: '`!ametsu/!amecu:` ametsu kedvenc emote-jait küldöm be\n\n' +
-                    '`!geci + "valami":` meg dingi-dongizom\n\n' +
-                    '`!mock + "valami":` retard spongyabobként beszélek\n\n' +
-                    '`!kurai:` elküldöm karcsi által szeretett vicces reagálást\n\n' +
-                    '`!list:`, Megtekintheted a napi kötelező szövegek listája hogy halad.\n\n' +
-                    '`!pisti/!szepi:` pisti az elkerülhetetlen\n\n' +
-                    '`!medikiakad:` prezentálim mi van akkor, ha MediMadi kiakad'},
-            { Parancsok: '`!kurva:` Swarci ordít egyet\n\n' +
-                    '`!nemtudom:` miért nem lehet tudod? Csalódtam.\n\n' +
-                    '`!assemble:` UwU egyesülj!\n\n' +
-                    '`!micsinalsz:` Mégis mit csinálsz??\n\n' +
-                    '`!faszom:` oh bazdmeg még ez is van\n\n' +
-                    '`!uwu:` strong together'},
-            { Parancsok: '`!springboot:` Oooo spring BOOT\n\n' +
-                    '`!vicci:` de vicci vagy\n\n' +
-                    '`!monke:` Return monke\n\n' +
-                    '`!rule:` A legfőbb szabály\n\n' +
-                    '`!csokas:` Aki fasszopókás\n\n' +
-                    '`!hirling:` Mit csinál vajon javítás helyett?'},
-            { Parancsok: '`!gay:` Teátrális buzi vagy\n\n' +
-                    '`!sub + "teszttel rendelkező kurzus":` Feliratkozhatsz olyan ping csoportba, ahol ezt a tesztet töltik ki\n\n' +
-                    '`!unsub + "teszttel rendelkező kurzus":` Leiratkozol a pingekről\n\n' +
-                    '`!teszt + "kurzus":` Akik fel vannak iratkozva a kurzusra azokat megpingelem\n\n' +
-                    '`!risus + "channel név":` Tipik risusing csak te nem használhatod ezt'},
-            { Parancsok: '`!bullshit:` Ez bikaszar\n\n' +
-                    '`!punch:` Megcsaplak\n\n' +
-                    '`!ugood:` U good? no...\n\n' +
-                    '`!vonzalom:` Cringe vonzalom emote-ok\n\n' +
-                    '`!aztakurva:` Tamás aztakurva aranyköpése\n\n' +
-                    '`!akurva:` A kurva anyád\n\n'},
-            { Parancsok: '`"bully"` a szövegben, akkor lespriccelem a másikat.\n\n' +
-                    '`"no bully"` a szövegben azt eredményezi hogy egy stop képet küldök, az abuse megszüntetésére.\n\n' +
-                    '`Ha 3x beküldik ugyanazt, akkor megismétlem`\n\n' +
-                    '`baszadékra szopadékot írok, és fordítva`\n\n' +
-                    '`medishug-ra madishrugot küldök és fordítva`\n\n' +
-                    '`brc van a szövegben brc-t reactolok`\n\n' +
-                    '`maroti, maróti, dimat van a szövegben marótit reactolok`\n\n' +
-                    '`megcsap, nem mered, nem leszek-re is reactolok`'},
-        ];
+        return helpList;
     },
 
     checkIfSame(array) {
@@ -166,15 +84,15 @@ export default {
 
     sendAttachment(image, client, msg) {
         let attachment = new Discord.MessageAttachment(image);
-        return client.channels.cache.get(msg.channel.id).send(attachment);
+        return client.channels.cache.get(msg.channel.id).send({files: [attachment]});
     },
 
     toDiscordMessage(client, msg, message) {
-        client.channels.cache.get(msg.channel.id).send(message);
+        return client.channels.cache.get(msg.channel.id).send(message);
     },
 
     toDiscordMessageChannel(client, channelId, message) {
-        client.channels.cache.get(channelId).send(message);
+        return client.channels.cache.get(channelId).send(message);
     },
 
     async getPingUsers(nickname) {

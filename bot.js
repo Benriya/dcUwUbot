@@ -26,7 +26,7 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-loadLoop(client).catch(e => console.log(e));
+loadLoop(client);
 
 client.on('messageCreate', async msg => {
     if (msg === undefined) return;
@@ -44,7 +44,7 @@ client.on('messageCreate', async msg => {
         }
         for (let expected in listCheck) {
             if (func.isSimilar(lastMessage.content, listCheck[expected]) >= 0.5) {
-                await database.updateList(listCheck[expected]);
+                database.updateList(listCheck[expected]);
             }
         }
 
@@ -161,20 +161,3 @@ client.on('messageReactionAdd', async (reaction, user) => {
 });
 
 client.login(process.env.TOKEN);
-
-
-
-/*
-<@251831600512368641> kuba
-<@491660100990140436> flote
-<@518823389008232460> dante
-<@318072258465628161> senki
-<@376439826549047296> ninja
-<@602525564217327637> kurzi
-<@295485347138240513> swarci
-<@279565175588388865> karcsi
-<@239028474696826891> villanyos
-<@623899095224025088> medimadi
-<@614513037411352607> dontá
-<@310497849274007553> dawe
- */

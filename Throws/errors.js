@@ -100,4 +100,9 @@ export class Errors {
         return this.getReply(this.message);
     }
 
+    underConstruction() {
+        this.message = 'Átdolgozás alatt.';
+        return this.getReply(this.message);
+    }
+
 }
