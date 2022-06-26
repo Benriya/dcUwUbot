@@ -48,6 +48,12 @@ client.on('messageCreate', async msg => {
             }
         }
 
+        if (messageChannel === channelIds.pollId) {
+         if (!lastMessage.content.includes('/poll create')) {
+             await msg.delete();
+         }
+        }
+
         await loadCommon(client, lastMessage, firstMention);
         await loadAdmin(client, lastMessage, messageChannel);
         await loadReply(client, lastMessage, messageChannel, firstMention);

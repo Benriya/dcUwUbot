@@ -114,6 +114,9 @@ export async function loadCommon(client, msg, firstMention) {
             await msg.delete();
             func.sendAttachment('./szerb/nemtudom.png', client, msg);
             break;
+        case 'mav':
+            func.sendAttachment('./szerb/mav.jpeg', client, msg);
+            break;
         case 'list':
             await msg.delete();
             const listEmbed = await func.sendList();
@@ -146,10 +149,9 @@ export async function loadCommon(client, msg, firstMention) {
 
             if (szerbs.includes(firstMention.id)) {
                 image = './szerb/szerb_1.jpg';
-            }
-            else if (firstMention.id === UwU.Ninja){
+            } else if (firstMention.id === UwU.Ninja) {
                 image = './szerb/TAP.png';
-            }else {
+            } else {
                 image = './szerb/szerb_0.jpg';
             }
             func.sendAttachment(image, client, msg);
@@ -173,8 +175,8 @@ export async function loadCommon(client, msg, firstMention) {
             func.toDiscordMessage(client, msg, func.retardinator(sentence));
             func.toDiscordMessage(client, msg, '<a:retard:788703547335901184>');
             break;
-        /*case 'votemute':
-            await msg.react('👍');
+        case 'votemute':
+            /*await msg.react('👍');
             msg.awaitReactions(func.voteMuteFilter, { max: 1, time: 10000, errors: ['time']})
                 .then(async () => {
                     let mute_role = msg.guild.roles.cache.get("686288799109480523");
@@ -185,10 +187,11 @@ export async function loadCommon(client, msg, firstMention) {
                 }).catch(r => {
                 func.toDiscordMessage(client, msg, error.deniedVote());
                 console.log(r);
-            });
+            });*/
+            msg.reply({embeds: [err.underConstruction()]});
             break;
         case 'votenick':
-            try{
+            /*try{
                 if (firstMention.roles.cache.has('671107459858956299')) {
                     func.toDiscordMessage(client, msg,'Botot nem nevezhetsz át');
                     break;
@@ -204,8 +207,9 @@ export async function loadCommon(client, msg, firstMention) {
                 }).catch(r => {
                 func.toDiscordMessage(client, msg, error.deniedVote());
                 console.log(r);
-            });
-            break;*/
+            });*/
+            msg.reply({embeds: [err.underConstruction()]});
+            break;
         case 'sub':
             pinger = await func.checkIfPingerSub(nickname, author);
             if (nickname !== undefined && !pinger) {
@@ -235,10 +239,6 @@ export async function loadCommon(client, msg, firstMention) {
             await msg.delete();
             func.toDiscordMessage(client, msg, "<:react:905522849014485093> 📢  🇦 🇿 🇹 🇦   🇰 🇺 🇷 🇻 🇦");
             break;
-        case 'mav':
-            func.sendAttachment('./szerb/mav.jpeg', client, msg);
-            break;
-
     }
 }
 }
