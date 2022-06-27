@@ -110,6 +110,16 @@ export default {
         return result !== null;
     },
 
+    async updateHufPeak(newHuf) {
+        const peak = await database.getHUF();
+        const hufNumber = parseFloat(newHuf);
+        if (!isNaN(hufNumber)) {
+            if (peak[0].HUF < hufNumber) {
+                await database.updateHUF(hufNumber);
+            }
+        }
+    },
+
     rollTheDice(luck) {
         let dice = Math.floor(Math.random() * 100) + 1;
         if (dice <= luck) return true;

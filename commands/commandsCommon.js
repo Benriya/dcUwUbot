@@ -235,6 +235,11 @@ export async function loadCommon(client, msg, firstMention) {
             await msg.delete();
             func.toDiscordMessage(client, msg, `<:leave:839585675002642452> <#${func.getChannel(args[1])}>`);
             break;
+        case 'peak':
+            await msg.delete();
+            const peak = await database.getHUF();
+            func.toDiscordMessage(client, msg, `Jelenlegi csúcspont: 1 EUR = ${peak[0].HUF} Ft`);
+            break;
         case 'aztakurva':
             await msg.delete();
             func.toDiscordMessage(client, msg, "<:react:905522849014485093> 📢  🇦 🇿 🇹 🇦   🇰 🇺 🇷 🇻 🇦");

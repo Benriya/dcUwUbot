@@ -96,4 +96,31 @@ export default {
             });
         });
     },
+
+    getHUF: () => {
+        return new Promise(function (resolve, reject) {
+            MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function (err, db) {
+                if (err) throw err;
+                let dbo = db.db("mydb");
+                dbo.collection("Currency").find({HUF_id: 1}).toArray(function (err, result) {
+                    if (err) throw err;
+                    db.close();
+                    resolve(result);
+                });
+            });
+        });
+    },
+
+    updateHUF: (value) => {
+        MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, db) {
+            if (err) throw err;
+            let dbo = db.db("mydb");
+            let myQuery = { HUF_id: 1 };
+            let newValues = { $set: { HUF: value } };
+            dbo.collection("Currency").updateOne(myQuery, newValues, function(err, res) {
+                if (err) throw err;
+                db.close();
+            });
+        });
+    },
 };
