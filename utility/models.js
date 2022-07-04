@@ -48,7 +48,7 @@ export const channelIds = {
 export const szerbs = [UwU.Tamas, UwU.Kurzi, UwU.Medimadi];
 
 export let voters = [];
-export let pinger, HUF;
+export let HUF;
 export function modifyHUF( value ) { HUF = value; }
 
 export const csicskawallText = 

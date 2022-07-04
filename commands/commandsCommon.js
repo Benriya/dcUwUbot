@@ -1,8 +1,7 @@
 import func from "../utility/functions.js";
-import {pinger, HUF, szerbs, UwU} from "../utility/models.js";
+import {HUF, szerbs, UwU} from "../utility/models.js";
 import Pagination from "discord-paginationembed";
 import database from "../database/handle_database.js";
-import { cli } from "winston/lib/winston/config/index.js";
 import { Errors } from "../Throws/errors.js";
 
 export async function loadCommon(client, msg, firstMention) {
@@ -10,6 +9,7 @@ export async function loadCommon(client, msg, firstMention) {
     const author = msg.author.id;
     const args = msg.content.substring(1).split(' ');
     const cmd = args[0];
+    let pinger;
 
     await client.user.setActivity(`1 Euro = ${HUF} Ft`);
 
@@ -120,7 +120,7 @@ export async function loadCommon(client, msg, firstMention) {
         case 'list':
             await msg.delete();
             const listEmbed = await func.sendList();
-            func.toDiscordMessage(client, msg, listEmbed);
+            func.toDiscordMessage(client, msg, {embeds: [listEmbed]});
             break;
         case '!help':
             /*let commands = func.getCommands();
